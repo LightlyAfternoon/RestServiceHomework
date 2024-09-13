@@ -1,16 +1,17 @@
-package org.example.model;
+package org.example.servlet.dto;
 
 import java.util.Date;
 
-public class ExamEntity {
+public class ExamDTO {
     private int id;
     private Date startDate;
     private int groupId;
     private int subjectTeacherId;
 
-    public ExamEntity() {}
+    public ExamDTO() {}
 
-    public ExamEntity(Date startDate, int groupId, int subjectTeacherId) {
+    public ExamDTO(int id, Date startDate, int groupId, int subjectTeacherId) {
+        this.id = id;
         this.startDate = startDate;
         this.groupId = groupId;
         this.subjectTeacherId = subjectTeacherId;
