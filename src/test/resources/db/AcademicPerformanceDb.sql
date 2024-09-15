@@ -69,7 +69,7 @@ ALTER TABLE public.student ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE public.subject (
     id integer NOT NULL,
-    name character varying(30) NOT NULL
+    name character varying(100) NOT NULL
 );
 
 ALTER TABLE public.subject ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (

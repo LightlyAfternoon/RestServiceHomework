@@ -7,6 +7,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface TeacherRepository extends Repository<TeacherEntity> {
-    List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException;
+public interface SubjectRepository extends Repository<SubjectEntity> {
+    List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException, IOException;
 }

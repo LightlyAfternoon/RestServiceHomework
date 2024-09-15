@@ -13,6 +13,11 @@ public class SubjectEntity {
         this.name = name;
     }
 
+    public SubjectEntity(int id, String name) {
+        this(name);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

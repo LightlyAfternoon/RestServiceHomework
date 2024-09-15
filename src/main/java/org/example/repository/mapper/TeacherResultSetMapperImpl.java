@@ -9,9 +9,9 @@ public class TeacherResultSetMapperImpl implements TeacherResultSetMapper {
     @Override
     public TeacherEntity map(ResultSet resultSet) throws SQLException {
         try {
-            resultSet.next();
 
             return new TeacherEntity(
+                    resultSet.getInt("id"),
                     resultSet.getString("first_name"),
                     resultSet.getString("last_name"),
                     resultSet.getString("patronymic")

@@ -17,6 +17,11 @@ public class TeacherEntity {
         this.patronymic = patronymic;
     }
 
+    public TeacherEntity(int id, String firstName, String lastName, String patronymic) {
+        this(firstName, lastName, patronymic);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
