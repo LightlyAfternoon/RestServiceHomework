@@ -4,9 +4,7 @@ import org.example.db.ConnectionManager;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
-import org.example.repository.TeacherRepository;
 import org.example.repository.impl.SubjectRepositoryImpl;
-import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,7 @@ class SubjectRepositoryImplTest {
 
     @BeforeEach
     void setUp() throws SQLException, IOException {
-        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(),container.getPassword());
 
         try {
             connection = connectionManager.getConnection();

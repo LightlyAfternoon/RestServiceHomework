@@ -16,6 +16,11 @@ public class StudentEntity {
         this.groupId = groupId;
     }
 
+    public StudentEntity(int id, String firstName, String lastName, String patronymic, int groupId) {
+        this(firstName, lastName, patronymic, groupId);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

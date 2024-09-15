@@ -48,36 +48,41 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
     @Override
     public SubjectEntity save(SubjectEntity entity) throws SQLException, IOException {
-        String sql;
         int id = entity.getId();
 
         if (id > 0) {
-            sql = "UPDATE subject SET name = ? WHERE id = ?";
+            return update(entity);
         } else {
-            sql = "INSERT INTO subject (name) VALUES (?)";
+            return insert(entity);
         }
+    }
 
+    private SubjectEntity insert(SubjectEntity entity) throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject (name) VALUES (?)")) {
 
             preparedStatement.setString(1, entity.getName());
-            if (id > 0) {
-                preparedStatement.setInt(2, id);
-            }
-
             preparedStatement.executeUpdate();
 
-            if (id < 1) {
-                try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM subject ORDER BY id DESC LIMIT 1")) {
-                    ResultSet resultSet = newPreparedStatement.executeQuery();
-                    resultSet.next();
+            try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM subject ORDER BY id DESC LIMIT 1")) {
+                ResultSet resultSet = newPreparedStatement.executeQuery();
+                resultSet.next();
 
-                    SubjectEntity subject = new SubjectResultSetMapperImpl().map(resultSet);
-                    subject.setTeachers(findAllTeachersWithSubjectId(subject.getId()));
+                SubjectEntity subject = new SubjectResultSetMapperImpl().map(resultSet);
+                subject.setTeachers(findAllTeachersWithSubjectId(subject.getId()));
 
-                    entity = subject;
-                }
+                return  subject;
             }
+        }
+    }
+
+    private SubjectEntity update(SubjectEntity entity) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE subject SET name = ? WHERE id = ?")) {
+
+            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setInt(2, entity.getId());
+            preparedStatement.executeUpdate();
 
             return entity;
         }
@@ -101,20 +106,15 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_teacher WHERE subject_id = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT t.* FROM subject_teacher st " +
+                     "JOIN teacher t ON st.teacher_id = t.id WHERE subject_id = ?")) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<TeacherEntity> teacherEntities = new ArrayList<>();
 
             while (resultSet.next()) {
-                try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM teacher WHERE id = ?")) {
-                    newPreparedStatement.setInt(1, resultSet.getInt("teacher_id"));
-                    ResultSet newResultSet = newPreparedStatement.executeQuery();
-                    newResultSet.next();
-
-                    teacherEntities.add(new TeacherResultSetMapperImpl().map(newResultSet));
-                }
+                teacherEntities.add(new TeacherResultSetMapperImpl().map(resultSet));
             }
 
             return teacherEntities;

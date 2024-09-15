@@ -21,6 +21,11 @@ public class GroupEntity {
         this.teacherId = teacherId;
     }
 
+    public GroupEntity(int id, String name, Date startDate, Date endDate, int teacherId) {
+        this(name, startDate, endDate, teacherId);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
