@@ -12,8 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
@@ -83,6 +82,23 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             preparedStatement.executeUpdate();
 
             return entity;
+        }
+    }
+
+    @Override
+    public Set<Map.Entry<SubjectEntity, TeacherEntity>> save(SubjectEntity subject, TeacherEntity teacher) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject_teacher (subject_id, teacher_id) VALUES (?, ?)")) {
+
+            preparedStatement.setInt(1, subject.getId());
+            preparedStatement.setInt(2, teacher.getId());
+
+            preparedStatement.executeUpdate();
+
+            Set<Map.Entry<SubjectEntity, TeacherEntity>> set = new HashSet<>();
+            set.add(Map.entry(subject, teacher));
+
+            return set;
         }
     }
 

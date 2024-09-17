@@ -4,16 +4,23 @@ import org.example.db.ConnectionManager;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
+import org.example.repository.TeacherRepository;
 import org.example.repository.impl.SubjectRepositoryImpl;
+import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 class SubjectRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
@@ -96,6 +103,25 @@ class SubjectRepositoryImplTest {
         subject = subjectRepository.save(subject);
         Assertions.assertEquals(4, subject.getId());
         Assertions.assertEquals("2 Тест", subject.getName());
+    }
+
+    @Test
+    void saveSubjectTeacherConnectionTest() throws SQLException, IOException {
+        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
+        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
+
+        SubjectEntity subject = subjectRepository.findById(2);
+        TeacherEntity teacher = teacherRepository.findById(1);
+
+        Assertions.assertTrue(subjectRepository.save(subject, teacher).contains(Map.entry(subject, teacher)));
+
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_teacher ORDER BY id DESC LIMIT 1");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+
+        Assertions.assertEquals(3, resultSet.getInt("id"));
+        Assertions.assertEquals(2, resultSet.getInt("subject_id"));
+        Assertions.assertEquals(1, resultSet.getInt("teacher_id"));
     }
 
     @Test

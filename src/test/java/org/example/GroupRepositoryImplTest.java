@@ -93,7 +93,6 @@ class GroupRepositoryImplTest {
         Calendar startCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
         Calendar endCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
 
-
         Date startDate = new Date(startCalendar.getTimeInMillis());
         endCalendar.add(Calendar.MONTH, 46);
         Date endDate = new Date(endCalendar.getTimeInMillis());
