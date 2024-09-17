@@ -94,9 +94,9 @@ class GroupRepositoryImplTest {
         Calendar endCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
 
 
-        Date startDate = new Date(startCalendar.getTime().getTime());
+        Date startDate = new Date(startCalendar.getTimeInMillis());
         endCalendar.add(Calendar.MONTH, 46);
-        Date endDate = new Date(endCalendar.getTime().getTime());
+        Date endDate = new Date(endCalendar.getTimeInMillis());
         GroupEntity group = groupRepository.findById(2);
         group.setName("Т");
         group.setStartDate(startDate);
@@ -110,9 +110,9 @@ class GroupRepositoryImplTest {
         Assertions.assertEquals(2, group.getTeacherId());
 
         startCalendar.add(Calendar.YEAR, -4);
-        startDate = new Date(startCalendar.getTime().getTime());
+        startDate = new Date(startCalendar.getTimeInMillis());
         endCalendar.add(Calendar.MONTH, -48);
-        endDate = new Date(endCalendar.getTime().getTime());
+        endDate = new Date(endCalendar.getTimeInMillis());
         group = new GroupEntity();
         group.setName("Т-2");
         group.setStartDate(startDate);

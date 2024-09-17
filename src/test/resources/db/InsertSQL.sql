@@ -23,4 +23,4 @@ INSERT INTO exam(start_date, group_id, subject_teacher_id) VALUES ('2024-01-05',
 
 INSERT INTO grade(student_id, exam_id, mark) VALUES (1, 1, 4);
 INSERT INTO grade(student_id, exam_id, mark) VALUES (2, 1, 5);
---INSERT INTO grade(student_id, exam_id, mark) VALUES (3, 3, 5);
+INSERT INTO grade(student_id, exam_id, mark) VALUES (2, 2, 5);
