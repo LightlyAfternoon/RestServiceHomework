@@ -4,14 +4,19 @@ public class GradeEntity {
     private int id;
     private int studentId;
     private int examId;
-    private int mark;
+    private short mark;
 
     public GradeEntity() {}
 
-    public GradeEntity(int studentId, int examId, int mark) {
+    public GradeEntity(int studentId, int examId, short mark) {
         this.studentId = studentId;
         this.examId = examId;
         this.mark = mark;
+    }
+
+    public GradeEntity(int id, int studentId, int examId, short mark) {
+        this(studentId, examId, mark);
+        this.id = id;
     }
 
     public int getId() {
@@ -34,11 +39,11 @@ public class GradeEntity {
         this.examId = examId;
     }
 
-    public int getMark() {
+    public short getMark() {
         return mark;
     }
 
-    public void setMark(int mark) {
+    public void setMark(short mark) {
         this.mark = mark;
     }
 }

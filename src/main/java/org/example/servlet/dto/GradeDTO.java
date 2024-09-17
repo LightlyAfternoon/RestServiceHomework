@@ -4,11 +4,11 @@ public class GradeDTO {
     private int id;
     private int studentId;
     private int examId;
-    private int mark;
+    private short mark;
 
     public GradeDTO() {}
 
-    public GradeDTO(int id, int studentId, int examId, int mark) {
+    public GradeDTO(int id, int studentId, int examId, short mark) {
         this.id = id;
         this.studentId = studentId;
         this.examId = examId;
@@ -35,11 +35,11 @@ public class GradeDTO {
         this.examId = examId;
     }
 
-    public int getMark() {
+    public short getMark() {
         return mark;
     }
 
-    public void setMark(int mark) {
+    public void setMark(short mark) {
         this.mark = mark;
     }
 }
