@@ -2,10 +2,8 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
-import org.example.model.GroupEntity;
 import org.example.repository.ExamRepository;
 import org.example.repository.mapper.ExamResultSetMapperImpl;
-import org.example.repository.mapper.GroupResultSetMapperImpl;
 
 import java.io.IOException;
 import java.sql.Connection;
