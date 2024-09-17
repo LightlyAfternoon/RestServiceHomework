@@ -48,9 +48,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
     @Override
     public SubjectEntity save(SubjectEntity entity) throws SQLException, IOException {
-        int id = entity.getId();
-
-        if (id > 0) {
+        if (entity.getId() > 0) {
             return update(entity);
         } else {
             return insert(entity);
@@ -96,7 +94,10 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             List<SubjectEntity> subjectEntities = new ArrayList<>();
 
             while (resultSet.next()) {
-                subjectEntities.add(new SubjectResultSetMapperImpl().map(resultSet));
+                SubjectEntity subjectEntity = new SubjectResultSetMapperImpl().map(resultSet);
+                subjectEntity.setTeachers(findAllTeachersWithSubjectId(subjectEntity.getId()));
+
+                subjectEntities.add(subjectEntity);
             }
 
             return subjectEntities;

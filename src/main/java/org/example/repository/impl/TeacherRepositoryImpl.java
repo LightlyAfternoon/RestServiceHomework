@@ -52,9 +52,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
     @Override
     public TeacherEntity save(TeacherEntity entity) throws SQLException, IOException {
-        int id = entity.getId();
-
-        if (id > 0) {
+        if (entity.getId() > 0) {
             return update(entity);
         } else {
             return insert(entity);

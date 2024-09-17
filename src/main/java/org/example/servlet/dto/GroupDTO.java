@@ -1,6 +1,6 @@
 package org.example.servlet.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class GroupDTO {
     private int id;
