@@ -1,5 +1,8 @@
 package org.example.service;
 
+import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 
 import java.io.IOException;
@@ -14,4 +17,10 @@ public interface TeacherService {
     TeacherEntity save(TeacherEntity entity) throws SQLException, IOException;
 
     List<TeacherEntity> findAll() throws SQLException, IOException;
+
+    List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException, IOException;
+
+    List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException;
+
+    List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException, IOException;
 }

@@ -2,8 +2,10 @@ package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
+import org.example.repository.impl.GroupRepositoryImpl;
 import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
@@ -66,11 +68,11 @@ class SubjectRepositoryImplTest {
 
     @Test
     void getSubjectByIdTest() throws SQLException, IOException {
-
-
         SubjectEntity subject = subjectRepository.findById(1);
         Assertions.assertNotNull(subject);
         Assertions.assertFalse(subject.getTeachers().isEmpty());
+        Assertions.assertFalse(subject.getExams().isEmpty());
+        Assertions.assertFalse(subject.getGroups().isEmpty());
 
         subject = subjectRepository.findById(2);
         Assertions.assertNotNull(subject);
@@ -101,7 +103,7 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void saveSubjectTeacherConnectionTest() throws SQLException, IOException {
+    void saveSubjectTeacherRelationshipTest() throws SQLException, IOException {
         TeacherRepository teacherRepository = new TeacherRepositoryImpl();
 
         SubjectEntity subject = subjectRepository.findById(2);
@@ -116,6 +118,24 @@ class SubjectRepositoryImplTest {
         Assertions.assertEquals(3, resultSet.getInt("id"));
         Assertions.assertEquals(2, resultSet.getInt("subject_id"));
         Assertions.assertEquals(1, resultSet.getInt("teacher_id"));
+    }
+
+    @Test
+    void saveSubjectGroupRelationshipTest() throws SQLException, IOException {
+        GroupRepository groupRepository = new GroupRepositoryImpl();
+
+        SubjectEntity subject = subjectRepository.findById(2);
+        GroupEntity group = groupRepository.findById(1);
+
+        Assertions.assertEquals(group, subjectRepository.save(subject, group));
+
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_group ORDER BY id DESC LIMIT 1");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+
+        Assertions.assertEquals(3, resultSet.getInt("id"));
+        Assertions.assertEquals(2, resultSet.getInt("subject_id"));
+        Assertions.assertEquals(1, resultSet.getInt("group_id"));
     }
 
     @Test
@@ -135,6 +155,13 @@ class SubjectRepositoryImplTest {
     @Test
     void findAllExamsWithSubjectIdTest() throws SQLException, IOException {
         List<ExamEntity> exams = subjectRepository.findAllExamsWithSubjectId(1);
+
+        Assertions.assertFalse(exams.isEmpty());
+    }
+
+    @Test
+    void findAllGroupsWithSubjectIdTest() throws SQLException, IOException {
+        List<GroupEntity> exams = subjectRepository.findAllGroupsWithSubjectId(1);
 
         Assertions.assertFalse(exams.isEmpty());
     }

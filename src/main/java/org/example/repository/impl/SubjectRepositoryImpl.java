@@ -2,10 +2,12 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
 import org.example.repository.mapper.ExamResultSetMapperImpl;
+import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 import org.example.repository.mapper.TeacherResultSetMapperImpl;
 
@@ -28,6 +30,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
             SubjectEntity subjectEntity = new SubjectResultSetMapperImpl().map(resultSet);
             subjectEntity.setTeachers(findAllTeachersWithSubjectId(subjectEntity.getId()));
+            subjectEntity.setGroups(findAllGroupsWithSubjectId(subjectEntity.getId()));
+            subjectEntity.setExams(findAllExamsWithSubjectId(subjectEntity.getId()));
 
             return subjectEntity;
         } catch (SQLException e) {
@@ -102,6 +106,20 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
+    public GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject_group (subject_id, group_id) VALUES (?, ?)")) {
+
+            preparedStatement.setInt(1, subject.getId());
+            preparedStatement.setInt(2, group.getId());
+
+            preparedStatement.executeUpdate();
+
+            return group;
+        }
+    }
+
+    @Override
     public List<SubjectEntity> findAll() throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject")) {
@@ -152,6 +170,24 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             }
 
             return examEntities;
+        }
+    }
+
+    @Override
+    public List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.* FROM subject_group sg " +
+                     "JOIN \"group\" g ON g.id = sg.group_id WHERE sg.subject_id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<GroupEntity> groupEntities = new ArrayList<>();
+
+            while (resultSet.next()) {
+                groupEntities.add(new GroupResultSetMapperImpl().map(resultSet));
+            }
+
+            return groupEntities;
         }
     }
 }

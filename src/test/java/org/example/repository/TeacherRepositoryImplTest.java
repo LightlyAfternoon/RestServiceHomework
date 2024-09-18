@@ -68,6 +68,8 @@ class TeacherRepositoryImplTest {
         TeacherEntity teacher = teacherRepository.findById(1);
         Assertions.assertNotNull(teacher);
         Assertions.assertFalse(teacher.getSubjects().isEmpty());
+        Assertions.assertFalse(teacher.getGroups().isEmpty());
+        Assertions.assertFalse(teacher.getExams().isEmpty());
 
         teacher = teacherRepository.findById(2);
         Assertions.assertNotNull(teacher);

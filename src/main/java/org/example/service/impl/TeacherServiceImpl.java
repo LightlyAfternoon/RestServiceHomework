@@ -1,7 +1,11 @@
 package org.example.service.impl;
 
+import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
+import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.TeacherService;
 
 import java.io.IOException;
@@ -10,6 +14,10 @@ import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
     TeacherRepository repository;
+
+    public TeacherServiceImpl() {
+        this.repository = new TeacherRepositoryImpl();
+    }
 
     public TeacherServiceImpl(TeacherRepository repository) {
         this.repository = repository;
@@ -33,5 +41,20 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<TeacherEntity> findAll() throws SQLException, IOException {
         return repository.findAll();
+    }
+
+    @Override
+    public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException, IOException {
+        return repository.findAllGroupsWithTeacherId(id);
+    }
+
+    @Override
+    public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException {
+        return repository.findAllSubjectsWithTeacherId(id);
+    }
+
+    @Override
+    public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException, IOException {
+        return repository.findAllExamsWithTeacherId(id);
     }
 }

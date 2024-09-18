@@ -67,6 +67,21 @@ ALTER TABLE public.student ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     CACHE 1
 );
 
+CREATE TABLE public.subject_group (
+    id integer NOT NULL,
+    subject_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+ALTER TABLE public.subject_group ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.subject_group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 CREATE TABLE public.subject (
     id integer NOT NULL,
     name character varying(100) NOT NULL
@@ -124,6 +139,9 @@ ALTER TABLE ONLY public."group"
 ALTER TABLE ONLY public.student
     ADD CONSTRAINT student_pkey PRIMARY KEY (id);
 
+ALTER TABLE ONLY public.subject_group
+    ADD CONSTRAINT subject_group_pkey PRIMARY KEY (id);
+
 ALTER TABLE ONLY public.subject
     ADD CONSTRAINT subject_pkey PRIMARY KEY (id);
 
@@ -150,6 +168,12 @@ ALTER TABLE ONLY public."group"
 
 ALTER TABLE ONLY public.student
     ADD CONSTRAINT student_group_id_fkey FOREIGN KEY (group_id) REFERENCES public."group"(id) NOT VALID;
+
+ALTER TABLE ONLY public.subject_group
+    ADD CONSTRAINT subject_group_group_id_fkey FOREIGN KEY (group_id) REFERENCES public."group"(id);
+
+ALTER TABLE ONLY public.subject_group
+    ADD CONSTRAINT subject_group_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subject(id);
 
 ALTER TABLE ONLY public.subject_teacher
     ADD CONSTRAINT subject_teacher_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subject(id) NOT VALID;

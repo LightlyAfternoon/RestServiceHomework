@@ -4,10 +4,12 @@ import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.StudentEntity;
+import org.example.model.SubjectEntity;
 import org.example.repository.GroupRepository;
 import org.example.repository.mapper.ExamResultSetMapperImpl;
 import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.StudentResultSetMapperImpl;
+import org.example.repository.mapper.SubjectResultSetMapperImpl;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -30,6 +32,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             GroupEntity groupEntity = new GroupResultSetMapperImpl().map(resultSet);
             groupEntity.setStudents(findAllStudentsWithGroupId(id));
             groupEntity.setExams(findAllExamsWithGroupId(id));
+            groupEntity.setSubjects(findAllSubjectsWithGroupId(id));
 
             return groupEntity;
         }
@@ -144,6 +147,24 @@ public class GroupRepositoryImpl implements GroupRepository {
             }
 
             return exams;
+        }
+    }
+
+    @Override
+    public List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT s.* FROM subject_group sg " +
+                     "JOIN subject s ON s.id = sg.subject_id WHERE sg.group_id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<SubjectEntity> subjectEntities = new ArrayList<>();
+
+            while (resultSet.next()) {
+                subjectEntities.add(new SubjectResultSetMapperImpl().map(resultSet));
+            }
+
+            return subjectEntities;
         }
     }
 }

@@ -11,6 +11,7 @@ public class GroupEntity {
     private int teacherId;
     private List<StudentEntity> students;
     private List<ExamEntity> exams;
+    private List<SubjectEntity> subjects;
 
     public GroupEntity() {}
 
@@ -76,5 +77,39 @@ public class GroupEntity {
 
     public void setExams(List<ExamEntity> exams) {
         this.exams = exams;
+    }
+
+    public List<SubjectEntity> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SubjectEntity> subjects) {
+        this.subjects = subjects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof GroupEntity)) return false;
+        if (this == o) return true;
+
+        GroupEntity g = (GroupEntity) o;
+
+        return id == g.id
+                && name.equals(g.name)
+                && startDate.equals(g.startDate)
+                && (endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + name.hashCode();
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+        result = 31 * result + teacherId;
+
+        return result;
     }
 }

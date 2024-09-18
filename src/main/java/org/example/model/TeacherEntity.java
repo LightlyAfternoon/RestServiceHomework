@@ -83,9 +83,20 @@ public class TeacherEntity {
         if (this == o) return true;
 
         TeacherEntity t = (TeacherEntity) o;
-        return (id == t.id
+        return id == t.id
                 && firstName.equals(t.firstName)
                 && lastName.equals(t.lastName)
-                && (patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic)));
+                && (patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
+
+        return result;
     }
 }

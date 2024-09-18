@@ -31,6 +31,8 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
             TeacherEntity teacherEntity = new TeacherResultSetMapperImpl().map(resultSet);
             teacherEntity.setSubjects(findAllSubjectsWithTeacherId(teacherEntity.getId()));
+            teacherEntity.setGroups(findAllGroupsWithTeacherId(teacherEntity.getId()));
+            teacherEntity.setExams(findAllExamsWithTeacherId(teacherEntity.getId()));
 
             return teacherEntity;
         } catch (SQLException e) {

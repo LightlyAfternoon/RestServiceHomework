@@ -4,6 +4,7 @@ import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.StudentEntity;
+import org.example.model.SubjectEntity;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -72,6 +73,7 @@ class GroupRepositoryImplTest {
         Assertions.assertNotNull(group);
         Assertions.assertFalse(group.getStudents().isEmpty());
         Assertions.assertFalse(group.getExams().isEmpty());
+        Assertions.assertFalse(group.getSubjects().isEmpty());
 
         group = groupRepository.findById(2);
         Assertions.assertNotNull(group);
@@ -142,5 +144,12 @@ class GroupRepositoryImplTest {
         List<ExamEntity> exams = groupRepository.findAllExamsWithGroupId(2);
 
         Assertions.assertEquals(2, exams.size());
+    }
+
+    @Test
+    void findAllSubjectsWithGroupIdTest() throws SQLException, IOException {
+        List<SubjectEntity> subjects = groupRepository.findAllSubjectsWithGroupId(2);
+
+        Assertions.assertEquals(1, subjects.size());
     }
 }

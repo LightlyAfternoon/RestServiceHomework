@@ -7,6 +7,7 @@ public class SubjectEntity {
     private String name;
     private List<TeacherEntity> teachers;
     private List<ExamEntity> exams;
+    private List<GroupEntity> groups;
 
     public SubjectEntity() {}
 
@@ -45,5 +46,34 @@ public class SubjectEntity {
 
     public void setExams(List<ExamEntity> exams) {
         this.exams = exams;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof SubjectEntity)) return false;
+        if (this == o) return true;
+
+        SubjectEntity s = (SubjectEntity) o;
+
+        return id == s.id
+                && name.equals(s.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + name.hashCode();
+
+        return result;
     }
 }
