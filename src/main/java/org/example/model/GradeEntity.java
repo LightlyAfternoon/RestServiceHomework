@@ -46,4 +46,28 @@ public class GradeEntity {
     public void setMark(short mark) {
         this.mark = mark;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof GradeEntity)) return false;
+        if (this == o) return true;
+
+        GradeEntity g = (GradeEntity) o;
+        return id == g.id
+                && studentId == g.studentId
+                && examId == g.examId
+                && mark == g.mark;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + studentId;
+        result = 31 * result + examId;
+        result = 31 * result + mark;
+
+        return result;
+    }
 }

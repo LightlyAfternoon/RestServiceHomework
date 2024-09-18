@@ -48,4 +48,28 @@ public class ExamEntity {
     public void setSubjectTeacherId(int subjectTeacherId) {
         this.subjectTeacherId = subjectTeacherId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof ExamEntity)) return false;
+        if (this == o) return true;
+
+        ExamEntity e = (ExamEntity) o;
+        return id == e.id
+                && startDate.equals(e.startDate)
+                && groupId == e.groupId
+                && subjectTeacherId == e.subjectTeacherId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + groupId;
+        result = 31 * result + subjectTeacherId;
+
+        return result;
+    }
 }
