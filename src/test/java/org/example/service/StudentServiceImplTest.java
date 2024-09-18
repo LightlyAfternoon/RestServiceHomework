@@ -36,7 +36,6 @@ class StudentServiceImplTest {
     @Test
     void findByIdTest() throws SQLException, IOException {
         Mockito.when(mockStudentRepository.findById(1)).thenReturn(studentEntity);
-        studentEntity = new StudentEntity(1, "Клара", "Ломоносова", "Евгеньевна", 1);
 
         Assertions.assertEquals(studentService.findById(1), studentEntity);
 

@@ -37,8 +37,6 @@ class SubjectServiceImplTest {
     void findByIdTest() throws SQLException, IOException {
         Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
-        subjectEntity = new SubjectEntity(1, "TestS");
-
         Assertions.assertEquals(subjectService.findById(1), subjectEntity);
 
         subjectEntity = new SubjectEntity(1, "TestS2");

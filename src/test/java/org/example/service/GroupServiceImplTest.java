@@ -39,10 +39,6 @@ class GroupServiceImplTest {
     @Test
     void findByIdTest() throws SQLException, IOException {
         Mockito.when(mockGroupRepository.findById(1)).thenReturn(groupEntity);
-        groupEntity = new GroupEntity(1, "П-0",
-                new Date(new GregorianCalendar(2015, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2019, Calendar.JUNE, 30).getTimeInMillis()),
-                1);
 
         Assertions.assertEquals(groupService.findById(1), groupEntity);
 
