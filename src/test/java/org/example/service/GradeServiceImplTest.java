@@ -63,7 +63,7 @@ class GradeServiceImplTest {
 
         Mockito.when(mockGradeRepository.save(gradeEntity)).thenReturn(gradeEntity);
 
-        gradeEntity = new GradeEntity(2, 4, 3, (short) 2);
+        gradeEntity = new GradeEntity(3, 4, 3, (short) 2);
 
         Assertions.assertEquals(gradeEntity, gradeService.save(gradeEntity));
     }
