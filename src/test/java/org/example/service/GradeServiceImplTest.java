@@ -24,7 +24,7 @@ class GradeServiceImplTest {
         mockGradeRepository = Mockito.mock(GradeRepositoryImpl.class);
         gradeService = new GradeServiceImpl(mockGradeRepository);
 
-        gradeEntity = new GradeEntity(1, 1, (short) 4);
+        gradeEntity = new GradeEntity(1, 1, 1, (short) 4);
     }
 
     @Test
@@ -33,7 +33,7 @@ class GradeServiceImplTest {
 
         Assertions.assertEquals(gradeService.findById(1), gradeEntity);
 
-        gradeEntity = new GradeEntity(2, 1, (short) 4);
+        gradeEntity = new GradeEntity(2, 2, 1, (short) 4);
 
         Assertions.assertNotEquals(gradeService.findById(1), gradeEntity);
     }
@@ -59,11 +59,11 @@ class GradeServiceImplTest {
 
     @Test
     void saveGradeTest() throws SQLException, IOException {
-        gradeEntity = new GradeEntity(4, 3, (short) 2);
+        gradeEntity = new GradeEntity(3, 4, 3, (short) 2);
 
         Mockito.when(mockGradeRepository.save(gradeEntity)).thenReturn(gradeEntity);
 
-        gradeEntity = new GradeEntity(4, 3, (short) 2);
+        gradeEntity = new GradeEntity(2, 4, 3, (short) 2);
 
         Assertions.assertEquals(gradeEntity, gradeService.save(gradeEntity));
     }
