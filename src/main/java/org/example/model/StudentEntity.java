@@ -67,7 +67,7 @@ public class StudentEntity {
         return id == s.id
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
-                && (patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic)
+                && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
                 && groupId == s.groupId);
     }
 

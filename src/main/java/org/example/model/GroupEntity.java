@@ -98,7 +98,8 @@ public class GroupEntity {
         return id == g.id
                 && name.equals(g.name)
                 && startDate.equals(g.startDate)
-                && (endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate));
+                && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
+                && teacherId == g.teacherId);
     }
 
     @Override

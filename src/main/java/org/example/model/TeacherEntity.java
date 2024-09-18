@@ -86,7 +86,7 @@ public class TeacherEntity {
         return id == t.id
                 && firstName.equals(t.firstName)
                 && lastName.equals(t.lastName)
-                && (patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic));
+                && ((patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic)));
     }
 
     @Override
