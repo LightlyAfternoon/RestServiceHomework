@@ -7,7 +7,9 @@ public class TeacherEntity {
     private String firstName;
     private String lastName;
     private String patronymic;
+    private List<GroupEntity> groups;
     private List<SubjectEntity> subjects;
+    private List<ExamEntity> exams;
 
     public TeacherEntity() {}
 
@@ -50,11 +52,40 @@ public class TeacherEntity {
         this.patronymic = patronymic;
     }
 
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
     public List<SubjectEntity> getSubjects() {
         return subjects;
     }
 
     public void setSubjects(List<SubjectEntity> subjects) {
         this.subjects = subjects;
+    }
+
+    public List<ExamEntity> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<ExamEntity> exams) {
+        this.exams = exams;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof TeacherEntity)) return false;
+        if (this == o) return true;
+
+        TeacherEntity t = (TeacherEntity) o;
+        return (id == t.id
+                && firstName.equals(t.firstName)
+                && lastName.equals(t.lastName)
+                && (patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic)));
     }
 }

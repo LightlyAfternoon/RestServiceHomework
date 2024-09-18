@@ -6,6 +6,7 @@ public class SubjectEntity {
     private int id;
     private String name;
     private List<TeacherEntity> teachers;
+    private List<ExamEntity> exams;
 
     public SubjectEntity() {}
 
@@ -36,5 +37,13 @@ public class SubjectEntity {
 
     public void setTeachers(List<TeacherEntity> teachers) {
         this.teachers = teachers;
+    }
+
+    public List<ExamEntity> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<ExamEntity> exams) {
+        this.exams = exams;
     }
 }

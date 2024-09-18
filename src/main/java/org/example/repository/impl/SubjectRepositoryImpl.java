@@ -1,9 +1,11 @@
 package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
+import org.example.model.ExamEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
+import org.example.repository.mapper.ExamResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 import org.example.repository.mapper.TeacherResultSetMapperImpl;
 
@@ -86,7 +88,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public Set<Map.Entry<SubjectEntity, TeacherEntity>> save(SubjectEntity subject, TeacherEntity teacher) throws SQLException, IOException {
+    public TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject_teacher (subject_id, teacher_id) VALUES (?, ?)")) {
 
@@ -95,10 +97,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
             preparedStatement.executeUpdate();
 
-            Set<Map.Entry<SubjectEntity, TeacherEntity>> set = new HashSet<>();
-            set.add(Map.entry(subject, teacher));
-
-            return set;
+            return teacher;
         }
     }
 
@@ -124,7 +123,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     public List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT t.* FROM subject_teacher st " +
-                     "JOIN teacher t ON st.teacher_id = t.id WHERE subject_id = ?")) {
+                     "JOIN teacher t ON st.teacher_id = t.id WHERE st.subject_id = ?")) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -135,6 +134,24 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             }
 
             return teacherEntities;
+        }
+    }
+
+    @Override
+    public List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT e.* FROM subject_teacher st " +
+                     "JOIN exam e ON st.id = e.subject_teacher_id WHERE st.subject_id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<ExamEntity> examEntities = new ArrayList<>();
+
+            while (resultSet.next()) {
+                examEntities.add(new ExamResultSetMapperImpl().map(resultSet));
+            }
+
+            return examEntities;
         }
     }
 }

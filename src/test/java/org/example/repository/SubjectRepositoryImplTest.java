@@ -1,33 +1,31 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
+import org.example.model.ExamEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
-import org.example.repository.SubjectRepository;
-import org.example.repository.TeacherRepository;
 import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 class SubjectRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    private static final Logger log = LoggerFactory.getLogger(SubjectRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(SubjectRepositoryImplTest.class);
     Connection connection;
+
+    SubjectRepository subjectRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -43,6 +41,7 @@ class SubjectRepositoryImplTest {
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(),container.getPassword());
 
+        subjectRepository = new SubjectRepositoryImpl();
         try {
             connection = connectionManager.getConnection();
         } catch (SQLException e) {
@@ -67,7 +66,7 @@ class SubjectRepositoryImplTest {
 
     @Test
     void getSubjectByIdTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
+
 
         SubjectEntity subject = subjectRepository.findById(1);
         Assertions.assertNotNull(subject);
@@ -81,16 +80,12 @@ class SubjectRepositoryImplTest {
 
     @Test
     void deleteSubjectByIdTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
-
         Assertions.assertTrue(subjectRepository.deleteById(3));
         Assertions.assertFalse(subjectRepository.deleteById(50));
     }
 
     @Test
     void saveSubjectTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
-
         SubjectEntity subject = subjectRepository.findById(2);
         subject.setName("Тест");
 
@@ -107,13 +102,12 @@ class SubjectRepositoryImplTest {
 
     @Test
     void saveSubjectTeacherConnectionTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
         TeacherRepository teacherRepository = new TeacherRepositoryImpl();
 
         SubjectEntity subject = subjectRepository.findById(2);
         TeacherEntity teacher = teacherRepository.findById(1);
 
-        Assertions.assertTrue(subjectRepository.save(subject, teacher).contains(Map.entry(subject, teacher)));
+        Assertions.assertEquals(teacher, subjectRepository.save(subject, teacher));
 
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_teacher ORDER BY id DESC LIMIT 1");
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -126,7 +120,6 @@ class SubjectRepositoryImplTest {
 
     @Test
     void findAllSubjectsTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
         List<SubjectEntity> subjects = subjectRepository.findAll();
 
         Assertions.assertFalse(subjects.isEmpty());
@@ -134,9 +127,15 @@ class SubjectRepositoryImplTest {
 
     @Test
     void findAllTeachersWithSubjectIdTest() throws SQLException, IOException {
-        SubjectRepository subjectRepository = new SubjectRepositoryImpl();
         List<TeacherEntity> teachers = subjectRepository.findAllTeachersWithSubjectId(1);
 
         Assertions.assertFalse(teachers.isEmpty());
+    }
+
+    @Test
+    void findAllExamsWithSubjectIdTest() throws SQLException, IOException {
+        List<ExamEntity> exams = subjectRepository.findAllExamsWithSubjectId(1);
+
+        Assertions.assertFalse(exams.isEmpty());
     }
 }

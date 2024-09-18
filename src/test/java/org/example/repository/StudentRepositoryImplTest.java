@@ -1,8 +1,7 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.StudentEntity;
-import org.example.repository.StudentRepository;
 import org.example.repository.impl.StudentRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -18,8 +17,10 @@ class StudentRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
     
-    private static final Logger log = LoggerFactory.getLogger(StudentRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(StudentRepositoryImplTest.class);
     Connection connection;
+
+    StudentRepository studentRepository;
     
     @BeforeAll
     static void beforeAll() {
@@ -34,6 +35,9 @@ class StudentRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        studentRepository = new StudentRepositoryImpl();
+
         try {
             connection = connectionManager.getConnection();
         } catch (SQLException e) {
@@ -58,8 +62,6 @@ class StudentRepositoryImplTest {
 
     @Test
     void getStudentByIdTest() throws SQLException, IOException {
-        StudentRepository studentRepository = new StudentRepositoryImpl();
-
         StudentEntity student = studentRepository.findById(1);
         Assertions.assertNotNull(student);
 
@@ -71,16 +73,12 @@ class StudentRepositoryImplTest {
 
     @Test
     void deleteStudentByIdTest() throws SQLException, IOException {
-        StudentRepository studentRepository = new StudentRepositoryImpl();
-
         Assertions.assertTrue(studentRepository.deleteById(3));
         Assertions.assertFalse(studentRepository.deleteById(50));
     }
 
     @Test
     void saveStudentTest() throws SQLException, IOException {
-        StudentRepository studentRepository = new StudentRepositoryImpl();
-
         StudentEntity student = studentRepository.findById(2);
         student.setFirstName("John");
         student.setLastName("Doe");
@@ -105,7 +103,6 @@ class StudentRepositoryImplTest {
 
     @Test
     void findAllStudentsTest() throws SQLException, IOException {
-        StudentRepository studentRepository = new StudentRepositoryImpl();
         List<StudentEntity> students = studentRepository.findAll();
 
         Assertions.assertFalse(students.isEmpty());

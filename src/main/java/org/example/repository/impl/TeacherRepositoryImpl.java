@@ -1,9 +1,13 @@
 package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
+import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
+import org.example.repository.mapper.ExamResultSetMapperImpl;
+import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 import org.example.repository.mapper.TeacherResultSetMapperImpl;
 
@@ -125,10 +129,31 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
+    public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"group\" WHERE teacher_id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<GroupEntity> groupEntities = new ArrayList<>();
+
+            while (resultSet.next()) {
+                groupEntities.add(new GroupResultSetMapperImpl().map(resultSet));
+            }
+
+            return groupEntities;
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
     public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException {
         try (Connection connection = new ConnectionManager().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT s.* FROM subject_teacher st " +
-                     "JOIN subject s ON s.id = st.subject_id WHERE teacher_id = ?")) {
+                     "JOIN subject s ON s.id = st.subject_id WHERE st.teacher_id = ?")) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -139,6 +164,28 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             }
 
             return subjectEntities;
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException, IOException {
+        try (Connection connection = new ConnectionManager().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT e.* FROM subject_teacher st " +
+                     "JOIN exam e ON st.id = e.subject_teacher_id WHERE st.teacher_id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<ExamEntity> examEntities = new ArrayList<>();
+
+            while (resultSet.next()) {
+                examEntities.add(new ExamResultSetMapperImpl().map(resultSet));
+            }
+
+            return examEntities;
         } catch (SQLException e) {
             throw new SQLException(e);
         } catch (IOException e) {

@@ -1,8 +1,7 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.GradeEntity;
-import org.example.repository.GradeRepository;
 import org.example.repository.impl.GradeRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -11,10 +10,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 class GradeRepositoryImplTest {
@@ -23,6 +19,8 @@ class GradeRepositoryImplTest {
 
     private static final Logger log = LoggerFactory.getLogger(GradeRepositoryImplTest.class);
     Connection connection;
+
+    GradeRepository gradeRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -37,6 +35,9 @@ class GradeRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        gradeRepository = new GradeRepositoryImpl();
+
         try {
             connection = connectionManager.getConnection();
         } catch (SQLException e) {
@@ -61,8 +62,6 @@ class GradeRepositoryImplTest {
 
     @Test
     void getGradeByIdTest() throws SQLException, IOException {
-        GradeRepository gradeRepository = new GradeRepositoryImpl();
-
         GradeEntity grade = gradeRepository.findById(1);
         Assertions.assertNotNull(grade);
 
@@ -74,16 +73,12 @@ class GradeRepositoryImplTest {
 
     @Test
     void deleteGradeByIdTest() throws SQLException, IOException {
-        GradeRepository gradeRepository = new GradeRepositoryImpl();
-
         Assertions.assertTrue(gradeRepository.deleteById(3));
         Assertions.assertFalse(gradeRepository.deleteById(50));
     }
 
     @Test
     void saveGradeTest() throws SQLException, IOException {
-        GradeRepository gradeRepository = new GradeRepositoryImpl();
-
         GradeEntity grade = gradeRepository.findById(1);
         grade.setStudentId(2);
         grade.setExamId(1);
@@ -107,7 +102,6 @@ class GradeRepositoryImplTest {
 
     @Test
     void findAllGradesTest() throws SQLException, IOException {
-        GradeRepository gradeRepository = new GradeRepositoryImpl();
         List<GradeEntity> grades = gradeRepository.findAll();
 
         Assertions.assertFalse(grades.isEmpty());

@@ -1,11 +1,9 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.StudentEntity;
-import org.example.model.TeacherEntity;
-import org.example.repository.GroupRepository;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -25,8 +22,10 @@ class GroupRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    private static final Logger log = LoggerFactory.getLogger(GroupRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(GroupRepositoryImplTest.class);
     Connection connection;
+
+    GroupRepository groupRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -41,6 +40,9 @@ class GroupRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(),container.getPassword());
+
+
+        groupRepository = new GroupRepositoryImpl();
 
         try {
             connection = connectionManager.getConnection();
@@ -66,8 +68,6 @@ class GroupRepositoryImplTest {
 
     @Test
     void getGroupByIdTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
-
         GroupEntity group = groupRepository.findById(1);
         Assertions.assertNotNull(group);
         Assertions.assertFalse(group.getStudents().isEmpty());
@@ -81,15 +81,12 @@ class GroupRepositoryImplTest {
 
     @Test
     void deleteGroupByIdTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
-
         Assertions.assertTrue(groupRepository.deleteById(3));
         Assertions.assertFalse(groupRepository.deleteById(50));
     }
 
     @Test
     void saveGroupTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
         Calendar startCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
         Calendar endCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
 
@@ -128,7 +125,6 @@ class GroupRepositoryImplTest {
 
     @Test
     void findAllGroupsTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
         List<GroupEntity> groups = groupRepository.findAll();
 
         Assertions.assertFalse(groups.isEmpty());
@@ -136,7 +132,6 @@ class GroupRepositoryImplTest {
 
     @Test
     void findAllStudentsWithGroupIdTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
         List<StudentEntity> students = groupRepository.findAllStudentsWithGroupId(1);
 
         Assertions.assertFalse(students.isEmpty());
@@ -144,7 +139,6 @@ class GroupRepositoryImplTest {
 
     @Test
     void findAllExamsWithGroupIdTest() throws SQLException, IOException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
         List<ExamEntity> exams = groupRepository.findAllExamsWithGroupId(2);
 
         Assertions.assertEquals(2, exams.size());

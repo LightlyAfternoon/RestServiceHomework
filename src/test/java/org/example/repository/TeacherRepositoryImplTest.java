@@ -1,9 +1,10 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
+import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
-import org.example.repository.TeacherRepository;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -19,8 +20,10 @@ class TeacherRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    private static final Logger log = LoggerFactory.getLogger(TeacherRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(TeacherRepositoryImplTest.class);
     Connection connection;
+
+    TeacherRepository teacherRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -35,6 +38,8 @@ class TeacherRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        teacherRepository = new TeacherRepositoryImpl();
 
         try {
             connection = connectionManager.getConnection();
@@ -60,8 +65,6 @@ class TeacherRepositoryImplTest {
 
     @Test
     void getTeacherByIdTest() throws SQLException, IOException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
-
         TeacherEntity teacher = teacherRepository.findById(1);
         Assertions.assertNotNull(teacher);
         Assertions.assertFalse(teacher.getSubjects().isEmpty());
@@ -74,16 +77,12 @@ class TeacherRepositoryImplTest {
 
     @Test
     void deleteTeacherByIdTest() throws SQLException, IOException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
-
         Assertions.assertTrue(teacherRepository.deleteById(3));
         Assertions.assertFalse(teacherRepository.deleteById(50));
     }
 
     @Test
     void saveTeacherTest() throws SQLException, IOException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
-
         TeacherEntity teacher = teacherRepository.findById(2);
         teacher.setFirstName("Тест");
         teacher.setPatronymic("Тестович");
@@ -104,7 +103,6 @@ class TeacherRepositoryImplTest {
 
     @Test
     void findAllTeachersTest() throws SQLException, IOException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
         List<TeacherEntity> teachers = teacherRepository.findAll();
 
         Assertions.assertFalse(teachers.isEmpty());
@@ -112,9 +110,22 @@ class TeacherRepositoryImplTest {
 
     @Test
     void findAllSubjectsWithTeacherIdTest() throws SQLException, IOException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
         List<SubjectEntity> subjects = teacherRepository.findAllSubjectsWithTeacherId(1);
 
         Assertions.assertFalse(subjects.isEmpty());
+    }
+
+    @Test
+    void findAllGroupsWithTeacherIdTest() throws SQLException, IOException {
+        List<GroupEntity> groups = teacherRepository.findAllGroupsWithTeacherId(1);
+
+        Assertions.assertFalse(groups.isEmpty());
+    }
+
+    @Test
+    void findAllExamsWithTeacherIdTest() throws SQLException, IOException {
+        List<ExamEntity> exams = teacherRepository.findAllExamsWithTeacherId(1);
+
+        Assertions.assertFalse(exams.isEmpty());
     }
 }

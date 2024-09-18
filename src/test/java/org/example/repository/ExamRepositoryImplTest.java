@@ -1,8 +1,7 @@
-package org.example;
+package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
-import org.example.repository.ExamRepository;
 import org.example.repository.impl.ExamRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -23,6 +22,8 @@ class ExamRepositoryImplTest {
     
     private static final Logger log = LoggerFactory.getLogger(ExamRepositoryImplTest.class);
     Connection connection;
+
+    ExamRepository examRepository;
     
     @BeforeAll
     static void beforeAll() {
@@ -37,6 +38,9 @@ class ExamRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException, IOException {
         ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        examRepository = new ExamRepositoryImpl();
+
         try {
             connection = connectionManager.getConnection();
         } catch (SQLException e) {
@@ -61,8 +65,6 @@ class ExamRepositoryImplTest {
 
     @Test
     void getExamByIdTest() throws SQLException, IOException {
-        ExamRepository examRepository = new ExamRepositoryImpl();
-
         ExamEntity exam = examRepository.findById(1);
         Assertions.assertNotNull(exam);
 
@@ -74,15 +76,12 @@ class ExamRepositoryImplTest {
 
     @Test
     void deleteExamByIdTest() throws SQLException, IOException {
-        ExamRepository examRepository = new ExamRepositoryImpl();
-
         Assertions.assertTrue(examRepository.deleteById(3));
         Assertions.assertFalse(examRepository.deleteById(50));
     }
 
     @Test
     void saveExamTest() throws SQLException, IOException {
-        ExamRepository examRepository = new ExamRepositoryImpl();
         Calendar calendar = new GregorianCalendar(2023, Calendar.MAY, 26);
         Date startDate = new Date(calendar.getTimeInMillis());
 
@@ -111,7 +110,6 @@ class ExamRepositoryImplTest {
 
     @Test
     void findAllExamsTest() throws SQLException, IOException {
-        ExamRepository examRepository = new ExamRepositoryImpl();
         List<ExamEntity> exams = examRepository.findAll();
 
         Assertions.assertFalse(exams.isEmpty());
