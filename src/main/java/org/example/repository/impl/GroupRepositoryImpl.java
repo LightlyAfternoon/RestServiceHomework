@@ -26,7 +26,10 @@ public class GroupRepositoryImpl implements GroupRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             GroupEntity groupEntity = new GroupResultSetMapperImpl().map(resultSet);
             groupEntity.setStudents(findAllStudentsWithGroupId(id));
@@ -69,7 +72,10 @@ public class GroupRepositoryImpl implements GroupRepository {
 
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM \"group\" ORDER BY id DESC LIMIT 1")) {
                 ResultSet resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+                if (!resultSet.next()) {
+                    return null;
+                }
 
                 GroupEntity group = new GroupResultSetMapperImpl().map(resultSet);
                 group.setStudents(findAllStudentsWithGroupId(group.getId()));

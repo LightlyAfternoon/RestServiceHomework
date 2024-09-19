@@ -42,4 +42,14 @@ public class TeacherDTO {
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "    \"id\": "+id+",\n" +
+                "    \"firstName\": \""+firstName+"\",\n" +
+                "    \"lastName\": \""+lastName+"\",\n" +
+                "    \"patronymic\": \""+patronymic+"\"\n" +
+                "}";
+    }
 }

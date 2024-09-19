@@ -26,7 +26,10 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             TeacherEntity teacherEntity = new TeacherResultSetMapperImpl().map(resultSet);
             teacherEntity.setSubjects(findAllSubjectsWithTeacherId(teacherEntity.getId()));
@@ -34,6 +37,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             teacherEntity.setExams(findAllExamsWithTeacherId(teacherEntity.getId()));
 
             return teacherEntity;
+
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -73,7 +77,10 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             ResultSet resultSet;
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM teacher ORDER BY id DESC LIMIT 1")) {
                 resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
                 TeacherEntity teacher = new TeacherResultSetMapperImpl().map(resultSet);
                 teacher.setSubjects(findAllSubjectsWithTeacherId(teacher.getId()));

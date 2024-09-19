@@ -20,7 +20,10 @@ public class GradeRepositoryImpl implements GradeRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             return new GradeResultSetMapperImpl().map(resultSet);
         }
@@ -59,7 +62,10 @@ public class GradeRepositoryImpl implements GradeRepository {
 
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM grade ORDER BY id DESC LIMIT 1")) {
                 ResultSet resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+                if (!resultSet.next()) {
+                    return null;
+                }
 
                 return new GradeResultSetMapperImpl().map(resultSet);
             }

@@ -3,8 +3,11 @@ package org.example.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConnectionManager {
     private static HikariConfig config = new HikariConfig();
@@ -20,6 +23,21 @@ public class ConnectionManager {
     }
 
     private ConnectionManager() {}
+
+    public static void setConfig(String path) {
+        try (InputStream inputStream = ConnectionManager.class.getClassLoader().getResourceAsStream(path)){
+            Properties prop = new Properties();
+            prop.load(inputStream);
+            config.setDriverClassName(prop.getProperty("driverClassName"));
+            config.setJdbcUrl(prop.getProperty("jdbcUrl"));
+            config.setUsername(prop.getProperty("username"));
+            config.setPassword(prop.getProperty("password"));
+
+            ds = new HikariDataSource(config);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void setConfig(String url, String user, String password) {
         config.setDriverClassName("org.postgresql.Driver");

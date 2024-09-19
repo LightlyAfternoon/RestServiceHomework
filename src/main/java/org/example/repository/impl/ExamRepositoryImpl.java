@@ -20,7 +20,10 @@ public class ExamRepositoryImpl implements ExamRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             return new ExamResultSetMapperImpl().map(resultSet);
         }
@@ -57,7 +60,10 @@ public class ExamRepositoryImpl implements ExamRepository {
 
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM exam ORDER BY id DESC LIMIT 1")) {
                 ResultSet resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+                if (!resultSet.next()) {
+                    return null;
+                }
 
                 return new ExamResultSetMapperImpl().map(resultSet);
             }

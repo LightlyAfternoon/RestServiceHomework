@@ -25,7 +25,10 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             SubjectEntity subjectEntity = new SubjectResultSetMapperImpl().map(resultSet);
             subjectEntity.setTeachers(findAllTeachersWithSubjectId(subjectEntity.getId()));
@@ -66,7 +69,10 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM subject ORDER BY id DESC LIMIT 1")) {
                 ResultSet resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
                 SubjectEntity subject = new SubjectResultSetMapperImpl().map(resultSet);
                 subject.setTeachers(findAllTeachersWithSubjectId(subject.getId()));

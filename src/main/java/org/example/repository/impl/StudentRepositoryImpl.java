@@ -20,7 +20,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
             return new StudentResultSetMapperImpl().map(resultSet);
         }
@@ -60,7 +63,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 
             try (PreparedStatement newPreparedStatement = connection.prepareStatement("SELECT * FROM student ORDER BY id DESC LIMIT 1")) {
                 ResultSet resultSet = newPreparedStatement.executeQuery();
-                resultSet.next();
+
+            if (!resultSet.next()) {
+                return null;
+            }
 
                 return new StudentResultSetMapperImpl().map(resultSet);
             }
