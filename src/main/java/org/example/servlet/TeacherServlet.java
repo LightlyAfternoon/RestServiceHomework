@@ -10,10 +10,8 @@ import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.TeacherDTO;
 import org.example.servlet.mapper.TeacherDTOMapperImpl;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class TeacherServlet extends HttpServlet {
             info = req.getPathInfo().substring(1);
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(Integer.parseInt(info)));
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }

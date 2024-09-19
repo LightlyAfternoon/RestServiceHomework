@@ -5,7 +5,6 @@ import org.example.repository.ExamRepository;
 import org.example.repository.impl.ExamRepositoryImpl;
 import org.example.service.ExamService;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,22 +20,22 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamEntity findById(int id) throws SQLException, IOException {
+    public ExamEntity findById(int id) throws SQLException {
         return examRepository.findById(id);
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
+    public boolean deleteById(int id) throws SQLException {
         return examRepository.deleteById(id);
     }
 
     @Override
-    public ExamEntity save(ExamEntity entity) throws SQLException, IOException {
+    public ExamEntity save(ExamEntity entity) throws SQLException {
         return examRepository.save(entity);
     }
 
     @Override
-    public List<ExamEntity> findAll() throws SQLException, IOException {
+    public List<ExamEntity> findAll() throws SQLException {
         return examRepository.findAll();
     }
 }

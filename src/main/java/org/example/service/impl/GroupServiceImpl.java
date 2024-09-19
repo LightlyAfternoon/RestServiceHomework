@@ -8,7 +8,6 @@ import org.example.repository.GroupRepository;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.example.service.GroupService;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,37 +23,37 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupEntity findById(int id) throws SQLException, IOException {
+    public GroupEntity findById(int id) throws SQLException {
         return groupRepository.findById(id);
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
+    public boolean deleteById(int id) throws SQLException {
         return groupRepository.deleteById(id);
     }
 
     @Override
-    public GroupEntity save(GroupEntity entity) throws SQLException, IOException {
+    public GroupEntity save(GroupEntity entity) throws SQLException {
         return groupRepository.save(entity);
     }
 
     @Override
-    public List<GroupEntity> findAll() throws SQLException, IOException {
+    public List<GroupEntity> findAll() throws SQLException {
         return groupRepository.findAll();
     }
 
     @Override
-    public List<StudentEntity> findAllStudentsWithGroupId(int id) throws SQLException, IOException {
+    public List<StudentEntity> findAllStudentsWithGroupId(int id) throws SQLException {
         return groupRepository.findAllStudentsWithGroupId(id);
     }
 
     @Override
-    public List<ExamEntity> findAllExamsWithGroupId(int id) throws SQLException, IOException {
+    public List<ExamEntity> findAllExamsWithGroupId(int id) throws SQLException {
         return groupRepository.findAllExamsWithGroupId(id);
     }
 
     @Override
-    public List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException, IOException {
+    public List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException {
         return groupRepository.findAllSubjectsWithGroupId(id);
     }
 }

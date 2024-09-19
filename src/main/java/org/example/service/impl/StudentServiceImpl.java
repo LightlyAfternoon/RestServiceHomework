@@ -5,7 +5,6 @@ import org.example.repository.StudentRepository;
 import org.example.repository.impl.StudentRepositoryImpl;
 import org.example.service.StudentService;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,22 +20,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentEntity findById(int id) throws SQLException, IOException {
+    public StudentEntity findById(int id) throws SQLException {
         return studentRepository.findById(id);
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
+    public boolean deleteById(int id) throws SQLException {
         return studentRepository.deleteById(id);
     }
 
     @Override
-    public StudentEntity save(StudentEntity entity) throws SQLException, IOException {
+    public StudentEntity save(StudentEntity entity) throws SQLException {
         return studentRepository.save(entity);
     }
 
     @Override
-    public List<StudentEntity> findAll() throws SQLException, IOException {
+    public List<StudentEntity> findAll() throws SQLException {
         return studentRepository.findAll();
     }
 }
