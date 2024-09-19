@@ -5,11 +5,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface Repository<E> {
-    E findById(int id) throws SQLException, IOException;
+    E findById(int id) throws SQLException;
 
-    boolean deleteById(int id) throws SQLException, IOException;
+    boolean deleteById(int id) throws SQLException;
 
-    E save(E entity) throws SQLException, IOException;
+    E save(E entity) throws SQLException;
 
-    List<E> findAll() throws SQLException, IOException;
+    List<E> findAll() throws SQLException;
 }

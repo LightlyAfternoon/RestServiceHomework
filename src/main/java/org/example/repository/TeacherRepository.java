@@ -10,9 +10,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface TeacherRepository extends Repository<TeacherEntity> {
-    List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException, IOException;
+    List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException;
 
-    List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException;
+    List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException;
 
-    List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException, IOException;
+    List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException;
 }

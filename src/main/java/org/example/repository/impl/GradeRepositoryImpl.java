@@ -5,7 +5,6 @@ import org.example.model.GradeEntity;
 import org.example.repository.GradeRepository;
 import org.example.repository.mapper.GradeResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,8 +14,8 @@ import java.util.List;
 
 public class GradeRepositoryImpl implements GradeRepository {
     @Override
-    public GradeEntity findById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public GradeEntity findById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM grade WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -28,8 +27,8 @@ public class GradeRepositoryImpl implements GradeRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM grade WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -39,7 +38,7 @@ public class GradeRepositoryImpl implements GradeRepository {
     }
 
     @Override
-    public GradeEntity save(GradeEntity entity) throws SQLException, IOException {
+    public GradeEntity save(GradeEntity entity) throws SQLException {
         if (entity.getId() > 0) {
             return update(entity);
         } else {
@@ -47,8 +46,8 @@ public class GradeRepositoryImpl implements GradeRepository {
         }
     }
 
-    private GradeEntity insert(GradeEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private GradeEntity insert(GradeEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
                      "grade(student_id, exam_id, mark) VALUES (?, ?, ?)")) {
 
@@ -67,8 +66,8 @@ public class GradeRepositoryImpl implements GradeRepository {
         }
     }
 
-    private GradeEntity update(GradeEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private GradeEntity update(GradeEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE grade SET " +
                      "student_id = ?, exam_id = ?, mark = ? WHERE id = ?")) {
 
@@ -84,8 +83,8 @@ public class GradeRepositoryImpl implements GradeRepository {
     }
 
     @Override
-    public List<GradeEntity> findAll() throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<GradeEntity> findAll() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM grade")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();

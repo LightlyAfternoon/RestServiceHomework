@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -36,13 +35,13 @@ class ExamRepositoryImplTest {
     }
     
     @BeforeEach
-    void setUp() throws SQLException, IOException {
-        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+    void setUp() throws SQLException {
+        ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
 
         examRepository = new ExamRepositoryImpl();
 
         try {
-            connection = connectionManager.getConnection();
+            connection = ConnectionManager.getConnection();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -52,6 +51,7 @@ class ExamRepositoryImplTest {
     void tearDown() throws SQLException {
         try {
             connection.close();
+            ConnectionManager.close();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -64,7 +64,7 @@ class ExamRepositoryImplTest {
     }
 
     @Test
-    void getExamByIdTest() throws SQLException, IOException {
+    void getExamByIdTest() throws SQLException {
         ExamEntity exam = examRepository.findById(1);
         Assertions.assertNotNull(exam);
 
@@ -75,13 +75,13 @@ class ExamRepositoryImplTest {
     }
 
     @Test
-    void deleteExamByIdTest() throws SQLException, IOException {
+    void deleteExamByIdTest() throws SQLException {
         Assertions.assertTrue(examRepository.deleteById(3));
         Assertions.assertFalse(examRepository.deleteById(50));
     }
 
     @Test
-    void saveExamTest() throws SQLException, IOException {
+    void saveExamTest() throws SQLException {
         Calendar calendar = new GregorianCalendar(2023, Calendar.MAY, 26);
         Date startDate = new Date(calendar.getTimeInMillis());
 
@@ -109,7 +109,7 @@ class ExamRepositoryImplTest {
     }
 
     @Test
-    void findAllExamsTest() throws SQLException, IOException {
+    void findAllExamsTest() throws SQLException {
         List<ExamEntity> exams = examRepository.findAll();
 
         Assertions.assertFalse(exams.isEmpty());

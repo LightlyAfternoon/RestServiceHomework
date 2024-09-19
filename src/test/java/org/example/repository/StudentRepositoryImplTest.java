@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,13 +32,13 @@ class StudentRepositoryImplTest {
     }
     
     @BeforeEach
-    void setUp() throws SQLException, IOException {
-        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+    void setUp() throws SQLException {
+        ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
 
         studentRepository = new StudentRepositoryImpl();
 
         try {
-            connection = connectionManager.getConnection();
+            connection = ConnectionManager.getConnection();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -49,6 +48,7 @@ class StudentRepositoryImplTest {
     void tearDown() throws SQLException {
         try {
             connection.close();
+            ConnectionManager.close();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -61,7 +61,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void getStudentByIdTest() throws SQLException, IOException {
+    void getStudentByIdTest() throws SQLException {
         StudentEntity student = studentRepository.findById(1);
         Assertions.assertNotNull(student);
 
@@ -72,13 +72,13 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void deleteStudentByIdTest() throws SQLException, IOException {
+    void deleteStudentByIdTest() throws SQLException {
         Assertions.assertTrue(studentRepository.deleteById(3));
         Assertions.assertFalse(studentRepository.deleteById(50));
     }
 
     @Test
-    void saveStudentTest() throws SQLException, IOException {
+    void saveStudentTest() throws SQLException {
         StudentEntity student = studentRepository.findById(2);
         student.setFirstName("John");
         student.setLastName("Doe");
@@ -102,7 +102,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void findAllStudentsTest() throws SQLException, IOException {
+    void findAllStudentsTest() throws SQLException {
         List<StudentEntity> students = studentRepository.findAll();
 
         Assertions.assertFalse(students.isEmpty());

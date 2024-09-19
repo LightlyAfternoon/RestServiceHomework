@@ -10,13 +10,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface SubjectRepository extends Repository<SubjectEntity> {
-    List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException, IOException;
+    List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException;
 
-    List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException, IOException;
+    List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException;
 
-    List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException, IOException;
+    List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException;
 
-    TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException, IOException;
+    TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException;
 
-    GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException, IOException;
+    GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException;
 }

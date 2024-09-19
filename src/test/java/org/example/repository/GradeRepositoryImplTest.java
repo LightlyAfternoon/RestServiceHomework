@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,13 +32,13 @@ class GradeRepositoryImplTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException, IOException {
-        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+    void setUp() throws SQLException {
+        ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
 
         gradeRepository = new GradeRepositoryImpl();
 
         try {
-            connection = connectionManager.getConnection();
+            connection = ConnectionManager.getConnection();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -49,6 +48,7 @@ class GradeRepositoryImplTest {
     void tearDown() throws SQLException {
         try {
             connection.close();
+            ConnectionManager.close();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -61,7 +61,7 @@ class GradeRepositoryImplTest {
     }
 
     @Test
-    void getGradeByIdTest() throws SQLException, IOException {
+    void getGradeByIdTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
         Assertions.assertNotNull(grade);
 
@@ -72,13 +72,13 @@ class GradeRepositoryImplTest {
     }
 
     @Test
-    void deleteGradeByIdTest() throws SQLException, IOException {
+    void deleteGradeByIdTest() throws SQLException {
         Assertions.assertTrue(gradeRepository.deleteById(3));
         Assertions.assertFalse(gradeRepository.deleteById(50));
     }
 
     @Test
-    void saveGradeTest() throws SQLException, IOException {
+    void saveGradeTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
         grade.setStudentId(2);
         grade.setExamId(1);
@@ -101,7 +101,7 @@ class GradeRepositoryImplTest {
     }
 
     @Test
-    void findAllGradesTest() throws SQLException, IOException {
+    void findAllGradesTest() throws SQLException {
         List<GradeEntity> grades = gradeRepository.findAll();
 
         Assertions.assertFalse(grades.isEmpty());

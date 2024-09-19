@@ -1,51 +1,40 @@
 package org.example.db;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 public class ConnectionManager {
-    String url;
-    String user;
-    String password;
+    private static HikariConfig config = new HikariConfig();
+    private static HikariDataSource ds;
 
-    //TODO: think about DbParameters file (tests needs other params that normal work)
-    public ConnectionManager()  throws IOException {
-        try {
-            List<String> strings = Files.readAllLines(Path.of("src", "main", "java", "org", "example", "db", "DbParameters"));
+    static {
+        config.setDriverClassName("org.postgresql.Driver");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/AcademicPerformanceDatabase");
+        config.setUsername("postgres");
+        config.setPassword("pass");
 
-            url = strings.get(0);
-            user = strings.get(1);
-            password = strings.get(2);
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
+        ds = new HikariDataSource(config);
     }
 
-    public ConnectionManager(String url, String user, String password) throws IOException {
-        Path path = Path.of("src", "main", "java", "org", "example", "db", "DbParameters");
+    private ConnectionManager() {}
 
-        byte[] buffer;
-        buffer = (url + "\n").getBytes();
-        Files.write(path, buffer);
+    public static void setConfig(String url, String user, String password) {
+        config.setDriverClassName("org.postgresql.Driver");
+        config.setJdbcUrl(url);
+        config.setUsername(user);
+        config.setPassword(password);
 
-        buffer = (user + "\n").getBytes();
-        Files.write(path, buffer, StandardOpenOption.APPEND);
-
-        buffer = (password).getBytes();
-        Files.write(path, buffer, StandardOpenOption.APPEND);
-
-        this.url = url;
-        this.user = user;
-        this.password = password;
+        ds = new HikariDataSource(config);
     }
 
-    public Connection getConnection() throws SQLException{
-        return DriverManager.getConnection(url, user, password);
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    }
+
+    public static void close() {
+        ds.close();
     }
 }

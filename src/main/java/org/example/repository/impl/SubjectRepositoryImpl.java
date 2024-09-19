@@ -11,7 +11,6 @@ import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 import org.example.repository.mapper.TeacherResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,8 +19,8 @@ import java.util.*;
 
 public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
-    public SubjectEntity findById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public SubjectEntity findById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -36,14 +35,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             return subjectEntity;
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM subject WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -52,7 +49,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public SubjectEntity save(SubjectEntity entity) throws SQLException, IOException {
+    public SubjectEntity save(SubjectEntity entity) throws SQLException {
         if (entity.getId() > 0) {
             return update(entity);
         } else {
@@ -60,8 +57,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
         }
     }
 
-    private SubjectEntity insert(SubjectEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private SubjectEntity insert(SubjectEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject (name) VALUES (?)")) {
 
             preparedStatement.setString(1, entity.getName());
@@ -79,8 +76,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
         }
     }
 
-    private SubjectEntity update(SubjectEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private SubjectEntity update(SubjectEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE subject SET name = ? WHERE id = ?")) {
 
             preparedStatement.setString(1, entity.getName());
@@ -92,8 +89,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject_teacher (subject_id, teacher_id) VALUES (?, ?)")) {
 
             preparedStatement.setInt(1, subject.getId());
@@ -106,8 +103,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO subject_group (subject_id, group_id) VALUES (?, ?)")) {
 
             preparedStatement.setInt(1, subject.getId());
@@ -120,8 +117,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<SubjectEntity> findAll() throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<SubjectEntity> findAll() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<SubjectEntity> subjectEntities = new ArrayList<>();
@@ -138,8 +135,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT t.* FROM subject_teacher st " +
                      "JOIN teacher t ON st.teacher_id = t.id WHERE st.subject_id = ?")) {
 
@@ -156,8 +153,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT e.* FROM subject_teacher st " +
                      "JOIN exam e ON st.id = e.subject_teacher_id WHERE st.subject_id = ?")) {
 
@@ -174,8 +171,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.* FROM subject_group sg " +
                      "JOIN \"group\" g ON g.id = sg.group_id WHERE sg.subject_id = ?")) {
 

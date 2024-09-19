@@ -5,7 +5,6 @@ import org.example.model.StudentEntity;
 import org.example.repository.StudentRepository;
 import org.example.repository.mapper.StudentResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,8 +14,8 @@ import java.util.List;
 
 public class StudentRepositoryImpl implements StudentRepository {
     @Override
-    public StudentEntity findById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public StudentEntity findById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM student WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -28,8 +27,8 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM student WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -39,7 +38,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public StudentEntity save(StudentEntity entity) throws SQLException, IOException {
+    public StudentEntity save(StudentEntity entity) throws SQLException {
         if (entity.getId() > 0) {
             return update(entity);
         } else {
@@ -47,8 +46,8 @@ public class StudentRepositoryImpl implements StudentRepository {
         }
     }
 
-    private StudentEntity insert(StudentEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private StudentEntity insert(StudentEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
                      "student(first_name, last_name, patronymic, group_id) VALUES (?, ?, ?, ?)")) {
 
@@ -68,8 +67,8 @@ public class StudentRepositoryImpl implements StudentRepository {
         }
     }
 
-    private StudentEntity update(StudentEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private StudentEntity update(StudentEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE student SET " +
                      "first_name = ?, last_name = ?, patronymic = ?, group_id = ? WHERE id = ?")) {
 
@@ -86,8 +85,8 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public List<StudentEntity> findAll() throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<StudentEntity> findAll() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM student")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();

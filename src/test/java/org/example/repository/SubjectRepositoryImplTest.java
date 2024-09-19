@@ -12,8 +12,6 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,12 +38,13 @@ class SubjectRepositoryImplTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException, IOException {
-        ConnectionManager connectionManager = new ConnectionManager(container.getJdbcUrl(), container.getUsername(),container.getPassword());
+    void setUp() throws SQLException {
+        ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
 
         subjectRepository = new SubjectRepositoryImpl();
+
         try {
-            connection = connectionManager.getConnection();
+            connection = ConnectionManager.getConnection();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -55,6 +54,7 @@ class SubjectRepositoryImplTest {
     void tearDown() throws SQLException {
         try {
             connection.close();
+            ConnectionManager.close();
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -67,7 +67,7 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void getSubjectByIdTest() throws SQLException, IOException {
+    void getSubjectByIdTest() throws SQLException {
         SubjectEntity subject = subjectRepository.findById(1);
         Assertions.assertNotNull(subject);
         Assertions.assertFalse(subject.getTeachers().isEmpty());
@@ -81,13 +81,13 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void deleteSubjectByIdTest() throws SQLException, IOException {
+    void deleteSubjectByIdTest() throws SQLException {
         Assertions.assertTrue(subjectRepository.deleteById(3));
         Assertions.assertFalse(subjectRepository.deleteById(50));
     }
 
     @Test
-    void saveSubjectTest() throws SQLException, IOException {
+    void saveSubjectTest() throws SQLException {
         SubjectEntity subject = subjectRepository.findById(2);
         subject.setName("Тест");
 
@@ -103,7 +103,7 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void saveSubjectTeacherRelationshipTest() throws SQLException, IOException {
+    void saveSubjectTeacherRelationshipTest() throws SQLException {
         TeacherRepository teacherRepository = new TeacherRepositoryImpl();
 
         SubjectEntity subject = subjectRepository.findById(2);
@@ -121,7 +121,7 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void saveSubjectGroupRelationshipTest() throws SQLException, IOException {
+    void saveSubjectGroupRelationshipTest() throws SQLException {
         GroupRepository groupRepository = new GroupRepositoryImpl();
 
         SubjectEntity subject = subjectRepository.findById(2);
@@ -139,28 +139,28 @@ class SubjectRepositoryImplTest {
     }
 
     @Test
-    void findAllSubjectsTest() throws SQLException, IOException {
+    void findAllSubjectsTest() throws SQLException {
         List<SubjectEntity> subjects = subjectRepository.findAll();
 
         Assertions.assertFalse(subjects.isEmpty());
     }
 
     @Test
-    void findAllTeachersWithSubjectIdTest() throws SQLException, IOException {
+    void findAllTeachersWithSubjectIdTest() throws SQLException {
         List<TeacherEntity> teachers = subjectRepository.findAllTeachersWithSubjectId(1);
 
         Assertions.assertFalse(teachers.isEmpty());
     }
 
     @Test
-    void findAllExamsWithSubjectIdTest() throws SQLException, IOException {
+    void findAllExamsWithSubjectIdTest() throws SQLException {
         List<ExamEntity> exams = subjectRepository.findAllExamsWithSubjectId(1);
 
         Assertions.assertFalse(exams.isEmpty());
     }
 
     @Test
-    void findAllGroupsWithSubjectIdTest() throws SQLException, IOException {
+    void findAllGroupsWithSubjectIdTest() throws SQLException {
         List<GroupEntity> exams = subjectRepository.findAllGroupsWithSubjectId(1);
 
         Assertions.assertFalse(exams.isEmpty());

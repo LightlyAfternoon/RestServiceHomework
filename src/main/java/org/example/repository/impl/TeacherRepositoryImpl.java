@@ -11,7 +11,6 @@ import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 import org.example.repository.mapper.TeacherResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,8 +20,8 @@ import java.util.List;
 
 public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
-    public TeacherEntity findById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public TeacherEntity findById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM teacher WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -37,27 +36,23 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             return teacherEntity;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM teacher WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
     @Override
-    public TeacherEntity save(TeacherEntity entity) throws SQLException, IOException {
+    public TeacherEntity save(TeacherEntity entity) throws SQLException {
         if (entity.getId() > 0) {
             return update(entity);
         } else {
@@ -65,8 +60,8 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         }
     }
 
-    private TeacherEntity insert(TeacherEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private TeacherEntity insert(TeacherEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO teacher (first_name, last_name, patronymic) VALUES(?, ?, ?)")) {
 
             preparedStatement.setString(1, entity.getFirstName());
@@ -87,13 +82,11 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             }
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
-    private TeacherEntity update(TeacherEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private TeacherEntity update(TeacherEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE teacher SET first_name = ?, last_name = ?, patronymic = ? WHERE id = ?")) {
 
             preparedStatement.setString(1, entity.getFirstName());
@@ -106,14 +99,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             return entity;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
     @Override
-    public List<TeacherEntity> findAll() throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<TeacherEntity> findAll() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM teacher")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -131,8 +122,8 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
-    public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"group\" WHERE teacher_id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -146,14 +137,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             return groupEntities;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
     @Override
-    public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT s.* FROM subject_teacher st " +
                      "JOIN subject s ON s.id = st.subject_id WHERE st.teacher_id = ?")) {
 
@@ -168,14 +157,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             return subjectEntities;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
     @Override
-    public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT e.* FROM subject_teacher st " +
                      "JOIN exam e ON st.id = e.subject_teacher_id WHERE st.teacher_id = ?")) {
 
@@ -190,8 +177,6 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             return examEntities;
         } catch (SQLException e) {
             throw new SQLException(e);
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 }

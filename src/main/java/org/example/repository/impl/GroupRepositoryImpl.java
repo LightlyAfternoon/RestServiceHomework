@@ -11,7 +11,6 @@ import org.example.repository.mapper.GroupResultSetMapperImpl;
 import org.example.repository.mapper.StudentResultSetMapperImpl;
 import org.example.repository.mapper.SubjectResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,8 +20,8 @@ import java.util.List;
 
 public class GroupRepositoryImpl implements GroupRepository {
     @Override
-    public GroupEntity findById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public GroupEntity findById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"group\" WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -39,8 +38,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"group\" WHERE id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -50,7 +49,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public GroupEntity save(GroupEntity entity) throws SQLException, IOException {
+    public GroupEntity save(GroupEntity entity) throws SQLException {
         if (entity.getId() > 0) {
             return update(entity);
         } else {
@@ -58,8 +57,8 @@ public class GroupRepositoryImpl implements GroupRepository {
         }
     }
 
-    private GroupEntity insert(GroupEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private GroupEntity insert(GroupEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"group\" (name, start_date, end_date, teacher_id) VALUES (?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, entity.getName());
@@ -81,8 +80,8 @@ public class GroupRepositoryImpl implements GroupRepository {
         }
     }
 
-    private GroupEntity update(GroupEntity entity) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    private GroupEntity update(GroupEntity entity) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"group\" SET name = ?, start_date = ?, end_date = ?, teacher_id = ? WHERE id = ?")) {
 
             preparedStatement.setString(1, entity.getName());
@@ -97,8 +96,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public List<GroupEntity> findAll() throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<GroupEntity> findAll() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"group\"")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -117,8 +116,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public List<StudentEntity> findAllStudentsWithGroupId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<StudentEntity> findAllStudentsWithGroupId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT s.* FROM student s JOIN \"group\" g ON s.group_id = g.id WHERE g.id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -134,8 +133,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public List<ExamEntity> findAllExamsWithGroupId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<ExamEntity> findAllExamsWithGroupId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT e.* FROM exam e JOIN \"group\" g ON e.group_id = g.id WHERE g.id = ?")) {
 
             preparedStatement.setInt(1, id);
@@ -151,8 +150,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException, IOException {
-        try (Connection connection = new ConnectionManager().getConnection();
+    public List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT s.* FROM subject_group sg " +
                      "JOIN subject s ON s.id = sg.subject_id WHERE sg.group_id = ?")) {
 
