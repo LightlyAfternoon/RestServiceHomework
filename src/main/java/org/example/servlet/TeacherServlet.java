@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
 import org.example.service.impl.TeacherServiceImpl;
@@ -16,21 +17,32 @@ import org.example.servlet.mapper.TeacherDTOMapperImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @WebServlet("/teacher/*")
 public class TeacherServlet extends HttpServlet {
+    static final String PATH ="C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters";
+    static final String CHARACTER_ENCODING = "UTF-8";
+    static final String CONTENT_TYPE = "application/json; charset=UTF";
+
     TeacherService teacherService;
     TeacherDTO teacherDTO;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json; charset=utf-8");
+    private void setSettings(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding(CHARACTER_ENCODING);
+        resp.setContentType(CONTENT_TYPE);
+        ConnectionManager.setConfig(PATH);
 
         teacherService = new TeacherServiceImpl();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setSettings(req, resp);
+
         String info = "";
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
@@ -44,8 +56,7 @@ public class TeacherServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && teacherDTO != null) {
-                String json = new Gson().toJson(teacherDTO);
-                printWriter.write(json);
+                printWriter.write(teacherDTO.toString());
             } else if (!info.isBlank()) {
                 printWriter.write("Teacher is not found");
             } else {
@@ -61,11 +72,9 @@ public class TeacherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json; charset=utf-8");
+        setSettings(req, resp);
 
         TeacherDTOMapperImpl mapper = new TeacherDTOMapperImpl();
-        teacherService = new TeacherServiceImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
@@ -88,10 +97,8 @@ public class TeacherServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json; charset=utf-8");
+        setSettings(req, resp);
 
-        teacherService = new TeacherServiceImpl();
         String info = "";
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
@@ -105,7 +112,6 @@ public class TeacherServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && teacherDTO != null) {
-                String json = new Gson().toJson(teacherDTO);
                 printWriter.write("{\"success\":\""+teacherService.deleteById(Integer.parseInt(info))+"\"}");
             } else if (!info.isBlank()) {
                 printWriter.write("Teacher is not found");

@@ -3,29 +3,23 @@ package org.example.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionManager {
-    private static HikariConfig config = new HikariConfig();
+    private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
-
-    static {
-        config.setDriverClassName("org.postgresql.Driver");
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/AcademicPerformanceDatabase");
-        config.setUsername("postgres");
-        config.setPassword("pass");
-
-        ds = new HikariDataSource(config);
-    }
 
     private ConnectionManager() {}
 
     public static void setConfig(String path) {
-        try (InputStream inputStream = ConnectionManager.class.getClassLoader().getResourceAsStream(path)){
+        try (InputStream inputStream = Files.newInputStream(Path.of(path))) {
             Properties prop = new Properties();
             prop.load(inputStream);
             config.setDriverClassName(prop.getProperty("driverClassName"));
@@ -49,7 +43,11 @@ public class ConnectionManager {
     }
 
     public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+        if (ds != null) {
+            return ds.getConnection();
+        } else {
+            throw new SQLException("Need to call setConfig() first");
+        }
     }
 
     public static void close() {
