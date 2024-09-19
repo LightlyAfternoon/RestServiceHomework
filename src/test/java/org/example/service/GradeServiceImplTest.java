@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ class GradeServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws SQLException, IOException {
+    void findByIdTest() throws SQLException {
         Mockito.when(mockGradeRepository.findById(1)).thenReturn(gradeEntity);
 
         Assertions.assertEquals(gradeService.findById(1), gradeEntity);
@@ -39,7 +38,7 @@ class GradeServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException, IOException {
+    void deleteByIdTest() throws SQLException {
         Mockito.when(mockGradeRepository.deleteById(1)).thenReturn(true);
         Mockito.when(mockGradeRepository.deleteById(2)).thenReturn(false);
 
@@ -48,7 +47,7 @@ class GradeServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws SQLException, IOException {
+    void findAllTest() throws SQLException {
         List<GradeEntity> gradeEntities = new ArrayList<>();
         gradeEntities.add(gradeEntity);
 
@@ -58,7 +57,7 @@ class GradeServiceImplTest {
     }
 
     @Test
-    void saveGradeTest() throws SQLException, IOException {
+    void saveGradeTest() throws SQLException {
         gradeEntity = new GradeEntity(3, 4, 3, (short) 2);
 
         Mockito.when(mockGradeRepository.save(gradeEntity)).thenReturn(gradeEntity);

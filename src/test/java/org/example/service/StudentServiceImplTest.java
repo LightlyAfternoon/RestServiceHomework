@@ -1,8 +1,5 @@
 package org.example.service;
 
-import org.example.model.ExamEntity;
-import org.example.model.GroupEntity;
-import org.example.model.SubjectEntity;
 import org.example.model.StudentEntity;
 import org.example.repository.StudentRepository;
 import org.example.repository.impl.StudentRepositoryImpl;
@@ -12,12 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 class StudentServiceImplTest {
@@ -34,7 +27,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws SQLException, IOException {
+    void findByIdTest() throws SQLException {
         Mockito.when(mockStudentRepository.findById(1)).thenReturn(studentEntity);
 
         Assertions.assertEquals(studentService.findById(1), studentEntity);
@@ -45,7 +38,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException, IOException {
+    void deleteByIdTest() throws SQLException {
         Mockito.when(mockStudentRepository.deleteById(1)).thenReturn(true);
         Mockito.when(mockStudentRepository.deleteById(2)).thenReturn(false);
 
@@ -54,7 +47,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws SQLException, IOException {
+    void findAllTest() throws SQLException {
         List<StudentEntity> studentEntities = new ArrayList<>();
         studentEntities.add(studentEntity);
 
@@ -64,7 +57,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void saveStudentTest() throws SQLException, IOException {
+    void saveStudentTest() throws SQLException {
         studentEntity = new StudentEntity(2, "Клавдий", "Ломоносов", "Германович", 1);
 
         Mockito.when(mockStudentRepository.save(studentEntity)).thenReturn(studentEntity);

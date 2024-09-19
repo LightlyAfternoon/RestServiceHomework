@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws SQLException, IOException {
+    void findByIdTest() throws SQLException {
         Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
         Assertions.assertEquals(subjectService.findById(1), subjectEntity);
@@ -45,7 +44,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException, IOException {
+    void deleteByIdTest() throws SQLException {
         Mockito.when(mockSubjectRepository.deleteById(1)).thenReturn(true);
         Mockito.when(mockSubjectRepository.deleteById(2)).thenReturn(false);
 
@@ -54,7 +53,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws SQLException, IOException {
+    void findAllTest() throws SQLException {
         List<SubjectEntity> subjectEntities = new ArrayList<>();
         subjectEntities.add(subjectEntity);
 
@@ -64,7 +63,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void findAllTeachersWithSubjectIdTest() throws SQLException, IOException {
+    void findAllTeachersWithSubjectIdTest() throws SQLException {
         TeacherEntity teacherEntity = new TeacherEntity(1, "Lizzi", "Testova", "Testovna");
         List<TeacherEntity> teacherEntities = List.of(teacherEntity);
 
@@ -74,7 +73,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void findAllGroupsWithSubjectIdTest() throws SQLException, IOException {
+    void findAllGroupsWithSubjectIdTest() throws SQLException {
         GroupEntity groupEntity = new GroupEntity(1,
                 "t-11",
                 new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
@@ -88,7 +87,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void findAllExamsWithSubjectIdTest() throws SQLException, IOException {
+    void findAllExamsWithSubjectIdTest() throws SQLException {
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
                 1,
@@ -103,7 +102,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void saveSubjectTest() throws SQLException, IOException {
+    void saveSubjectTest() throws SQLException {
         subjectEntity = new SubjectEntity(2, "S2");
 
         Mockito.when(mockSubjectRepository.save(subjectEntity)).thenReturn(subjectEntity);
@@ -112,7 +111,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void saveSubjectTeacherRelationshipTest() throws SQLException, IOException {
+    void saveSubjectTeacherRelationshipTest() throws SQLException {
         TeacherEntity teacherEntity = new TeacherEntity(1,
                 "Лора",
                 "Тестова",
@@ -125,7 +124,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void saveSubjectGroupRelationshipTest() throws SQLException, IOException {
+    void saveSubjectGroupRelationshipTest() throws SQLException {
         GroupEntity groupEntity = new GroupEntity(1,
                 "П-12",
                 new Date(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1).getTimeInMillis()),

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws SQLException, IOException {
+    void findByIdTest() throws SQLException {
         Mockito.when(mockGroupRepository.findById(1)).thenReturn(groupEntity);
 
         Assertions.assertEquals(groupService.findById(1), groupEntity);
@@ -51,7 +50,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException, IOException {
+    void deleteByIdTest() throws SQLException {
         Mockito.when(mockGroupRepository.deleteById(1)).thenReturn(true);
         Mockito.when(mockGroupRepository.deleteById(2)).thenReturn(false);
 
@@ -60,7 +59,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void saveGroupTest() throws SQLException, IOException {
+    void saveGroupTest() throws SQLException {
         groupEntity = new GroupEntity(2, "Э-321",
                 new Date(new GregorianCalendar(2010, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2020, Calendar.JUNE, 30).getTimeInMillis()),
@@ -77,7 +76,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws SQLException, IOException {
+    void findAllTest() throws SQLException {
         List<GroupEntity> groupEntities = new ArrayList<>();
         groupEntities.add(groupEntity);
 
@@ -87,7 +86,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void findAllStudentsWithGroupIdTest() throws SQLException, IOException {
+    void findAllStudentsWithGroupIdTest() throws SQLException {
         StudentEntity studentEntity = new StudentEntity(1, "Number 1", "One", null, 1);
         List<StudentEntity> studentEntities = List.of(studentEntity);
 
@@ -97,7 +96,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void findAllSubjectsWithGroupIdTest() throws SQLException, IOException {
+    void findAllSubjectsWithGroupIdTest() throws SQLException {
         SubjectEntity subjectEntity = new SubjectEntity(1, "TestS");
         List<SubjectEntity> subjectEntities = List.of(subjectEntity);
 
@@ -107,7 +106,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void findAllExamsWithGroupIdTest() throws SQLException, IOException {
+    void findAllExamsWithGroupIdTest() throws SQLException {
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
                 1,

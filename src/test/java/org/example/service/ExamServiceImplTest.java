@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws SQLException, IOException {
+    void findByIdTest() throws SQLException {
         Mockito.when(mockExamRepository.findById(1)).thenReturn(examEntity);
 
         Assertions.assertEquals(examService.findById(1), examEntity);
@@ -46,7 +45,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException, IOException {
+    void deleteByIdTest() throws SQLException {
         Mockito.when(mockExamRepository.deleteById(1)).thenReturn(true);
         Mockito.when(mockExamRepository.deleteById(2)).thenReturn(false);
 
@@ -55,7 +54,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws SQLException, IOException {
+    void findAllTest() throws SQLException {
         List<ExamEntity> examEntities = new ArrayList<>();
         examEntities.add(examEntity);
 
@@ -65,7 +64,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void saveExamTest() throws SQLException, IOException {
+    void saveExamTest() throws SQLException {
         examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
                 5, 2);

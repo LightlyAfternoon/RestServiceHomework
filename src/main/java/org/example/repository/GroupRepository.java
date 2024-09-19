@@ -5,7 +5,6 @@ import org.example.model.GroupEntity;
 import org.example.model.StudentEntity;
 import org.example.model.SubjectEntity;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
