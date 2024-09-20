@@ -8,7 +8,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
 import org.example.service.impl.TeacherServiceImpl;
@@ -17,8 +16,6 @@ import org.example.servlet.mapper.TeacherDTOMapperImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;

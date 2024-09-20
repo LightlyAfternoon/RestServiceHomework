@@ -19,6 +19,10 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
     }
 
+    public StudentServiceImpl(String path) {
+        this.studentRepository = new StudentRepositoryImpl(path);
+    }
+
     @Override
     public StudentEntity findById(int id) throws SQLException {
         return studentRepository.findById(id);

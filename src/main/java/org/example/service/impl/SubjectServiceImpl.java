@@ -22,6 +22,10 @@ public class SubjectServiceImpl implements SubjectService {
         this.subjectRepository = subjectRepository;
     }
 
+    public SubjectServiceImpl(String path) {
+        this.subjectRepository = new SubjectRepositoryImpl(path);
+    }
+
     @Override
     public SubjectEntity findById(int id) throws SQLException {
         return subjectRepository.findById(id);

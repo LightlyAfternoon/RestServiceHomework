@@ -19,6 +19,10 @@ public class ExamServiceImpl implements ExamService {
         this.examRepository = examRepository;
     }
 
+    public ExamServiceImpl(String path) {
+        this.examRepository = new ExamRepositoryImpl(path);
+    }
+
     @Override
     public ExamEntity findById(int id) throws SQLException {
         return examRepository.findById(id);

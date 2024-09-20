@@ -22,6 +22,10 @@ public class GroupServiceImpl implements GroupService {
         this.groupRepository = groupRepository;
     }
 
+    public GroupServiceImpl(String path) {
+        this.groupRepository = new GroupRepositoryImpl(path);
+    }
+
     @Override
     public GroupEntity findById(int id) throws SQLException {
         return groupRepository.findById(id);

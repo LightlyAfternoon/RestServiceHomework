@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherRepositoryImpl implements TeacherRepository {
-    static final String PATH ="C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters";
-
     public TeacherRepositoryImpl() {}
 
     public TeacherRepositoryImpl(String path) {

@@ -19,6 +19,10 @@ public class GradeServiceImpl implements GradeService {
         this.gradeRepository = gradeRepository;
     }
 
+    public GradeServiceImpl(String path) {
+        this.gradeRepository = new GradeRepositoryImpl(path);
+    }
+
     @Override
     public GradeEntity findById(int id) throws SQLException {
         return gradeRepository.findById(id);

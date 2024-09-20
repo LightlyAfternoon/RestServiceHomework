@@ -12,52 +12,52 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
-    TeacherRepository repository;
+    TeacherRepository teacherRepository;
 
     public TeacherServiceImpl() {
-        this.repository = new TeacherRepositoryImpl();
+        this.teacherRepository = new TeacherRepositoryImpl();
     }
 
-    public TeacherServiceImpl(TeacherRepository repository) {
-        this.repository = repository;
+    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
     }
 
     public TeacherServiceImpl(String path) {
-        this.repository = new TeacherRepositoryImpl(path);
+        this.teacherRepository = new TeacherRepositoryImpl(path);
     }
 
     @Override
     public TeacherEntity findById(int id) throws SQLException {
-        return repository.findById(id);
+        return teacherRepository.findById(id);
     }
 
     @Override
     public boolean deleteById(int id) throws SQLException {
-        return repository.deleteById(id);
+        return teacherRepository.deleteById(id);
     }
 
     @Override
     public TeacherEntity save(TeacherEntity entity) throws SQLException {
-        return repository.save(entity);
+        return teacherRepository.save(entity);
     }
 
     @Override
     public List<TeacherEntity> findAll() throws SQLException {
-        return repository.findAll();
+        return teacherRepository.findAll();
     }
 
     @Override
     public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException {
-        return repository.findAllGroupsWithTeacherId(id);
+        return teacherRepository.findAllGroupsWithTeacherId(id);
     }
 
     @Override
     public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException {
-        return repository.findAllSubjectsWithTeacherId(id);
+        return teacherRepository.findAllSubjectsWithTeacherId(id);
     }
 
     @Override
     public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException {
-        return repository.findAllExamsWithTeacherId(id);
+        return teacherRepository.findAllExamsWithTeacherId(id);
     }
 }
