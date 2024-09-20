@@ -19,6 +19,21 @@ public class GroupDTOMapperImpl implements GroupDTOMapper {
     }
 
     @Override
+    public GroupEntity mapToEntity(GroupDTO groupDTO, int id) {
+        if (groupDTO == null) {
+            return null;
+        }
+
+        return new GroupEntity(
+                id,
+                groupDTO.getName(),
+                groupDTO.getStartDate(),
+                groupDTO.getEndDate(),
+                groupDTO.getTeacherId()
+        );
+    }
+
+    @Override
     public GroupDTO mapToDTO(GroupEntity group) {
         if (group == null) {
             return null;

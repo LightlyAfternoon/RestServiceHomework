@@ -19,6 +19,21 @@ public class StudentDTOMapperImpl implements StudentDTOMapper {
     }
 
     @Override
+    public StudentEntity mapToEntity(StudentDTO studentDTO, int id) {
+        if (studentDTO == null) {
+            return null;
+        }
+
+        return new StudentEntity(
+                id,
+                studentDTO.getFirstName(),
+                studentDTO.getLastName(),
+                studentDTO.getPatronymic(),
+                studentDTO.getGroupId()
+        );
+    }
+
+    @Override
     public StudentDTO mapToDTO(StudentEntity student) {
         if (student == null) {
             return null;

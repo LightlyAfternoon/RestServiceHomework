@@ -18,6 +18,21 @@ public class ExamDTOMapperImpl implements ExamDTOMapper {
     }
 
     @Override
+    public ExamEntity mapToEntity(ExamDTO examDTO, int id) {
+
+        if (examDTO == null) {
+            return null;
+        }
+
+        return new ExamEntity(
+                id,
+                examDTO.getStartDate(),
+                examDTO.getGroupId(),
+                examDTO.getSubjectTeacherId()
+        );
+    }
+
+    @Override
     public ExamDTO mapToDTO(ExamEntity exam) {
         if (exam == null) {
             return null;

@@ -12,6 +12,7 @@ import org.example.model.GradeEntity;
 import org.example.service.GradeService;
 import org.example.service.impl.GradeServiceImpl;
 import org.example.servlet.dto.GradeDTO;
+import org.example.servlet.mapper.GradeDTOMapper;
 import org.example.servlet.mapper.GradeDTOMapperImpl;
 
 import java.io.IOException;
@@ -44,23 +45,27 @@ public class GradeServlet extends HttpServlet {
 
         GradeDTO gradeDTO = null;
         String info = "";
+        int id = 0;
+        String[] split = new String[5];
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(Integer.parseInt(info)));
+                gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (!info.isBlank() && gradeDTO != null) {
+            if (id != 0 && gradeDTO != null) {
                 printWriter.write(gradeDTO.toString());
-            } else if (!info.isBlank()) {
+            } else if (id != 0) {
                 printWriter.write("Grade is not found");
             } else {
-                List<GradeDTO> grades = gradeService.findAll().stream().map(s -> new GradeDTOMapperImpl().mapToDTO(s)).toList();
+                List<GradeDTO> grades = gradeService.findAll().stream().map(t -> new GradeDTOMapperImpl().mapToDTO(t)).toList();
                 for (GradeDTO grade : grades) {
                     if (grade != grades.getLast()) {
                         printWriter.write(grade.toString() + ", \n");
@@ -78,14 +83,13 @@ public class GradeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        GradeDTO gradeDTO = null;
-        GradeDTOMapperImpl mapper = new GradeDTOMapperImpl();
+        GradeDTOMapper mapper = new GradeDTOMapperImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
         Gson gson = new Gson().fromJson(json, Gson.class);
 
-        gradeDTO = gson.fromJson(json, GradeDTO.class);
+        GradeDTO gradeDTO = gson.fromJson(json, GradeDTO.class);
 
         GradeEntity grade = mapper.mapToEntity(gradeDTO);
         try {
@@ -101,16 +105,63 @@ public class GradeServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setSettings(req, resp);
+
+        GradeDTO gradeDTO = null;
+        String info = "";
+        int id = 0;
+        String[] split;
+
+        if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
+            try {
+                gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            if (id != 0 && gradeDTO != null) {
+                GradeDTOMapperImpl mapper = new GradeDTOMapperImpl();
+
+                info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                JsonObject json = JsonParser.parseString(info).getAsJsonObject();
+                Gson gson = new Gson().fromJson(json, Gson.class);
+
+                gradeDTO = gson.fromJson(json, GradeDTO.class);
+
+                GradeEntity grade = mapper.mapToEntity(gradeDTO, id);
+                gradeDTO = mapper.mapToDTO(gradeService.save(grade));
+
+                try (PrintWriter printWriter = resp.getWriter()) {
+                    printWriter.write(gradeDTO.toString());
+                }
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
         GradeDTO gradeDTO = null;
         String info = "";
+        int id = 0;
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            String[] split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(Integer.parseInt(info)));
+                gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -118,7 +169,7 @@ public class GradeServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && gradeDTO != null) {
-                printWriter.write("{\"success\":\""+gradeService.deleteById(Integer.parseInt(info))+"\"}");
+                printWriter.write("{\"success\":\""+gradeService.deleteById(id)+"\"}");
             } else if (!info.isBlank()) {
                 printWriter.write("Grade is not found");
             } else {

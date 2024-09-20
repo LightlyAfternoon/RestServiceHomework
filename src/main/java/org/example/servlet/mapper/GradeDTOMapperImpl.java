@@ -18,6 +18,20 @@ public class GradeDTOMapperImpl implements GradeDTOMapper {
     }
 
     @Override
+    public GradeEntity mapToEntity(GradeDTO gradeDTO, int id) {
+        if (gradeDTO == null) {
+            return null;
+        }
+
+        return new GradeEntity(
+                gradeDTO.getId(),
+                gradeDTO.getStudentId(),
+                gradeDTO.getExamId(),
+                gradeDTO.getMark()
+        );
+    }
+
+    @Override
     public GradeDTO mapToDTO(GradeEntity grade) {
         if (grade == null) {
             return null;

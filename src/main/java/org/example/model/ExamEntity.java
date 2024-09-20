@@ -2,7 +2,7 @@ package org.example.model;
 
 import java.sql.Date;
 
-public class ExamEntity {
+public class ExamEntity extends Entity {
     private int id;
     private Date startDate;
     private int groupId;

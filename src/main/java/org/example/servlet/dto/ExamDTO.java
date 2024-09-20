@@ -2,7 +2,7 @@ package org.example.servlet.dto;
 
 import java.sql.Date;
 
-public class ExamDTO {
+public class ExamDTO extends DTO {
     private int id;
     private Date startDate;
     private int groupId;

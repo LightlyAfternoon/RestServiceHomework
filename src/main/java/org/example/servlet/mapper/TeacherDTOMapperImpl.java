@@ -18,6 +18,20 @@ public class TeacherDTOMapperImpl implements TeacherDTOMapper {
     }
 
     @Override
+    public TeacherEntity mapToEntity(TeacherDTO teacherDTO, int id) {
+        if (teacherDTO == null) {
+            return null;
+        }
+
+        return new TeacherEntity (
+                id,
+                teacherDTO.getFirstName(),
+                teacherDTO.getLastName(),
+                teacherDTO.getPatronymic()
+        );
+    }
+
+    @Override
     public TeacherDTO mapToDTO(TeacherEntity teacher) {
         if (teacher == null) {
             return null;

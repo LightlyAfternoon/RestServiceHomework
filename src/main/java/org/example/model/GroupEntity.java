@@ -3,7 +3,7 @@ package org.example.model;
 import java.sql.Date;
 import java.util.List;
 
-public class GroupEntity {
+public class GroupEntity extends Entity {
     private int id;
     private String name;
     private Date startDate;

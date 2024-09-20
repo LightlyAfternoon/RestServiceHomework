@@ -12,6 +12,7 @@ import org.example.model.StudentEntity;
 import org.example.service.StudentService;
 import org.example.service.impl.StudentServiceImpl;
 import org.example.servlet.dto.StudentDTO;
+import org.example.servlet.mapper.StudentDTOMapper;
 import org.example.servlet.mapper.StudentDTOMapperImpl;
 
 import java.io.IOException;
@@ -44,23 +45,27 @@ public class StudentServlet extends HttpServlet {
 
         StudentDTO studentDTO = null;
         String info = "";
+        int id = 0;
+        String[] split = new String[5];
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(Integer.parseInt(info)));
+                studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (!info.isBlank() && studentDTO != null) {
+            if (id != 0 && studentDTO != null) {
                 printWriter.write(studentDTO.toString());
-            } else if (!info.isBlank()) {
+            } else if (id != 0) {
                 printWriter.write("Student is not found");
             } else {
-                List<StudentDTO> students = studentService.findAll().stream().map(s -> new StudentDTOMapperImpl().mapToDTO(s)).toList();
+                List<StudentDTO> students = studentService.findAll().stream().map(t -> new StudentDTOMapperImpl().mapToDTO(t)).toList();
                 for (StudentDTO student : students) {
                     if (student != students.getLast()) {
                         printWriter.write(student.toString() + ", \n");
@@ -78,14 +83,13 @@ public class StudentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        StudentDTO studentDTO = null;
-        StudentDTOMapperImpl mapper = new StudentDTOMapperImpl();
+        StudentDTOMapper mapper = new StudentDTOMapperImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
         Gson gson = new Gson().fromJson(json, Gson.class);
 
-        studentDTO = gson.fromJson(json, StudentDTO.class);
+        StudentDTO studentDTO = gson.fromJson(json, StudentDTO.class);
 
         StudentEntity student = mapper.mapToEntity(studentDTO);
         try {
@@ -101,16 +105,63 @@ public class StudentServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setSettings(req, resp);
+
+        StudentDTO studentDTO = null;
+        String info = "";
+        int id = 0;
+        String[] split;
+
+        if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
+            try {
+                studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            if (id != 0 && studentDTO != null) {
+                StudentDTOMapperImpl mapper = new StudentDTOMapperImpl();
+
+                info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                JsonObject json = JsonParser.parseString(info).getAsJsonObject();
+                Gson gson = new Gson().fromJson(json, Gson.class);
+
+                studentDTO = gson.fromJson(json, StudentDTO.class);
+
+                StudentEntity student = mapper.mapToEntity(studentDTO, id);
+                studentDTO = mapper.mapToDTO(studentService.save(student));
+
+                try (PrintWriter printWriter = resp.getWriter()) {
+                    printWriter.write(studentDTO.toString());
+                }
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
         StudentDTO studentDTO = null;
         String info = "";
+        int id = 0;
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            String[] split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(Integer.parseInt(info)));
+                studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -118,7 +169,7 @@ public class StudentServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && studentDTO != null) {
-                printWriter.write("{\"success\":\""+studentService.deleteById(Integer.parseInt(info))+"\"}");
+                printWriter.write("{\"success\":\""+studentService.deleteById(id)+"\"}");
             } else if (!info.isBlank()) {
                 printWriter.write("Student is not found");
             } else {

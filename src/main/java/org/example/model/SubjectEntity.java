@@ -2,7 +2,7 @@ package org.example.model;
 
 import java.util.List;
 
-public class SubjectEntity {
+public class SubjectEntity extends Entity {
     private int id;
     private String name;
     private List<TeacherEntity> teachers;

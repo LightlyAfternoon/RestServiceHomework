@@ -13,6 +13,7 @@ import org.example.model.ExamEntity;
 import org.example.service.ExamService;
 import org.example.service.impl.ExamServiceImpl;
 import org.example.servlet.dto.ExamDTO;
+import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.ExamDTOMapperImpl;
 
 import java.io.IOException;
@@ -45,23 +46,27 @@ public class ExamServlet extends HttpServlet {
 
         ExamDTO examDTO = null;
         String info = "";
+        int id = 0;
+        String[] split = new String[5];
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(Integer.parseInt(info)));
+                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (!info.isBlank() && examDTO != null) {
+            if (id != 0 && examDTO != null) {
                 printWriter.write(examDTO.toString());
-            } else if (!info.isBlank()) {
+            } else if (id != 0) {
                 printWriter.write("Exam is not found");
             } else {
-                List<ExamDTO> exams = examService.findAll().stream().map(s -> new ExamDTOMapperImpl().mapToDTO(s)).toList();
+                List<ExamDTO> exams = examService.findAll().stream().map(t -> new ExamDTOMapperImpl().mapToDTO(t)).toList();
                 for (ExamDTO exam : exams) {
                     if (exam != exams.getLast()) {
                         printWriter.write(exam.toString() + ", \n");
@@ -79,11 +84,11 @@ public class ExamServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        ExamDTOMapperImpl mapper = new ExamDTOMapperImpl();
+        ExamDTOMapper mapper = new ExamDTOMapperImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();;
 
         ExamDTO examDTO = gson.fromJson(json, ExamDTO.class);
 
@@ -101,16 +106,63 @@ public class ExamServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setSettings(req, resp);
+
+        ExamDTO examDTO = null;
+        String info = "";
+        int id = 0;
+        String[] split;
+
+        if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
+            info = req.getPathInfo();
+            split = info.split("/");
+            id = Integer.parseInt(split[1]);
+            try {
+                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            if (id != 0 && examDTO != null) {
+                ExamDTOMapperImpl mapper = new ExamDTOMapperImpl();
+
+                info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                JsonObject json = JsonParser.parseString(info).getAsJsonObject();
+                Gson gson = new Gson().fromJson(json, Gson.class);
+
+                examDTO = gson.fromJson(json, ExamDTO.class);
+
+                ExamEntity exam = mapper.mapToEntity(examDTO, id);
+                examDTO = mapper.mapToDTO(examService.save(exam));
+
+                try (PrintWriter printWriter = resp.getWriter()) {
+                    printWriter.write(examDTO.toString());
+                }
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
         ExamDTO examDTO = null;
         String info = "";
+        int id = 0;
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
-            info = req.getPathInfo().substring(1);
+            info = req.getPathInfo();
+            String[] split = info.split("/");
+            id = Integer.parseInt(split[1]);
             try {
-                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(Integer.parseInt(info)));
+                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -118,7 +170,7 @@ public class ExamServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && examDTO != null) {
-                printWriter.write("{\"success\":\""+examService.deleteById(Integer.parseInt(info))+"\"}");
+                printWriter.write("{\"success\":\""+examService.deleteById(id)+"\"}");
             } else if (!info.isBlank()) {
                 printWriter.write("Exam is not found");
             } else {

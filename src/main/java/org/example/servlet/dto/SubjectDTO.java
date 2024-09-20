@@ -1,6 +1,6 @@
 package org.example.servlet.dto;
 
-public class SubjectDTO {
+public class SubjectDTO extends DTO {
     private int id;
     private String name;
 

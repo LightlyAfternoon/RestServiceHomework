@@ -1,6 +1,6 @@
 package org.example.model;
 
-public class StudentEntity {
+public class StudentEntity extends Entity {
     private int id;
     private String firstName;
     private String lastName;
