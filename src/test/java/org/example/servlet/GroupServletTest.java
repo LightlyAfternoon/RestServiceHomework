@@ -74,7 +74,7 @@ class GroupServletTest {
         Mockito.when(mockGroupService.findById(1)).thenReturn(null);
         groupServlet.doGet(mockRequest, mockResponse);
 
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Group is not found");
+        Assertions.assertEquals("Group is not found", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/");
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -241,18 +241,18 @@ class GroupServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         groupServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Group is not found");
+        Assertions.assertEquals("Group is not found", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn(null);
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
         groupServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Must to write a group's id");
+        Assertions.assertEquals("Must to write a group's id", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/");
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
         groupServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Must to write a group's id");
+        Assertions.assertEquals("Must to write a group's id", byteArrayOutputStream.toString());
     }
 }

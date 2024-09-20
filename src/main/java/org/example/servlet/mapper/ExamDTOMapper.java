@@ -1,9 +1,7 @@
 package org.example.servlet.mapper;
 
 import org.example.model.ExamEntity;
-import org.example.model.GradeEntity;
 import org.example.servlet.dto.ExamDTO;
-import org.example.servlet.dto.GradeDTO;
 
 public interface ExamDTOMapper {
     ExamEntity mapToEntity(ExamDTO examDTO);

@@ -62,7 +62,7 @@ class StudentServletTest {
         Mockito.when(mockStudentService.findById(1)).thenReturn(null);
         studentServlet.doGet(mockRequest, mockResponse);
 
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Student is not found");
+        Assertions.assertEquals("Student is not found", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/");
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -162,18 +162,18 @@ class StudentServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         studentServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Student is not found");
+        Assertions.assertEquals("Student is not found", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn(null);
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
         studentServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Must to write a student's id");
+        Assertions.assertEquals("Must to write a student's id", byteArrayOutputStream.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/");
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
         studentServlet.doDelete(mockRequest, mockResponse);
-        Assertions.assertEquals(byteArrayOutputStream.toString(), "Must to write a student's id");
+        Assertions.assertEquals("Must to write a student's id", byteArrayOutputStream.toString());
     }
 }
