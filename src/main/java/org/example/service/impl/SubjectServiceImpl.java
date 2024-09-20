@@ -15,15 +15,11 @@ public class SubjectServiceImpl implements SubjectService {
     SubjectRepository subjectRepository;
 
     public SubjectServiceImpl() {
-        this.subjectRepository = new SubjectRepositoryImpl();
+        this.subjectRepository = new SubjectRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
     }
 
     public SubjectServiceImpl(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
-    }
-
-    public SubjectServiceImpl(String path) {
-        this.subjectRepository = new SubjectRepositoryImpl(path);
     }
 
     @Override

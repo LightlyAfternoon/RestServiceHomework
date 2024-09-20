@@ -27,7 +27,7 @@ public class GradeServlet extends HttpServlet {
     final transient GradeService gradeService;
 
     public GradeServlet() {
-        this.gradeService = new GradeServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.gradeService = new GradeServiceImpl();
     }
 
     public GradeServlet(GradeService gradeService) {

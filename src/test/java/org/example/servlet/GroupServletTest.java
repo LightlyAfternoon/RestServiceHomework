@@ -10,8 +10,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.GroupEntity;
 import org.example.service.GroupService;
 import org.example.service.impl.GroupServiceImpl;
+import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.dto.GroupDTO;
+import org.example.servlet.dto.StudentDTO;
+import org.example.servlet.dto.SubjectDTO;
+import org.example.servlet.mapper.ExamDTOMapperImpl;
 import org.example.servlet.mapper.GroupDTOMapperImpl;
+import org.example.servlet.mapper.StudentDTOMapperImpl;
+import org.example.servlet.mapper.SubjectDTOMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,12 +85,78 @@ class GroupServletTest {
 
         groupServlet.doGet(mockRequest, mockResponse);
 
-        StringBuilder s = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (GroupDTO dto : groups) {
-            s.append(dto.toString());
+            stringBuilder.append(dto.toString());
         }
 
-        Assertions.assertEquals(byteArrayOutputStream.toString(), s.toString());
+        Assertions.assertEquals(byteArrayOutputStream.toString(), stringBuilder.toString());
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1/exam");
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()), 1, 1);
+        Mockito.when(mockGroupService.findById(1)).thenReturn(groupEntity);
+        Mockito.when(mockGroupService.findAllExamsWithGroupId(1)).thenReturn(List.of(new ExamDTOMapperImpl().mapToEntity(examDTO)));
+        List<ExamDTO> exams = mockGroupService.findAllExamsWithGroupId(1).stream().map(e -> new ExamDTOMapperImpl().mapToDTO(e)).toList();
+
+        groupServlet.doGet(mockRequest, mockResponse);
+
+        stringBuilder = new StringBuilder();
+        for (ExamDTO dto : exams) {
+            if (exams.getLast() != dto) {
+                stringBuilder.append(dto.toString()).append(", \n");
+            } else {
+                stringBuilder.append(dto.toString());
+            }
+        }
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), stringBuilder.toString());
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1/subject");
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        SubjectDTO subjectDTO = new SubjectDTO(1, "t");
+        Mockito.when(mockGroupService.findById(1)).thenReturn(groupEntity);
+        Mockito.when(mockGroupService.findAllSubjectsWithGroupId(1)).thenReturn(List.of(new SubjectDTOMapperImpl().mapToEntity(subjectDTO)));
+        List<SubjectDTO> subjects = mockGroupService.findAllSubjectsWithGroupId(1).stream().map(s -> new SubjectDTOMapperImpl().mapToDTO(s)).toList();
+
+        groupServlet.doGet(mockRequest, mockResponse);
+
+        stringBuilder = new StringBuilder();
+        for (SubjectDTO dto : subjects) {
+            if (subjects.getLast() != dto) {
+                stringBuilder.append(dto.toString()).append(", \n");
+            } else {
+                stringBuilder.append(dto.toString());
+            }
+        }
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), stringBuilder.toString());
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1/student");
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        StudentDTO studentDTO = new StudentDTO(1, "t", "t", "t", 2);
+        Mockito.when(mockGroupService.findById(1)).thenReturn(groupEntity);
+        Mockito.when(mockGroupService.findAllStudentsWithGroupId(1)).thenReturn(List.of(new StudentDTOMapperImpl().mapToEntity(studentDTO)));
+        List<StudentDTO> students = mockGroupService.findAllStudentsWithGroupId(1).stream().map(s -> new StudentDTOMapperImpl().mapToDTO(s)).toList();
+
+        groupServlet.doGet(mockRequest, mockResponse);
+
+        stringBuilder = new StringBuilder();
+        for (StudentDTO dto : students) {
+            if (students.getLast() != dto) {
+                stringBuilder.append(dto.toString()).append(", \n");
+            } else {
+                stringBuilder.append(dto.toString());
+            }
+        }
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), stringBuilder.toString());
     }
 
     @Test
@@ -95,7 +167,7 @@ class GroupServletTest {
                         "name": "t",
                         "startDate": "2029-09-01",
                         "endDate": "2033-07-03",
-                        "teacherId": 1
+                        "groupId": 1
                     }""";
 
         JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
@@ -114,6 +186,40 @@ class GroupServletTest {
         groupServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), groupDTO.toString());
+    }
+
+    @Test
+    void doPutTest() throws ServletException, IOException, SQLException {
+        String jsonS = """
+                    {
+                        "id": 1,
+                        "name": "t",
+                        "startDate": "2029-09-01",
+                        "endDate": "2033-07-03",
+                        "groupId": 1
+                    }""";
+
+        JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+        GroupDTO group = gson.fromJson(json, GroupDTO.class);
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
+        Mockito.when(mockGroupService.findById(1)).thenReturn(groupEntity);
+        Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
+        Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        groupEntity = new GroupDTOMapperImpl().mapToEntity(group, group.getId());
+        Mockito.when(mockGroupService.save(groupEntity)).thenReturn(groupEntity);
+        groupDTO = new GroupDTOMapperImpl().mapToDTO(mockGroupService.save(groupEntity));
+        groupServlet.doPut(mockRequest, mockResponse);
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), groupDTO.toString());
+
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
     }
 
     @Test

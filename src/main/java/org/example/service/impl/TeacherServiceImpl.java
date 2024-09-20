@@ -15,15 +15,11 @@ public class TeacherServiceImpl implements TeacherService {
     TeacherRepository teacherRepository;
 
     public TeacherServiceImpl() {
-        this.teacherRepository = new TeacherRepositoryImpl();
+        this.teacherRepository = new TeacherRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
     }
 
     public TeacherServiceImpl(TeacherRepository teacherRepository) {
         this.teacherRepository = teacherRepository;
-    }
-
-    public TeacherServiceImpl(String path) {
-        this.teacherRepository = new TeacherRepositoryImpl(path);
     }
 
     @Override

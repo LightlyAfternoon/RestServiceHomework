@@ -94,7 +94,7 @@ class ExamServletTest {
                         "id": 1,
                         "startDate": "2029-09-01",
                         "groupId": 1,
-                        "subjectTeacherId": 1
+                        "subjectExamId": 1
                     }""";
 
         JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
@@ -113,6 +113,39 @@ class ExamServletTest {
         examServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
+    }
+
+    @Test
+    void doPutTest() throws ServletException, IOException, SQLException {
+        String jsonS = """
+                    {
+                        "id": 1,
+                        "startDate": "2029-09-01",
+                        "groupId": 1,
+                        "subjectExamId": 1
+                    }""";
+
+        JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+        ExamDTO exam = gson.fromJson(json, ExamDTO.class);
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
+        Mockito.when(mockExamService.findById(1)).thenReturn(examEntity);
+        Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
+        Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        examEntity = new ExamDTOMapperImpl().mapToEntity(exam, exam.getId());
+        Mockito.when(mockExamService.save(examEntity)).thenReturn(examEntity);
+        examDTO = new ExamDTOMapperImpl().mapToDTO(mockExamService.save(examEntity));
+        examServlet.doPut(mockRequest, mockResponse);
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
+
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
     }
 
     @Test

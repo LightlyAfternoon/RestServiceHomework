@@ -12,15 +12,11 @@ public class ExamServiceImpl implements ExamService {
     ExamRepository examRepository;
 
     public ExamServiceImpl() {
-        examRepository = new ExamRepositoryImpl();
+        examRepository = new ExamRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
     }
 
     public ExamServiceImpl(ExamRepository examRepository) {
         this.examRepository = examRepository;
-    }
-
-    public ExamServiceImpl(String path) {
-        this.examRepository = new ExamRepositoryImpl(path);
     }
 
     @Override

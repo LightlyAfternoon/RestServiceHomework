@@ -15,15 +15,11 @@ public class GroupServiceImpl implements GroupService {
     GroupRepository groupRepository;
 
     public GroupServiceImpl() {
-        groupRepository = new GroupRepositoryImpl();
+        groupRepository = new GroupRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
     }
 
     public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-    }
-
-    public GroupServiceImpl(String path) {
-        this.groupRepository = new GroupRepositoryImpl(path);
     }
 
     @Override

@@ -183,6 +183,39 @@ class TeacherServletTest {
     }
 
     @Test
+    void doPutTest() throws ServletException, IOException, SQLException {
+        String jsonS = """
+                    {
+                        "id": 1,
+                        "firstName": "t",
+                        "lastName": "t",
+                        "patronymic": "t"
+                    }""";
+
+        JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
+        Gson gson = new Gson().fromJson(json, Gson.class);
+
+        TeacherDTO teacher = gson.fromJson(json, TeacherDTO.class);
+
+        Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
+        Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
+        Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+
+        teacherEntity = new TeacherDTOMapperImpl().mapToEntity(teacher, teacher.getId());
+        Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherEntity);
+        teacherDTO = new TeacherDTOMapperImpl().mapToDTO(mockTeacherService.save(teacherEntity));
+        teacherServlet.doPut(mockRequest, mockResponse);
+
+        Assertions.assertEquals(byteArrayOutputStream.toString(), teacherDTO.toString());
+
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
+    }
+
+    @Test
     void doDeleteTest() throws ServletException, IOException, SQLException {
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -29,7 +29,7 @@ public class GroupServlet extends HttpServlet {
     final transient GroupService groupService;
 
     public GroupServlet() {
-        this.groupService = new GroupServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.groupService = new GroupServiceImpl();
     }
 
     public GroupServlet(GroupService groupService) {
@@ -158,7 +158,7 @@ public class GroupServlet extends HttpServlet {
 
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                 JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-                Gson gson = new Gson().fromJson(json, Gson.class);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
                 groupDTO = gson.fromJson(json, GroupDTO.class);
 

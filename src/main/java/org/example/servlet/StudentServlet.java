@@ -27,7 +27,7 @@ public class StudentServlet extends HttpServlet {
     final transient StudentService studentService;
 
     public StudentServlet() {
-        this.studentService = new StudentServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.studentService = new StudentServiceImpl();
     }
 
     public StudentServlet(StudentService studentService) {

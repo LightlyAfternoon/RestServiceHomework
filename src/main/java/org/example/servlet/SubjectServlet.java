@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
+import org.example.service.GroupService;
 import org.example.service.SubjectService;
+import org.example.service.TeacherService;
 import org.example.service.impl.GroupServiceImpl;
 import org.example.service.impl.SubjectServiceImpl;
 import org.example.service.impl.TeacherServiceImpl;
@@ -30,13 +32,19 @@ import java.util.stream.Collectors;
 public class SubjectServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     final transient SubjectService subjectService;
+    final transient TeacherService teacherService;
+    final transient GroupService groupService;
 
     public SubjectServlet() {
-        this.subjectService = new SubjectServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.subjectService = new SubjectServiceImpl();
+        teacherService = new TeacherServiceImpl();
+        groupService =  new GroupServiceImpl();
     }
 
-    public SubjectServlet(SubjectService subjectService) {
+    public SubjectServlet(SubjectService subjectService, TeacherService teacherService, GroupService groupService) {
         this.subjectService = subjectService;
+        this.teacherService = teacherService;
+        this.groupService = groupService;
     }
 
     private void setSettings(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -190,10 +198,10 @@ public class SubjectServlet extends HttpServlet {
 
     private DTO findDTO(String info, SubjectDTO subjectDTO, int id) throws SQLException {
         if (info.equals("teacher")) {
-            TeacherEntity teacher = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO), new TeacherServiceImpl().findById(id));
+            TeacherEntity teacher = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO, subjectDTO.getId()), teacherService.findById(id));
             return new TeacherDTOMapperImpl().mapToDTO(teacher);
         } else if (info.equals("group")) {
-            GroupEntity group = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO), new GroupServiceImpl().findById(id));
+            GroupEntity group = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO, subjectDTO.getId()), groupService.findById(id));
             return new GroupDTOMapperImpl().mapToDTO(group);
         }
 

@@ -28,7 +28,7 @@ public class ExamServlet extends HttpServlet {
     final transient ExamService examService;
 
     public ExamServlet() {
-        this.examService = new ExamServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.examService = new ExamServiceImpl();
     }
 
     public ExamServlet(ExamService examService) {
@@ -88,7 +88,7 @@ public class ExamServlet extends HttpServlet {
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         ExamDTO examDTO = gson.fromJson(json, ExamDTO.class);
 
@@ -131,7 +131,7 @@ public class ExamServlet extends HttpServlet {
 
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                 JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-                Gson gson = new Gson().fromJson(json, Gson.class);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
                 examDTO = gson.fromJson(json, ExamDTO.class);
 
