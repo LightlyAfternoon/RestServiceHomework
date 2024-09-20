@@ -6,6 +6,10 @@ import org.example.servlet.dto.StudentDTO;
 public class StudentDTOMapperImpl implements StudentDTOMapper {
     @Override
     public StudentEntity mapToEntity(StudentDTO studentDTO) {
+        if (studentDTO == null) {
+            return null;
+        }
+
         return new StudentEntity(
                 studentDTO.getFirstName(),
                 studentDTO.getLastName(),
@@ -16,6 +20,10 @@ public class StudentDTOMapperImpl implements StudentDTOMapper {
 
     @Override
     public StudentDTO mapToDTO(StudentEntity student) {
+        if (student == null) {
+            return null;
+        }
+
         return new StudentDTO(
                 student.getId(),
                 student.getFirstName(),

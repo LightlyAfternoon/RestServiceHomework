@@ -6,6 +6,10 @@ import org.example.servlet.dto.ExamDTO;
 public class ExamDTOMapperImpl implements ExamDTOMapper {
     @Override
     public ExamEntity mapToEntity(ExamDTO examDTO) {
+        if (examDTO == null) {
+            return null;
+        }
+
         return new ExamEntity(
                 examDTO.getStartDate(),
                 examDTO.getGroupId(),
@@ -15,6 +19,10 @@ public class ExamDTOMapperImpl implements ExamDTOMapper {
 
     @Override
     public ExamDTO mapToDTO(ExamEntity exam) {
+        if (exam == null) {
+            return null;
+        }
+
         return new ExamDTO(
                 exam.getId(),
                 exam.getStartDate(),

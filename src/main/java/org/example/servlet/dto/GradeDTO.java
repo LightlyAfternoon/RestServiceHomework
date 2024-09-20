@@ -42,4 +42,14 @@ public class GradeDTO {
     public void setMark(short mark) {
         this.mark = mark;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "    \"id\": " + id + ",\n" +
+                "    \"studentId\": " + studentId + ",\n" +
+                "    \"examId\": " + examId + ",\n" +
+                "    \"mark\": " + mark + "\n" +
+                "}";
+    }
 }

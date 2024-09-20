@@ -54,4 +54,25 @@ public class GroupDTO {
     public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
+
+    @Override
+    public String toString() {
+        if (endDate == null) {
+            return "{\n" +
+                    "    \"id\": " + id + ",\n" +
+                    "    \"name\": \"" + name + "\",\n" +
+                    "    \"startDate\": \"" + startDate + "\",\n" +
+                    "    \"endDate\": null,\n" +
+                    "    \"teacherId\": " + teacherId + "\n" +
+                    "}";
+        }
+
+        return "{\n" +
+                "    \"id\": " + id + ",\n" +
+                "    \"name\": \"" + name + "\",\n" +
+                "    \"startDate\": \"" + startDate + "\",\n" +
+                "    \"endDate\": \"" + endDate + "\",\n" +
+                "    \"teacherId\": " + teacherId + "\n" +
+                "}";
+    }
 }

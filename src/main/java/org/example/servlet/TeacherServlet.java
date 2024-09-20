@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
 @WebServlet("/teacher/*")
 public class TeacherServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
-    TeacherService teacherService;
-    TeacherDTO teacherDTO;
+    final transient TeacherService teacherService;
 
     public TeacherServlet() {
         this.teacherService = new TeacherServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
@@ -43,6 +42,7 @@ public class TeacherServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
+        TeacherDTO teacherDTO = null;
         String info = "";
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
@@ -50,7 +50,7 @@ public class TeacherServlet extends HttpServlet {
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(Integer.parseInt(info)));
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
@@ -62,11 +62,15 @@ public class TeacherServlet extends HttpServlet {
             } else {
                 List<TeacherDTO> teachers = teacherService.findAll().stream().map(t -> new TeacherDTOMapperImpl().mapToDTO(t)).toList();
                 for (TeacherDTO teacher : teachers) {
-                    printWriter.write(teacher.toString());
+                    if (teacher != teachers.getLast()) {
+                        printWriter.write(teacher.toString() + ", \n");
+                    } else {
+                        printWriter.write(teacher.toString());
+                    }
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -74,6 +78,7 @@ public class TeacherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
+        TeacherDTO teacherDTO = null;
         TeacherDTOMapperImpl mapper = new TeacherDTOMapperImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
@@ -87,7 +92,7 @@ public class TeacherServlet extends HttpServlet {
             teacher = teacherService.save(teacher);
             teacherDTO = mapper.mapToDTO(teacher);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -99,6 +104,7 @@ public class TeacherServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
+        TeacherDTO teacherDTO = null;
         String info = "";
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
@@ -106,7 +112,7 @@ public class TeacherServlet extends HttpServlet {
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(Integer.parseInt(info)));
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
@@ -119,7 +125,7 @@ public class TeacherServlet extends HttpServlet {
                 printWriter.write("Must to write a teacher's id");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

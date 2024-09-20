@@ -52,4 +52,25 @@ public class StudentDTO {
     public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
+
+    @Override
+    public String toString() {
+        if (patronymic == null) {
+            return "{\n" +
+                    "    \"id\": "+id+",\n" +
+                    "    \"firstName\": \""+firstName+"\",\n" +
+                    "    \"lastName\": \""+lastName+"\",\n" +
+                    "    \"patronymic\": null,\n" +
+                    "    \"groupId\": "+groupId+"\n" +
+                    "}";
+        }
+
+        return "{\n" +
+                "    \"id\": "+id+",\n" +
+                "    \"firstName\": \""+firstName+"\",\n" +
+                "    \"lastName\": \""+lastName+"\",\n" +
+                "    \"patronymic\": \""+patronymic+"\",\n" +
+                "    \"groupId\": "+groupId+"\n" +
+                "}";
+    }
 }

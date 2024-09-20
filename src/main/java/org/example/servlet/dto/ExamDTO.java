@@ -44,4 +44,14 @@ public class ExamDTO {
     public void setSubjectTeacherId(int subjectTeacherId) {
         this.subjectTeacherId = subjectTeacherId;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "    \"id\": " + id + ",\n" +
+                "    \"startDate\": \"" + startDate + "\",\n" +
+                "    \"groupId\": " + groupId + ",\n" +
+                "    \"subjectTeacherId\": " + subjectTeacherId + "\n" +
+                "}";
+    }
 }

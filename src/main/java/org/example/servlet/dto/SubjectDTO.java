@@ -22,4 +22,12 @@ public class SubjectDTO {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "    \"id\": "+id+",\n" +
+                "    \"name\": \""+name+"\"\n" +
+                "}";
+    }
 }

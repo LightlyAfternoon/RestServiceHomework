@@ -1,7 +1,5 @@
 package org.example.servlet.dto;
 
-import java.util.List;
-
 public class TeacherDTO {
     private int id;
     private String firstName;
@@ -53,7 +51,7 @@ public class TeacherDTO {
                     "    \"firstName\": \""+firstName+"\",\n" +
                     "    \"lastName\": \""+lastName+"\",\n" +
                     "    \"patronymic\": null\n" +
-                    "}\n";
+                    "}";
 
         }
 
@@ -62,6 +60,6 @@ public class TeacherDTO {
                 "    \"firstName\": \""+firstName+"\",\n" +
                 "    \"lastName\": \""+lastName+"\",\n" +
                 "    \"patronymic\": \""+patronymic+"\"\n" +
-                "}\n";
+                "}";
     }
 }
