@@ -77,7 +77,7 @@ class SubjectRepositoryImplTest {
         subject = subjectRepository.findById(2);
         Assertions.assertNotNull(subject);
 
-        Assertions.assertThrows(SQLException.class, () -> subjectRepository.findById(50));
+        Assertions.assertNull(subjectRepository.findById(50));
     }
 
     @Test

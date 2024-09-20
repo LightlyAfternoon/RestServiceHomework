@@ -19,6 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherRepositoryImpl implements TeacherRepository {
+    static final String PATH ="C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters";
+
+    public TeacherRepositoryImpl() {}
+
+    public TeacherRepositoryImpl(String path) {
+        ConnectionManager.setConfig(path);
+    }
+
     @Override
     public TeacherEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

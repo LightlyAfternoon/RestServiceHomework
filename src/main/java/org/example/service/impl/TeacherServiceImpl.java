@@ -22,6 +22,10 @@ public class TeacherServiceImpl implements TeacherService {
         this.repository = repository;
     }
 
+    public TeacherServiceImpl(String path) {
+        this.repository = new TeacherRepositoryImpl(path);
+    }
+
     @Override
     public TeacherEntity findById(int id) throws SQLException {
         return repository.findById(id);

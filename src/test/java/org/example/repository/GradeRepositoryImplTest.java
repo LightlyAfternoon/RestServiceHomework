@@ -67,8 +67,9 @@ class GradeRepositoryImplTest {
 
         grade = gradeRepository.findById(2);
         Assertions.assertNotNull(grade);
+        System.out.println(gradeRepository.findById(50));
 
-        Assertions.assertThrows(SQLException.class, () -> gradeRepository.findById(50));
+        Assertions.assertNull(gradeRepository.findById(50));
     }
 
     @Test

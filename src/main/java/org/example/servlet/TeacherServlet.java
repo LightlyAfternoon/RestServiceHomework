@@ -18,25 +18,28 @@ import org.example.servlet.mapper.TeacherDTOMapperImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @WebServlet("/teacher/*")
 public class TeacherServlet extends HttpServlet {
-    static final String PATH ="C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters";
-    static final String CHARACTER_ENCODING = "UTF-8";
-    static final String CONTENT_TYPE = "application/json; charset=UTF";
-
+    static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     TeacherService teacherService;
     TeacherDTO teacherDTO;
 
-    private void setSettings(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.setCharacterEncoding(CHARACTER_ENCODING);
-        resp.setContentType(CONTENT_TYPE);
-        ConnectionManager.setConfig(PATH);
+    public TeacherServlet() {
+        this.teacherService = new TeacherServiceImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+    }
 
-        teacherService = new TeacherServiceImpl();
+    public TeacherServlet(TeacherService teacherService) {
+        this.teacherService = teacherService;
+    }
+
+    private void setSettings(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType(CONTENT_TYPE);
     }
 
     @Override

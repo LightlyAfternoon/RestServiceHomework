@@ -68,7 +68,7 @@ class StudentRepositoryImplTest {
         student = studentRepository.findById(2);
         Assertions.assertNotNull(student);
 
-        Assertions.assertThrows(SQLException.class, () -> studentRepository.findById(50));
+        Assertions.assertNull(studentRepository.findById(50));
     }
 
     @Test

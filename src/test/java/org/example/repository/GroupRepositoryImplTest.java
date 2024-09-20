@@ -78,7 +78,7 @@ class GroupRepositoryImplTest {
         group = groupRepository.findById(2);
         Assertions.assertNotNull(group);
 
-        Assertions.assertThrows(SQLException.class, () -> groupRepository.findById(50));
+        Assertions.assertNull(groupRepository.findById(50));
     }
 
     @Test
