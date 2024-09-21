@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,8 +80,11 @@ public class TeacherServlet extends HttpServlet {
         }
     }
 
-    // print all found elements from a list, returned by findList method
+    // if var split, that represents pathInfo split by a '/', contains only the entity id,
+    // then printWriter writes a json of this entity, otherwise printWriter writes json of
+    // all found elements from a list, returned by findList method
     private void printDTO(String[] split, TeacherDTO teacherDTO, PrintWriter printWriter) throws SQLException {
+        Arrays.stream(split).forEach(System.out::println);
         if (split.length > 2 && !split[2].isBlank()) {
             List<? extends DTO> dtos = findList(split[2], teacherDTO);
             for (DTO dto : dtos) {
