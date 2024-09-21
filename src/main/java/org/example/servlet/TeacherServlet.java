@@ -79,6 +79,7 @@ public class TeacherServlet extends HttpServlet {
         }
     }
 
+    // print all found elements from a list, returned by findList method
     private void printDTO(String[] split, TeacherDTO teacherDTO, PrintWriter printWriter) throws SQLException {
         if (split.length > 2 && !split[2].isBlank()) {
             List<? extends DTO> dtos = findList(split[2], teacherDTO);
@@ -94,6 +95,7 @@ public class TeacherServlet extends HttpServlet {
         }
     }
 
+    // find and return list of all groups, subjects or exams which have a teacherDTO's id
     private List<? extends DTO> findList(String info, TeacherDTO teacherDTO) throws SQLException {
         if (info.equals("group")) {
             return teacherService.findAllGroupsWithTeacherId(teacherDTO.getId())
