@@ -125,7 +125,7 @@ public class StudentServlet extends HttpServlet {
         }
 
         try {
-            if (id != 0 && studentDTO != null) {
+            if (studentDTO != null) {
                 StudentDTOMapperImpl mapper = new StudentDTOMapperImpl();
 
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));

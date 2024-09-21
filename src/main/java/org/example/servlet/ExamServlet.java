@@ -61,7 +61,7 @@ public class ExamServlet extends HttpServlet {
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (id != 0 && examDTO != null) {
+            if (examDTO != null) {
                 printWriter.write(examDTO.toString());
             } else if (id != 0) {
                 printWriter.write("Exam is not found");

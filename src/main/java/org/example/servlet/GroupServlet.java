@@ -62,19 +62,8 @@ public class GroupServlet extends HttpServlet {
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (id != 0 && groupDTO != null) {
-                if (split.length > 2 && !split[2].isBlank()) {
-                    List<? extends DTO> dtos = findList(split[2], groupDTO);
-                    for (DTO dto : dtos) {
-                        if (dto != dtos.getLast()) {
-                            printWriter.write(dto.toString() + ", \n");
-                        } else {
-                            printWriter.write(dto.toString());
-                        }
-                    }
-                } else {
-                    printWriter.write(groupDTO.toString());
-                }
+            if (groupDTO != null) {
+                printDTO(split, groupDTO, printWriter);
             } else if (id != 0) {
                 printWriter.write("Group is not found");
             } else {
@@ -89,6 +78,21 @@ public class GroupServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printDTO(String[] split, GroupDTO groupDTO, PrintWriter printWriter) throws SQLException {
+        if (split.length > 2 && !split[2].isBlank()) {
+            List<? extends DTO> dtos = findList(split[2], groupDTO);
+            for (DTO dto : dtos) {
+                if (dto != dtos.getLast()) {
+                    printWriter.write(dto.toString() + ", \n");
+                } else {
+                    printWriter.write(dto.toString());
+                }
+            }
+        } else {
+            printWriter.write(groupDTO.toString());
         }
     }
 

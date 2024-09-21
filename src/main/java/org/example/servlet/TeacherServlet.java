@@ -60,19 +60,8 @@ public class TeacherServlet extends HttpServlet {
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (id != 0 && teacherDTO != null) {
-                if (split.length > 2 && !split[2].isBlank()) {
-                    List<? extends DTO> dtos = findList(split[2], teacherDTO);
-                    for (DTO dto : dtos) {
-                        if (dto != dtos.getLast()) {
-                            printWriter.write(dto.toString() + ", \n");
-                        } else {
-                            printWriter.write(dto.toString());
-                        }
-                    }
-                } else {
-                    printWriter.write(teacherDTO.toString());
-                }
+            if (teacherDTO != null) {
+                printDTO(split, teacherDTO, printWriter);
             } else if (id != 0) {
                 printWriter.write("Teacher is not found");
             } else {
@@ -87,6 +76,21 @@ public class TeacherServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printDTO(String[] split, TeacherDTO teacherDTO, PrintWriter printWriter) throws SQLException {
+        if (split.length > 2 && !split[2].isBlank()) {
+            List<? extends DTO> dtos = findList(split[2], teacherDTO);
+            for (DTO dto : dtos) {
+                if (dto != dtos.getLast()) {
+                    printWriter.write(dto.toString() + ", \n");
+                } else {
+                    printWriter.write(dto.toString());
+                }
+            }
+        } else {
+            printWriter.write(teacherDTO.toString());
         }
     }
 

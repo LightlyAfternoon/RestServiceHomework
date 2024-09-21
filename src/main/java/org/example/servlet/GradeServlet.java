@@ -60,7 +60,7 @@ public class GradeServlet extends HttpServlet {
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (id != 0 && gradeDTO != null) {
+            if (gradeDTO != null) {
                 printWriter.write(gradeDTO.toString());
             } else if (id != 0) {
                 printWriter.write("Grade is not found");

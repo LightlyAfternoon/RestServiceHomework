@@ -73,19 +73,8 @@ public class SubjectServlet extends HttpServlet {
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
-            if (id != 0 && subjectDTO != null) {
-                if (split.length > 2 && !split[2].isBlank()) {
-                    List<? extends DTO> dtos = findList(split[2], subjectDTO);
-                    for (DTO dto : dtos) {
-                        if (dto != dtos.getLast()) {
-                            printWriter.write(dto.toString() + ", \n");
-                        } else {
-                            printWriter.write(dto.toString());
-                        }
-                    }
-                } else {
-                    printWriter.write(subjectDTO.toString());
-                }
+            if (subjectDTO != null) {
+                printDTO(split, subjectDTO, printWriter);
             } else if (id != 0) {
                 printWriter.write("Subject is not found");
             } else {
@@ -100,6 +89,21 @@ public class SubjectServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printDTO(String[] split, SubjectDTO subjectDTO, PrintWriter printWriter) throws SQLException {
+        if (split.length > 2 && !split[2].isBlank()) {
+            List<? extends DTO> dtos = findList(split[2], subjectDTO);
+            for (DTO dto : dtos) {
+                if (dto != dtos.getLast()) {
+                    printWriter.write(dto.toString() + ", \n");
+                } else {
+                    printWriter.write(dto.toString());
+                }
+            }
+        } else {
+            printWriter.write(subjectDTO.toString());
         }
     }
 
