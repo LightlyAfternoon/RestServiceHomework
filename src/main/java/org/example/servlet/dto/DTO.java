@@ -1,4 +1,4 @@
 package org.example.servlet.dto;
 
-public class DTO {
+public abstract class DTO {
 }
