@@ -24,7 +24,7 @@ public class GradeDTOMapperImpl implements GradeDTOMapper {
         }
 
         return new GradeEntity(
-                gradeDTO.getId(),
+                id,
                 gradeDTO.getStudentId(),
                 gradeDTO.getExamId(),
                 gradeDTO.getMark()
