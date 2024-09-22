@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherRepositoryImpl implements TeacherRepository {
-    public TeacherRepositoryImpl() {}
-
     @Override
     public TeacherEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

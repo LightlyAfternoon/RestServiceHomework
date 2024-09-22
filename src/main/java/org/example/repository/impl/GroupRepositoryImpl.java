@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupRepositoryImpl implements GroupRepository {
-    public GroupRepositoryImpl() {}
-
     @Override
     public GroupEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

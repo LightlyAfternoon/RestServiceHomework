@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradeRepositoryImpl implements GradeRepository {
-    public GradeRepositoryImpl() {}
-
     @Override
     public GradeEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

@@ -18,8 +18,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class SubjectRepositoryImpl implements SubjectRepository {
-    public SubjectRepositoryImpl() {}
-
     @Override
     public SubjectEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExamRepositoryImpl implements ExamRepository {
-    public ExamRepositoryImpl() {}
-
     @Override
     public ExamEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();
