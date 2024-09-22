@@ -1,6 +1,7 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.servlet.ServletException;
@@ -133,7 +134,7 @@ public class SubjectServlet extends HttpServlet {
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-        Gson gson = new Gson().fromJson(json, Gson.class);
+        Gson gson = new GsonBuilder().create();
 
         SubjectDTO subjectDTO = gson.fromJson(json, SubjectDTO.class);
 
@@ -184,7 +185,7 @@ public class SubjectServlet extends HttpServlet {
 
                     info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                     JsonObject json = JsonParser.parseString(info).getAsJsonObject();
-                    Gson gson = new Gson().fromJson(json, Gson.class);
+                    Gson gson = new GsonBuilder().create();
 
                     subjectDTO = gson.fromJson(json, SubjectDTO.class);
 

@@ -1,6 +1,7 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.servlet.ServletException;
@@ -165,7 +166,7 @@ class TeacherServletTest {
                     }""";
 
         JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
-        Gson gson = new Gson().fromJson(json, Gson.class);
+        Gson gson = new GsonBuilder().create();
 
         TeacherDTO teacher = gson.fromJson(json, TeacherDTO.class);
 
@@ -193,7 +194,7 @@ class TeacherServletTest {
                     }""";
 
         JsonObject json = JsonParser.parseString(jsonS).getAsJsonObject();
-        Gson gson = new Gson().fromJson(json, Gson.class);
+        Gson gson = new GsonBuilder().create();
 
         TeacherDTO teacher = gson.fromJson(json, TeacherDTO.class);
 
