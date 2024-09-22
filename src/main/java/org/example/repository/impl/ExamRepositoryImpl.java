@@ -15,10 +15,6 @@ import java.util.List;
 public class ExamRepositoryImpl implements ExamRepository {
     public ExamRepositoryImpl() {}
 
-    public ExamRepositoryImpl(String path) {
-        ConnectionManager.setConfig(path);
-    }
-
     @Override
     public ExamEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

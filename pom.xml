@@ -101,5 +101,12 @@
         </configuration>
       </plugin>
     </plugins>
+
+    <resources>
+      <resource>
+        <directory>src/main/java/org/example/db</directory>
+        <targetPath>org/example/db</targetPath>
+      </resource>
+    </resources>
   </build>
 </project>

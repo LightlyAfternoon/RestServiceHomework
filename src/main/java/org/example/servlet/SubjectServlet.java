@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
@@ -39,6 +40,8 @@ public class SubjectServlet extends HttpServlet {
         this.subjectService = new SubjectServiceImpl();
         teacherService = new TeacherServiceImpl();
         groupService =  new GroupServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public SubjectServlet(SubjectService subjectService, TeacherService teacherService, GroupService groupService) {
@@ -68,7 +71,7 @@ public class SubjectServlet extends HttpServlet {
             try {
                 subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -88,7 +91,7 @@ public class SubjectServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -139,7 +142,7 @@ public class SubjectServlet extends HttpServlet {
             subject = subjectService.save(subject);
             subjectDTO = mapper.mapToDTO(subject);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -163,7 +166,7 @@ public class SubjectServlet extends HttpServlet {
             try {
                 subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -196,7 +199,7 @@ public class SubjectServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -227,7 +230,7 @@ public class SubjectServlet extends HttpServlet {
             try {
                 subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -240,7 +243,7 @@ public class SubjectServlet extends HttpServlet {
                 printWriter.write("Must to write a subject's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

@@ -17,8 +17,8 @@ public class ConnectionManager {
 
     private ConnectionManager() {}
 
-    public static void setConfig(String path) {
-        try (InputStream inputStream = Files.newInputStream(Path.of(path))) {
+    public static void setConfig() {
+        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
             config.setDriverClassName(prop.getProperty("driverClassName"));

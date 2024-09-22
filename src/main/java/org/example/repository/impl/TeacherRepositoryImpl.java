@@ -21,10 +21,6 @@ import java.util.List;
 public class TeacherRepositoryImpl implements TeacherRepository {
     public TeacherRepositoryImpl() {}
 
-    public TeacherRepositoryImpl(String path) {
-        ConnectionManager.setConfig(path);
-    }
-
     @Override
     public TeacherEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

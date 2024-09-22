@@ -12,7 +12,7 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
 
     public StudentServiceImpl() {
-        studentRepository = new StudentRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        studentRepository = new StudentRepositoryImpl();
     }
 
     public StudentServiceImpl(StudentRepository studentRepository) {

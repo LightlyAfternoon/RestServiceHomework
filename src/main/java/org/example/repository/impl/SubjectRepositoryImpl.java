@@ -20,10 +20,6 @@ import java.util.*;
 public class SubjectRepositoryImpl implements SubjectRepository {
     public SubjectRepositoryImpl() {}
 
-    public SubjectRepositoryImpl(String path) {
-        ConnectionManager.setConfig(path);
-    }
-
     @Override
     public SubjectEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

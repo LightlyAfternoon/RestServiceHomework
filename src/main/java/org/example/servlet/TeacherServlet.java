@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
 import org.example.service.impl.TeacherServiceImpl;
@@ -29,6 +30,8 @@ public class TeacherServlet extends HttpServlet {
 
     public TeacherServlet() {
         this.teacherService = new TeacherServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public TeacherServlet(TeacherService teacherService) {
@@ -56,7 +59,7 @@ public class TeacherServlet extends HttpServlet {
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -76,7 +79,7 @@ public class TeacherServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -84,7 +87,6 @@ public class TeacherServlet extends HttpServlet {
     // then printWriter writes a json of this entity, otherwise printWriter writes json of
     // all found elements from a list, returned by findList method
     private void printDTO(String[] split, TeacherDTO teacherDTO, PrintWriter printWriter) throws SQLException {
-        Arrays.stream(split).forEach(System.out::println);
         if (split.length > 2 && !split[2].isBlank()) {
             List<? extends DTO> dtos = findList(split[2], teacherDTO);
             for (DTO dto : dtos) {
@@ -132,7 +134,7 @@ public class TeacherServlet extends HttpServlet {
             teacher = teacherService.save(teacher);
             teacherDTO = mapper.mapToDTO(teacher);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -156,7 +158,7 @@ public class TeacherServlet extends HttpServlet {
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -180,7 +182,7 @@ public class TeacherServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -199,7 +201,7 @@ public class TeacherServlet extends HttpServlet {
             try {
                 teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -212,7 +214,7 @@ public class TeacherServlet extends HttpServlet {
                 printWriter.write("Must to write a teacher's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

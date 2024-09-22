@@ -15,7 +15,7 @@ public class SubjectServiceImpl implements SubjectService {
     SubjectRepository subjectRepository;
 
     public SubjectServiceImpl() {
-        this.subjectRepository = new SubjectRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.subjectRepository = new SubjectRepositoryImpl();
     }
 
     public SubjectServiceImpl(SubjectRepository subjectRepository) {

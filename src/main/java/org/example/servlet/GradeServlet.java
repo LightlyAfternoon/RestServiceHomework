@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.GradeEntity;
 import org.example.service.GradeService;
 import org.example.service.impl.GradeServiceImpl;
@@ -28,6 +29,8 @@ public class GradeServlet extends HttpServlet {
 
     public GradeServlet() {
         this.gradeService = new GradeServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public GradeServlet(GradeService gradeService) {
@@ -55,7 +58,7 @@ public class GradeServlet extends HttpServlet {
             try {
                 gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -75,7 +78,7 @@ public class GradeServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -96,7 +99,7 @@ public class GradeServlet extends HttpServlet {
             grade = gradeService.save(grade);
             gradeDTO = mapper.mapToDTO(grade);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -120,7 +123,7 @@ public class GradeServlet extends HttpServlet {
             try {
                 gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -144,7 +147,7 @@ public class GradeServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -163,7 +166,7 @@ public class GradeServlet extends HttpServlet {
             try {
                 gradeDTO = new GradeDTOMapperImpl().mapToDTO(gradeService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -176,7 +179,7 @@ public class GradeServlet extends HttpServlet {
                 printWriter.write("Must to write a grade's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

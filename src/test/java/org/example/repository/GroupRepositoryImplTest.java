@@ -41,7 +41,6 @@ class GroupRepositoryImplTest {
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
 
-
         groupRepository = new GroupRepositoryImpl();
 
         try {

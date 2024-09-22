@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.StudentEntity;
 import org.example.service.StudentService;
 import org.example.service.impl.StudentServiceImpl;
@@ -28,6 +29,8 @@ public class StudentServlet extends HttpServlet {
 
     public StudentServlet() {
         this.studentService = new StudentServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public StudentServlet(StudentService studentService) {
@@ -55,7 +58,7 @@ public class StudentServlet extends HttpServlet {
             try {
                 studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+            throw new RuntimeException(e);
             }
         }
 
@@ -75,7 +78,7 @@ public class StudentServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -96,7 +99,7 @@ public class StudentServlet extends HttpServlet {
             student = studentService.save(student);
             studentDTO = mapper.mapToDTO(student);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -120,7 +123,7 @@ public class StudentServlet extends HttpServlet {
             try {
                 studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+            throw new RuntimeException(e);
             }
         }
 
@@ -144,7 +147,7 @@ public class StudentServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -163,7 +166,7 @@ public class StudentServlet extends HttpServlet {
             try {
                 studentDTO = new StudentDTOMapperImpl().mapToDTO(studentService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+            throw new RuntimeException(e);
             }
         }
 
@@ -176,7 +179,7 @@ public class StudentServlet extends HttpServlet {
                 printWriter.write("Must to write a student's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

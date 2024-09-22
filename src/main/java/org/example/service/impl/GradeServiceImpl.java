@@ -12,7 +12,7 @@ public class GradeServiceImpl implements GradeService {
     GradeRepository gradeRepository;
 
     public GradeServiceImpl() {
-        gradeRepository = new GradeRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        gradeRepository = new GradeRepositoryImpl();
     }
 
     public GradeServiceImpl(GradeRepository gradeRepository) {

@@ -15,7 +15,7 @@ public class TeacherServiceImpl implements TeacherService {
     TeacherRepository teacherRepository;
 
     public TeacherServiceImpl() {
-        this.teacherRepository = new TeacherRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        this.teacherRepository = new TeacherRepositoryImpl();
     }
 
     public TeacherServiceImpl(TeacherRepository teacherRepository) {

@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.service.ExamService;
 import org.example.service.impl.ExamServiceImpl;
@@ -29,6 +30,8 @@ public class ExamServlet extends HttpServlet {
 
     public ExamServlet() {
         this.examService = new ExamServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public ExamServlet(ExamService examService) {
@@ -45,9 +48,9 @@ public class ExamServlet extends HttpServlet {
         setSettings(req, resp);
 
         ExamDTO examDTO = null;
-        String info = "";
+        String info;
         int id = 0;
-        String[] split = new String[5];
+        String[] split;
 
         if (req.getPathInfo() != null && !req.getPathInfo().substring(1).isBlank()) {
             info = req.getPathInfo();
@@ -56,7 +59,7 @@ public class ExamServlet extends HttpServlet {
             try {
                 examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+               throw new RuntimeException(e);
             }
         }
 
@@ -76,7 +79,7 @@ public class ExamServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -97,7 +100,7 @@ public class ExamServlet extends HttpServlet {
             exam = examService.save(exam);
             examDTO = mapper.mapToDTO(exam);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -110,7 +113,7 @@ public class ExamServlet extends HttpServlet {
         setSettings(req, resp);
 
         ExamDTO examDTO = null;
-        String info = "";
+        String info;
         int id = 0;
         String[] split;
 
@@ -121,7 +124,7 @@ public class ExamServlet extends HttpServlet {
             try {
                 examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+               throw new RuntimeException(e);
             }
         }
 
@@ -145,7 +148,7 @@ public class ExamServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -164,7 +167,7 @@ public class ExamServlet extends HttpServlet {
             try {
                 examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+               throw new RuntimeException(e);
             }
         }
 
@@ -177,7 +180,7 @@ public class ExamServlet extends HttpServlet {
                 printWriter.write("Must to write a exam's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

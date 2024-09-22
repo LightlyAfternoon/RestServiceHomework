@@ -15,7 +15,7 @@ public class GroupServiceImpl implements GroupService {
     GroupRepository groupRepository;
 
     public GroupServiceImpl() {
-        groupRepository = new GroupRepositoryImpl("C:\\Users\\Vika\\IdeaProjects\\Homeworks\\RestServiceHomework\\src\\main\\java\\org\\example\\db\\DbParameters");
+        groupRepository = new GroupRepositoryImpl();
     }
 
     public GroupServiceImpl(GroupRepository groupRepository) {

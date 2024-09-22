@@ -15,10 +15,6 @@ import java.util.List;
 public class StudentRepositoryImpl implements StudentRepository {
     public StudentRepositoryImpl() {}
 
-    public StudentRepositoryImpl(String path) {
-        ConnectionManager.setConfig(path);
-    }
-
     @Override
     public StudentEntity findById(int id) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();

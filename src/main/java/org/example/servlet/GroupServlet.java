@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.db.ConnectionManager;
 import org.example.model.GroupEntity;
 import org.example.service.GroupService;
 import org.example.service.impl.GroupServiceImpl;
@@ -30,6 +31,8 @@ public class GroupServlet extends HttpServlet {
 
     public GroupServlet() {
         this.groupService = new GroupServiceImpl();
+
+        ConnectionManager.setConfig();
     }
 
     public GroupServlet(GroupService groupService) {
@@ -57,7 +60,7 @@ public class GroupServlet extends HttpServlet {
             try {
                 groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -77,7 +80,7 @@ public class GroupServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -128,7 +131,7 @@ public class GroupServlet extends HttpServlet {
             group = groupService.save(group);
             groupDTO = mapper.mapToDTO(group);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         try (PrintWriter printWriter = resp.getWriter()) {
@@ -152,7 +155,7 @@ public class GroupServlet extends HttpServlet {
             try {
                 groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -176,7 +179,7 @@ public class GroupServlet extends HttpServlet {
                 throw new RuntimeException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -195,7 +198,7 @@ public class GroupServlet extends HttpServlet {
             try {
                 groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -208,7 +211,7 @@ public class GroupServlet extends HttpServlet {
                 printWriter.write("Must to write a group's id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
