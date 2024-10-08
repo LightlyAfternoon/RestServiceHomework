@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import java.io.*;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -35,9 +36,6 @@ class TeacherServletTest {
     HttpServletResponse mockResponse;
 
     TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
-    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
-    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
-    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -92,7 +90,7 @@ class TeacherServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()), 1, 1);
+        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011, Calendar.SEPTEMBER,1).getTimeInMillis()), 1, 1);
         Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
         Mockito.when(mockTeacherService.findAllExamsWithTeacherId(1)).thenReturn(List.of(examDTO));
         List<ExamDTO> exams = mockTeacherService.findAllExamsWithTeacherId(1).stream().toList();
@@ -137,8 +135,8 @@ class TeacherServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         GroupDTO groupDTO = new GroupDTO(1, "t",
-                new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2016,1,5).getTimeInMillis()), 1);
+                new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2016,Calendar.JANUARY,5).getTimeInMillis()), 1);
         Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
         Mockito.when(mockTeacherService.findAllGroupsWithTeacherId(1)).thenReturn(List.of(groupDTO));
         List<GroupDTO> groups = mockTeacherService.findAllGroupsWithTeacherId(1).stream().toList();

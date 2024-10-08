@@ -4,6 +4,7 @@ import org.example.model.ExamEntity;
 import org.example.repository.ExamRepository;
 import org.example.repository.impl.ExamRepositoryImpl;
 import org.example.service.impl.ExamServiceImpl;
+import org.example.servlet.mapper.ExamDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ class ExamServiceImplTest {
     ExamService examService;
     ExamEntity examEntity;
 
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockExamRepository = Mockito.mock(ExamRepositoryImpl.class);
@@ -35,13 +38,13 @@ class ExamServiceImplTest {
     void findByIdTest() throws SQLException {
         Mockito.when(mockExamRepository.findById(1)).thenReturn(examEntity);
 
-        Assertions.assertEquals(examService.findById(1), examEntity);
+        Assertions.assertEquals(examService.findById(1), examMapper.mapToDTO(examEntity));
 
         examEntity = new ExamEntity(2,
                 new Date(new GregorianCalendar(2000, Calendar.SEPTEMBER, 2).getTimeInMillis()),
                 2, 4);
 
-        Assertions.assertNotEquals(examService.findById(1), examEntity);
+        Assertions.assertNotEquals(examService.findById(1), examMapper.mapToDTO(examEntity));
     }
 
     @Test
@@ -60,7 +63,7 @@ class ExamServiceImplTest {
 
         Mockito.when(mockExamRepository.findAll()).thenReturn(examEntities);
 
-        Assertions.assertEquals(examService.findAll(), examEntities);
+        Assertions.assertEquals(examService.findAll(), examEntities.stream().map(examMapper::mapToDTO).toList());
     }
 
     @Test
@@ -75,6 +78,6 @@ class ExamServiceImplTest {
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
                 5, 2);
 
-        Assertions.assertEquals(examEntity, examService.save(examEntity));
+        Assertions.assertEquals(examMapper.mapToDTO(examEntity), examService.save(examEntity));
     }
 }

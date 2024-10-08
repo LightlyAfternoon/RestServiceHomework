@@ -4,6 +4,7 @@ import org.example.model.StudentEntity;
 import org.example.repository.StudentRepository;
 import org.example.repository.impl.StudentRepositoryImpl;
 import org.example.service.impl.StudentServiceImpl;
+import org.example.servlet.mapper.StudentDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,8 @@ class StudentServiceImplTest {
     StudentService studentService;
     StudentEntity studentEntity;
 
+    StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockStudentRepository = Mockito.mock(StudentRepositoryImpl.class);
@@ -30,11 +33,11 @@ class StudentServiceImplTest {
     void findByIdTest() throws SQLException {
         Mockito.when(mockStudentRepository.findById(1)).thenReturn(studentEntity);
 
-        Assertions.assertEquals(studentService.findById(1), studentEntity);
+        Assertions.assertEquals(studentService.findById(1), studentMapper.mapToDTO(studentEntity));
 
         studentEntity = new StudentEntity(2, "Клара", "Ломоносова", "Евгеньевна", 3);
 
-        Assertions.assertNotEquals(studentService.findById(1), studentEntity);
+        Assertions.assertNotEquals(studentService.findById(1), studentMapper.mapToDTO(studentEntity));
     }
 
     @Test
@@ -53,7 +56,7 @@ class StudentServiceImplTest {
 
         Mockito.when(mockStudentRepository.findAll()).thenReturn(studentEntities);
 
-        Assertions.assertEquals(studentService.findAll(), studentEntities);
+        Assertions.assertEquals(studentService.findAll(), studentEntities.stream().map(studentMapper::mapToDTO).toList());
     }
 
     @Test
@@ -64,6 +67,6 @@ class StudentServiceImplTest {
 
         studentEntity = new StudentEntity(2, "Клавдий", "Ломоносов", "Германович", 1);
 
-        Assertions.assertEquals(studentEntity, studentService.save(studentEntity));
+        Assertions.assertEquals(studentMapper.mapToDTO(studentEntity), studentService.save(studentEntity));
     }
 }

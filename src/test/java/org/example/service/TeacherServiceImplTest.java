@@ -7,6 +7,9 @@ import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.impl.TeacherServiceImpl;
+import org.example.servlet.mapper.ExamDTOMapper;
+import org.example.servlet.mapper.GroupDTOMapper;
+import org.example.servlet.mapper.SubjectDTOMapper;
 import org.example.servlet.mapper.TeacherDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +29,9 @@ class TeacherServiceImplTest {
     TeacherEntity teacherEntity;
 
     TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -62,7 +68,7 @@ class TeacherServiceImplTest {
 
         Mockito.when(mockTeacherRepository.findAll()).thenReturn(teacherEntities);
 
-        Assertions.assertEquals(teacherService.findAll(), teacherEntities);
+        Assertions.assertEquals(teacherService.findAll(), teacherEntities.stream().map(teacherMapper::mapToDTO).toList());
     }
 
     @Test
@@ -76,7 +82,7 @@ class TeacherServiceImplTest {
 
         Mockito.when(mockTeacherRepository.findAllGroupsWithTeacherId(1)).thenReturn(groupEntities);
 
-        Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities);
+        Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
     }
 
     @Test
@@ -86,7 +92,7 @@ class TeacherServiceImplTest {
 
         Mockito.when(mockTeacherRepository.findAllSubjectsWithTeacherId(1)).thenReturn(subjectEntities);
 
-        Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities);
+        Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
     }
 
     @Test
@@ -99,7 +105,7 @@ class TeacherServiceImplTest {
 
         Mockito.when(mockTeacherRepository.findAllExamsWithTeacherId(1)).thenReturn(examEntities);
 
-        Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities);
+        Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
     }
 
     @Test

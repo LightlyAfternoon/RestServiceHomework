@@ -39,9 +39,6 @@ class GroupServletTest {
     HttpServletResponse mockResponse;
 
     GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
-    StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
-    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
-    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {

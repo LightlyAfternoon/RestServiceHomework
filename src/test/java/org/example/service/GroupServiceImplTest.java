@@ -7,7 +7,10 @@ import org.example.model.SubjectEntity;
 import org.example.repository.GroupRepository;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.example.service.impl.GroupServiceImpl;
+import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
+import org.example.servlet.mapper.StudentDTOMapper;
+import org.example.servlet.mapper.SubjectDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,9 @@ class GroupServiceImplTest {
     GroupEntity groupEntity;
 
     GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -85,7 +91,7 @@ class GroupServiceImplTest {
 
         Mockito.when(mockGroupRepository.findAll()).thenReturn(groupEntities);
 
-        Assertions.assertEquals(groupService.findAll(), groupEntities);
+        Assertions.assertEquals(groupService.findAll(), groupEntities.stream().map(groupMapper::mapToDTO).toList());
     }
 
     @Test
@@ -95,7 +101,7 @@ class GroupServiceImplTest {
 
         Mockito.when(mockGroupRepository.findAllStudentsWithGroupId(1)).thenReturn(studentEntities);
 
-        Assertions.assertEquals(groupService.findAllStudentsWithGroupId(1), studentEntities);
+        Assertions.assertEquals(groupService.findAllStudentsWithGroupId(1), studentEntities.stream().map(studentMapper::mapToDTO).toList());
     }
 
     @Test
@@ -105,7 +111,7 @@ class GroupServiceImplTest {
 
         Mockito.when(mockGroupRepository.findAllSubjectsWithGroupId(1)).thenReturn(subjectEntities);
 
-        Assertions.assertEquals(groupService.findAllSubjectsWithGroupId(1), subjectEntities);
+        Assertions.assertEquals(groupService.findAllSubjectsWithGroupId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
     }
 
     @Test
@@ -118,6 +124,6 @@ class GroupServiceImplTest {
 
         Mockito.when(mockGroupRepository.findAllExamsWithGroupId(1)).thenReturn(examEntities);
 
-        Assertions.assertEquals(groupService.findAllExamsWithGroupId(1), examEntities);
+        Assertions.assertEquals(groupService.findAllExamsWithGroupId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
     }
 }

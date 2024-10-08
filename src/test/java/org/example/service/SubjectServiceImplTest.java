@@ -7,6 +7,7 @@ import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
 import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.service.impl.SubjectServiceImpl;
+import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
 import org.example.servlet.mapper.SubjectDTOMapper;
 import org.example.servlet.mapper.TeacherDTOMapper;
@@ -30,6 +31,7 @@ class SubjectServiceImplTest {
     SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
     TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
     GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -66,7 +68,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.findAll()).thenReturn(subjectEntities);
 
-        Assertions.assertEquals(subjectService.findAll(), subjectEntities);
+        Assertions.assertEquals(subjectService.findAll(), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
     }
 
     @Test
@@ -76,7 +78,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.findAllTeachersWithSubjectId(1)).thenReturn(teacherEntities);
 
-        Assertions.assertEquals(subjectService.findAllTeachersWithSubjectId(1), teacherEntities);
+        Assertions.assertEquals(subjectService.findAllTeachersWithSubjectId(1), teacherEntities.stream().map(teacherMapper::mapToDTO).toList());
     }
 
     @Test
@@ -90,7 +92,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.findAllGroupsWithSubjectId(1)).thenReturn(groupEntities);
 
-        Assertions.assertEquals(subjectService.findAllGroupsWithSubjectId(1), groupEntities);
+        Assertions.assertEquals(subjectService.findAllGroupsWithSubjectId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
     }
 
     @Test
@@ -104,7 +106,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.findAllExamsWithSubjectId(1)).thenReturn(examEntities);
 
-        Assertions.assertEquals(subjectService.findAllExamsWithSubjectId(1), examEntities);
+        Assertions.assertEquals(subjectService.findAllExamsWithSubjectId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
 
     }
 

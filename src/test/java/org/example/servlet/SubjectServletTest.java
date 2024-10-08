@@ -103,7 +103,7 @@ class SubjectServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()), 1, 1);
+        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()), 1, 1);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectMapper.mapToDTO(subjectEntity));
         Mockito.when(mockSubjectService.findAllExamsWithSubjectId(1)).thenReturn(List.of(examDTO));
         List<ExamDTO> exams = mockSubjectService.findAllExamsWithSubjectId(1).stream().toList();
@@ -148,8 +148,8 @@ class SubjectServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         GroupDTO groupDTO = new GroupDTO(1, "t",
-                new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2016,1,5).getTimeInMillis()), 1);
+                new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2016,Calendar.JANUARY,5).getTimeInMillis()), 1);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectMapper.mapToDTO(subjectEntity));
         Mockito.when(mockSubjectService.findAllGroupsWithSubjectId(1)).thenReturn(List.of(groupDTO));
         List<GroupDTO> groups = mockSubjectService.findAllGroupsWithSubjectId(1).stream().toList();
