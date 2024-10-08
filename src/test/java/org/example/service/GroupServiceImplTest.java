@@ -7,6 +7,7 @@ import org.example.model.SubjectEntity;
 import org.example.repository.GroupRepository;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.example.service.impl.GroupServiceImpl;
+import org.example.servlet.mapper.GroupDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ class GroupServiceImplTest {
     GroupService groupService;
     GroupEntity groupEntity;
 
+    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockGroupRepository = Mockito.mock(GroupRepositoryImpl.class);
@@ -39,14 +42,14 @@ class GroupServiceImplTest {
     void findByIdTest() throws SQLException {
         Mockito.when(mockGroupRepository.findById(1)).thenReturn(groupEntity);
 
-        Assertions.assertEquals(groupService.findById(1), groupEntity);
+        Assertions.assertEquals(groupService.findById(1), groupMapper.mapToDTO(groupEntity));
 
         groupEntity = new GroupEntity(90, "П-1",
                 new Date(new GregorianCalendar(2015, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2019, Calendar.JUNE, 30).getTimeInMillis()),
                 1);
 
-        Assertions.assertNotEquals(groupService.findById(1), groupEntity);
+        Assertions.assertNotEquals(groupService.findById(1), groupMapper.mapToDTO(groupEntity));
     }
 
     @Test
@@ -72,7 +75,7 @@ class GroupServiceImplTest {
                 new Date(new GregorianCalendar(2020, Calendar.JUNE, 30).getTimeInMillis()),
                 4);
 
-        Assertions.assertEquals(groupEntity, groupService.save(groupEntity));
+        Assertions.assertEquals(groupMapper.mapToDTO(groupEntity), groupService.save(groupEntity));
     }
 
     @Test

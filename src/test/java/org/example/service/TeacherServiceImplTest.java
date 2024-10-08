@@ -7,6 +7,7 @@ import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.impl.TeacherServiceImpl;
+import org.example.servlet.mapper.TeacherDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ class TeacherServiceImplTest {
     TeacherService teacherService;
     TeacherEntity teacherEntity;
 
+    TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockTeacherRepository = Mockito.mock(TeacherRepositoryImpl.class);
@@ -36,11 +39,11 @@ class TeacherServiceImplTest {
     void findByIdTest() throws SQLException {
         Mockito.when(mockTeacherRepository.findById(1)).thenReturn(teacherEntity);
 
-        Assertions.assertEquals(teacherService.findById(1), teacherEntity);
+        Assertions.assertEquals(teacherService.findById(1), teacherMapper.mapToDTO(teacherEntity));
 
         teacherEntity = new TeacherEntity(2, "t2", "t2", null);
 
-        Assertions.assertNotEquals(teacherService.findById(1), teacherEntity);
+        Assertions.assertNotEquals(teacherService.findById(1), teacherMapper.mapToDTO(teacherEntity));
     }
 
     @Test
@@ -107,6 +110,6 @@ class TeacherServiceImplTest {
 
         teacherEntity = new TeacherEntity(2, "Тет", "Тт", "Ттт");
 
-        Assertions.assertEquals(teacherEntity, teacherService.save(teacherEntity));
+        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherService.save(teacherEntity));
     }
 }

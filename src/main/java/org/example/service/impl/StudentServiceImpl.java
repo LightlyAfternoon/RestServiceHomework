@@ -4,12 +4,16 @@ import org.example.model.StudentEntity;
 import org.example.repository.StudentRepository;
 import org.example.repository.impl.StudentRepositoryImpl;
 import org.example.service.StudentService;
+import org.example.servlet.dto.StudentDTO;
+import org.example.servlet.mapper.StudentDTOMapper;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
+
+    StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
 
     public StudentServiceImpl() {
         studentRepository = new StudentRepositoryImpl();
@@ -20,8 +24,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentEntity findById(int id) throws SQLException {
-        return studentRepository.findById(id);
+    public StudentDTO findById(int id) throws SQLException {
+        return studentMapper.mapToDTO(studentRepository.findById(id));
     }
 
     @Override
@@ -30,12 +34,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentEntity save(StudentEntity entity) throws SQLException {
-        return studentRepository.save(entity);
+    public StudentDTO save(StudentEntity entity) throws SQLException {
+        return studentMapper.mapToDTO(studentRepository.save(entity));
     }
 
     @Override
-    public List<StudentEntity> findAll() throws SQLException {
-        return studentRepository.findAll();
+    public List<StudentDTO> findAll() throws SQLException {
+        return studentRepository.findAll().stream().map(studentMapper::mapToDTO).toList();
     }
 }

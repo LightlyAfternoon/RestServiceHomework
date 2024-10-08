@@ -4,12 +4,16 @@ import org.example.model.ExamEntity;
 import org.example.repository.ExamRepository;
 import org.example.repository.impl.ExamRepositoryImpl;
 import org.example.service.ExamService;
+import org.example.servlet.dto.ExamDTO;
+import org.example.servlet.mapper.ExamDTOMapper;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ExamServiceImpl implements ExamService {
     ExamRepository examRepository;
+
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public ExamServiceImpl() {
         examRepository = new ExamRepositoryImpl();
@@ -20,8 +24,8 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamEntity findById(int id) throws SQLException {
-        return examRepository.findById(id);
+    public ExamDTO findById(int id) throws SQLException {
+        return examMapper.mapToDTO(examRepository.findById(id));
     }
 
     @Override
@@ -30,12 +34,12 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamEntity save(ExamEntity entity) throws SQLException {
-        return examRepository.save(entity);
+    public ExamDTO save(ExamEntity entity) throws SQLException {
+        return examMapper.mapToDTO(examRepository.save(entity));
     }
 
     @Override
-    public List<ExamEntity> findAll() throws SQLException {
-        return examRepository.findAll();
+    public List<ExamDTO> findAll() throws SQLException {
+        return examRepository.findAll().stream().map(examMapper::mapToDTO).toList();
     }
 }

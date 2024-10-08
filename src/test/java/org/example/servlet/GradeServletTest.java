@@ -50,8 +50,8 @@ class GradeServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeEntity);
-        gradeDTO = gradeMapper.mapToDTO(mockGradeService.findById(1));
+        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeMapper.mapToDTO(gradeEntity));
+        gradeDTO = mockGradeService.findById(1);
 
         gradeServlet.doGet(mockRequest, mockResponse);
 
@@ -71,8 +71,8 @@ class GradeServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockGradeService.findAll()).thenReturn(List.of(gradeMapper.mapToEntity(gradeDTO)));
-        List<GradeDTO> grades = mockGradeService.findAll().stream().map(t -> gradeMapper.mapToDTO(t)).toList();
+        Mockito.when(mockGradeService.findAll()).thenReturn(List.of(gradeDTO));
+        List<GradeDTO> grades = mockGradeService.findAll().stream().toList();
 
         gradeServlet.doGet(mockRequest, mockResponse);
 
@@ -105,8 +105,8 @@ class GradeServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         gradeEntity = gradeMapper.mapToEntity(grade);
-        Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeEntity);
-        gradeDTO = gradeMapper.mapToDTO(mockGradeService.save(gradeEntity));
+        Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeMapper.mapToDTO(gradeEntity));
+        gradeDTO = mockGradeService.save(gradeEntity);
         gradeServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), gradeDTO.toString());
@@ -128,15 +128,15 @@ class GradeServletTest {
         GradeDTO grade = gson.fromJson(json, GradeDTO.class);
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
-        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeEntity);
+        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeMapper.mapToDTO(gradeEntity));
         Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
         Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         gradeEntity = gradeMapper.mapToEntity(grade, 1);
-        Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeEntity);
-        gradeDTO = gradeMapper.mapToDTO(mockGradeService.save(gradeEntity));
+        Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeMapper.mapToDTO(gradeEntity));
+        gradeDTO = mockGradeService.save(gradeEntity);
         gradeServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), gradeDTO.toString());
@@ -151,7 +151,7 @@ class GradeServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeEntity);
+        Mockito.when(mockGradeService.findById(1)).thenReturn(gradeMapper.mapToDTO(gradeEntity));
         Mockito.when(mockGradeService.deleteById(1)).thenReturn(true);
 
         gradeServlet.doDelete(mockRequest, mockResponse);

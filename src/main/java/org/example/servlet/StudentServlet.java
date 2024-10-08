@@ -58,7 +58,7 @@ public class StudentServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                studentDTO = studentMapper.mapToDTO(studentService.findById(id));
+                studentDTO = studentService.findById(id);
             } catch (SQLException e) {
             throw new RuntimeException(e);
             }
@@ -70,7 +70,7 @@ public class StudentServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Student is not found");
             } else {
-                List<StudentDTO> students = studentService.findAll().stream().map(t -> studentMapper.mapToDTO(t)).toList();
+                List<StudentDTO> students = studentService.findAll().stream().toList();
                 for (StudentDTO student : students) {
                     if (student != students.getLast()) {
                         printWriter.write(student.toString() + ", \n");
@@ -96,8 +96,7 @@ public class StudentServlet extends HttpServlet {
 
         StudentEntity student = studentMapper.mapToEntity(studentDTO);
         try {
-            student = studentService.save(student);
-            studentDTO = studentMapper.mapToDTO(student);
+            studentDTO = studentService.save(student);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -121,7 +120,7 @@ public class StudentServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                studentDTO = studentMapper.mapToDTO(studentService.findById(id));
+                studentDTO = studentService.findById(id);
             } catch (SQLException e) {
             throw new RuntimeException(e);
             }
@@ -136,7 +135,7 @@ public class StudentServlet extends HttpServlet {
                 studentDTO = gson.fromJson(json, StudentDTO.class);
 
                 StudentEntity student = studentMapper.mapToEntity(studentDTO, id);
-                studentDTO = studentMapper.mapToDTO(studentService.save(student));
+                studentDTO = studentService.save(student);
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(studentDTO.toString());
@@ -162,9 +161,9 @@ public class StudentServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                studentDTO = studentMapper.mapToDTO(studentService.findById(id));
+                studentDTO = studentService.findById(id);
             } catch (SQLException e) {
-            throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 

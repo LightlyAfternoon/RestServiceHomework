@@ -1,29 +1,32 @@
 package org.example.service;
 
-import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
+import org.example.servlet.dto.ExamDTO;
+import org.example.servlet.dto.GroupDTO;
+import org.example.servlet.dto.SubjectDTO;
+import org.example.servlet.dto.TeacherDTO;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface SubjectService {
-    SubjectEntity findById(int id) throws SQLException;
+    SubjectDTO findById(int id) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
 
-    SubjectEntity save(SubjectEntity entity) throws SQLException;
+    SubjectDTO save(SubjectEntity entity) throws SQLException;
 
-    List<SubjectEntity> findAll() throws SQLException;
+    List<SubjectDTO> findAll() throws SQLException;
 
-    List<TeacherEntity> findAllTeachersWithSubjectId(int id) throws SQLException;
+    List<TeacherDTO> findAllTeachersWithSubjectId(int id) throws SQLException;
 
-    List<GroupEntity> findAllGroupsWithSubjectId(int id) throws SQLException;
+    List<GroupDTO> findAllGroupsWithSubjectId(int id) throws SQLException;
 
-    List<ExamEntity> findAllExamsWithSubjectId(int id) throws SQLException;
+    List<ExamDTO> findAllExamsWithSubjectId(int id) throws SQLException;
 
-    TeacherEntity save(SubjectEntity subject, TeacherEntity teacher) throws SQLException;
+    TeacherDTO save(SubjectEntity subject, TeacherEntity teacher) throws SQLException;
 
-    GroupEntity save(SubjectEntity subject, GroupEntity group) throws SQLException;
+    GroupDTO save(SubjectEntity subject, GroupEntity group) throws SQLException;
 }

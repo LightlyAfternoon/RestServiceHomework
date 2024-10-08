@@ -58,7 +58,7 @@ public class ExamServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = examMapper.mapToDTO(examService.findById(id));
+                examDTO = examService.findById(id);
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }
@@ -70,7 +70,7 @@ public class ExamServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Exam is not found");
             } else {
-                List<ExamDTO> exams = examService.findAll().stream().map(t -> examMapper.mapToDTO(t)).toList();
+                List<ExamDTO> exams = examService.findAll().stream().toList();
                 for (ExamDTO exam : exams) {
                     if (exam != exams.getLast()) {
                         printWriter.write(exam.toString() + ", \n");
@@ -96,8 +96,7 @@ public class ExamServlet extends HttpServlet {
 
         ExamEntity exam = examMapper.mapToEntity(examDTO);
         try {
-            exam = examService.save(exam);
-            examDTO = examMapper.mapToDTO(exam);
+            examDTO = examService.save(exam);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -121,7 +120,7 @@ public class ExamServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = examMapper.mapToDTO(examService.findById(id));
+                examDTO = examService.findById(id);
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }
@@ -136,7 +135,7 @@ public class ExamServlet extends HttpServlet {
                 examDTO = gson.fromJson(json, ExamDTO.class);
 
                 ExamEntity exam = examMapper.mapToEntity(examDTO, id);
-                examDTO = examMapper.mapToDTO(examService.save(exam));
+                examDTO = examService.save(exam);
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(examDTO.toString());
@@ -162,7 +161,7 @@ public class ExamServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = examMapper.mapToDTO(examService.findById(id));
+                examDTO = examService.findById(id);
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }

@@ -58,7 +58,7 @@ public class GradeServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                gradeDTO = gradeMapper.mapToDTO(gradeService.findById(id));
+                gradeDTO = gradeService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -70,7 +70,7 @@ public class GradeServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Grade is not found");
             } else {
-                List<GradeDTO> grades = gradeService.findAll().stream().map(t -> gradeMapper.mapToDTO(t)).toList();
+                List<GradeDTO> grades = gradeService.findAll().stream().toList();
                 for (GradeDTO grade : grades) {
                     if (grade != grades.getLast()) {
                         printWriter.write(grade.toString() + ", \n");
@@ -98,8 +98,7 @@ public class GradeServlet extends HttpServlet {
 
         GradeEntity grade = mapper.mapToEntity(gradeDTO);
         try {
-            grade = gradeService.save(grade);
-            gradeDTO = mapper.mapToDTO(grade);
+            gradeDTO = gradeService.save(grade);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -123,7 +122,7 @@ public class GradeServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                gradeDTO = gradeMapper.mapToDTO(gradeService.findById(id));
+                gradeDTO = gradeService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -138,7 +137,7 @@ public class GradeServlet extends HttpServlet {
                 gradeDTO = gson.fromJson(json, GradeDTO.class);
 
                 GradeEntity grade = gradeMapper.mapToEntity(gradeDTO, id);
-                gradeDTO = gradeMapper.mapToDTO(gradeService.save(grade));
+                gradeDTO = gradeService.save(grade);
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(gradeDTO.toString());
@@ -164,7 +163,7 @@ public class GradeServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                gradeDTO = gradeMapper.mapToDTO(gradeService.findById(id));
+                gradeDTO = gradeService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -30,9 +30,6 @@ public class TeacherServlet extends HttpServlet {
     final transient TeacherService teacherService;
 
     static TeacherDTOMapper mapper = TeacherDTOMapper.INSTANCE;
-    static GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
-    static SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
-    static ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public TeacherServlet() {
         this.teacherService = new TeacherServiceImpl();
@@ -63,7 +60,7 @@ public class TeacherServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
+                teacherDTO = teacherService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -75,7 +72,7 @@ public class TeacherServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Teacher is not found");
             } else {
-                List<TeacherDTO> teachers = teacherService.findAll().stream().map(t -> mapper.mapToDTO(t)).toList();
+                List<TeacherDTO> teachers = teacherService.findAll().stream().toList();
                 for (TeacherDTO teacher : teachers) {
                     if (teacher != teachers.getLast()) {
                         printWriter.write(teacher.toString() + ", \n");
@@ -111,13 +108,13 @@ public class TeacherServlet extends HttpServlet {
     private List<? extends DTO> findList(String info, TeacherDTO teacherDTO) throws SQLException {
         if (info.equals("group")) {
             return teacherService.findAllGroupsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> groupMapper.mapToDTO(e)).toList();
+                    .stream().toList();
         } else if (info.equals("subject")) {
             return teacherService.findAllSubjectsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> subjectMapper.mapToDTO(e)).toList();
+                    .stream().toList();
         } else if (info.equals("exam")) {
             return teacherService.findAllExamsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> examMapper.mapToDTO(e)).toList();
+                    .stream().toList();
         }
 
         return new ArrayList<>();
@@ -135,8 +132,7 @@ public class TeacherServlet extends HttpServlet {
 
         TeacherEntity teacher = mapper.mapToEntity(teacherDTO);
         try {
-            teacher = teacherService.save(teacher);
-            teacherDTO = mapper.mapToDTO(teacher);
+            teacherDTO = teacherService.save(teacher);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -160,7 +156,7 @@ public class TeacherServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
+                teacherDTO = teacherService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -175,7 +171,7 @@ public class TeacherServlet extends HttpServlet {
                 teacherDTO = gson.fromJson(json, TeacherDTO.class);
 
                 TeacherEntity teacher = mapper.mapToEntity(teacherDTO, id);
-                teacherDTO = mapper.mapToDTO(teacherService.save(teacher));
+                teacherDTO = teacherService.save(teacher);
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(teacherDTO.toString());
@@ -201,7 +197,7 @@ public class TeacherServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
+                teacherDTO = teacherService.findById(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

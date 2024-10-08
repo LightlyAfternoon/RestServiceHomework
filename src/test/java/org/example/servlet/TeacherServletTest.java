@@ -55,8 +55,8 @@ class TeacherServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
-        teacherDTO = teacherMapper.mapToDTO(mockTeacherService.findById(1));
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        teacherDTO = mockTeacherService.findById(1);
 
         teacherServlet.doGet(mockRequest, mockResponse);
 
@@ -76,8 +76,8 @@ class TeacherServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockTeacherService.findAll()).thenReturn(List.of(teacherMapper.mapToEntity(teacherDTO)));
-        List<TeacherDTO> teachers = mockTeacherService.findAll().stream().map(t -> teacherMapper.mapToDTO(t)).toList();
+        Mockito.when(mockTeacherService.findAll()).thenReturn(List.of(teacherDTO));
+        List<TeacherDTO> teachers = mockTeacherService.findAll().stream().toList();
 
         teacherServlet.doGet(mockRequest, mockResponse);
 
@@ -93,9 +93,9 @@ class TeacherServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()), 1, 1);
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
-        Mockito.when(mockTeacherService.findAllExamsWithTeacherId(1)).thenReturn(List.of(examMapper.mapToEntity(examDTO)));
-        List<ExamDTO> exams = mockTeacherService.findAllExamsWithTeacherId(1).stream().map(e -> examMapper.mapToDTO(e)).toList();
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        Mockito.when(mockTeacherService.findAllExamsWithTeacherId(1)).thenReturn(List.of(examDTO));
+        List<ExamDTO> exams = mockTeacherService.findAllExamsWithTeacherId(1).stream().toList();
 
         teacherServlet.doGet(mockRequest, mockResponse);
 
@@ -115,9 +115,9 @@ class TeacherServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         SubjectDTO subjectDTO = new SubjectDTO(1, "t");
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
-        Mockito.when(mockTeacherService.findAllSubjectsWithTeacherId(1)).thenReturn(List.of(subjectMapper.mapToEntity(subjectDTO)));
-        List<SubjectDTO> subjects = mockTeacherService.findAllSubjectsWithTeacherId(1).stream().map(s -> subjectMapper.mapToDTO(s)).toList();
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        Mockito.when(mockTeacherService.findAllSubjectsWithTeacherId(1)).thenReturn(List.of(subjectDTO));
+        List<SubjectDTO> subjects = mockTeacherService.findAllSubjectsWithTeacherId(1).stream().toList();
 
         teacherServlet.doGet(mockRequest, mockResponse);
 
@@ -139,9 +139,9 @@ class TeacherServletTest {
         GroupDTO groupDTO = new GroupDTO(1, "t",
                 new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2016,1,5).getTimeInMillis()), 1);
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
-        Mockito.when(mockTeacherService.findAllGroupsWithTeacherId(1)).thenReturn(List.of(groupMapper.mapToEntity(groupDTO)));
-        List<GroupDTO> groups = mockTeacherService.findAllGroupsWithTeacherId(1).stream().map(g -> groupMapper.mapToDTO(g)).toList();
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        Mockito.when(mockTeacherService.findAllGroupsWithTeacherId(1)).thenReturn(List.of(groupDTO));
+        List<GroupDTO> groups = mockTeacherService.findAllGroupsWithTeacherId(1).stream().toList();
 
         teacherServlet.doGet(mockRequest, mockResponse);
 
@@ -178,8 +178,8 @@ class TeacherServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         teacherEntity = teacherMapper.mapToEntity(teacher);
-        Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherEntity);
-        teacherDTO = teacherMapper.mapToDTO(mockTeacherService.save(teacherEntity));
+        Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        teacherDTO = mockTeacherService.save(teacherEntity);
         teacherServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), teacherDTO.toString());
@@ -201,15 +201,15 @@ class TeacherServletTest {
         TeacherDTO teacher = gson.fromJson(json, TeacherDTO.class);
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
         Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
         Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         teacherEntity = teacherMapper.mapToEntity(teacher, 1);
-        Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherEntity);
-        teacherDTO = teacherMapper.mapToDTO(mockTeacherService.save(teacherEntity));
+        Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        teacherDTO = mockTeacherService.save(teacherEntity);
         teacherServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), teacherDTO.toString());
@@ -224,7 +224,7 @@ class TeacherServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
+        Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
         Mockito.when(mockTeacherService.deleteById(1)).thenReturn(true);
 
         teacherServlet.doDelete(mockRequest, mockResponse);

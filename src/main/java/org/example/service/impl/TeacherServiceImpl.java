@@ -1,18 +1,28 @@
 package org.example.service.impl;
 
-import org.example.model.ExamEntity;
-import org.example.model.GroupEntity;
-import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
 import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.TeacherService;
+import org.example.servlet.dto.ExamDTO;
+import org.example.servlet.dto.GroupDTO;
+import org.example.servlet.dto.SubjectDTO;
+import org.example.servlet.dto.TeacherDTO;
+import org.example.servlet.mapper.ExamDTOMapper;
+import org.example.servlet.mapper.GroupDTOMapper;
+import org.example.servlet.mapper.SubjectDTOMapper;
+import org.example.servlet.mapper.TeacherDTOMapper;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
     TeacherRepository teacherRepository;
+
+    TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public TeacherServiceImpl() {
         this.teacherRepository = new TeacherRepositoryImpl();
@@ -23,8 +33,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherEntity findById(int id) throws SQLException {
-        return teacherRepository.findById(id);
+    public TeacherDTO findById(int id) throws SQLException {
+        return teacherMapper.mapToDTO(teacherRepository.findById(id));
     }
 
     @Override
@@ -33,27 +43,27 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherEntity save(TeacherEntity entity) throws SQLException {
-        return teacherRepository.save(entity);
+    public TeacherDTO save(TeacherEntity entity) throws SQLException {
+        return teacherMapper.mapToDTO(teacherRepository.save(entity));
     }
 
     @Override
-    public List<TeacherEntity> findAll() throws SQLException {
-        return teacherRepository.findAll();
+    public List<TeacherDTO> findAll() throws SQLException {
+        return teacherRepository.findAll().stream().map(teacherMapper::mapToDTO).toList();
     }
 
     @Override
-    public List<GroupEntity> findAllGroupsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllGroupsWithTeacherId(id);
+    public List<GroupDTO> findAllGroupsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findAllGroupsWithTeacherId(id).stream().map(groupMapper::mapToDTO).toList();
     }
 
     @Override
-    public List<SubjectEntity> findAllSubjectsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllSubjectsWithTeacherId(id);
+    public List<SubjectDTO> findAllSubjectsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findAllSubjectsWithTeacherId(id).stream().map(subjectMapper::mapToDTO).toList();
     }
 
     @Override
-    public List<ExamEntity> findAllExamsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllExamsWithTeacherId(id);
+    public List<ExamDTO> findAllExamsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findAllExamsWithTeacherId(id).stream().map(examMapper::mapToDTO).toList();
     }
 }

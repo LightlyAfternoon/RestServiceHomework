@@ -54,8 +54,8 @@ class ExamServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockExamService.findById(1)).thenReturn(examEntity);
-        examDTO = examMapper.mapToDTO(mockExamService.findById(1));
+        Mockito.when(mockExamService.findById(1)).thenReturn(examMapper.mapToDTO(examEntity));
+        examDTO = mockExamService.findById(1);
 
         examServlet.doGet(mockRequest, mockResponse);
 
@@ -76,8 +76,8 @@ class ExamServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockExamService.findAll()).thenReturn(List.of(examMapper.mapToEntity(examDTO)));
-        List<ExamDTO> exams = mockExamService.findAll().stream().map(t -> examMapper.mapToDTO(t)).toList();
+        Mockito.when(mockExamService.findAll()).thenReturn(List.of(examDTO));
+        List<ExamDTO> exams = mockExamService.findAll().stream().toList();
 
         examServlet.doGet(mockRequest, mockResponse);
 
@@ -110,8 +110,8 @@ class ExamServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         examEntity = examMapper.mapToEntity(exam);
-        Mockito.when(mockExamService.save(examEntity)).thenReturn(examEntity);
-        examDTO = examMapper.mapToDTO(mockExamService.save(examEntity));
+        Mockito.when(mockExamService.save(examEntity)).thenReturn(examMapper.mapToDTO(examEntity));
+        examDTO = mockExamService.save(examEntity);
         examServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
@@ -133,15 +133,15 @@ class ExamServletTest {
         ExamDTO exam = gson.fromJson(json, ExamDTO.class);
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
-        Mockito.when(mockExamService.findById(1)).thenReturn(examEntity);
+        Mockito.when(mockExamService.findById(1)).thenReturn(examMapper.mapToDTO(examEntity));
         Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
         Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         examEntity = examMapper.mapToEntity(exam, 1);
-        Mockito.when(mockExamService.save(examEntity)).thenReturn(examEntity);
-        examDTO = examMapper.mapToDTO(mockExamService.save(examEntity));
+        Mockito.when(mockExamService.save(examEntity)).thenReturn(examMapper.mapToDTO(examEntity));
+        examDTO = mockExamService.save(examEntity);
         examServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
@@ -156,7 +156,7 @@ class ExamServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockExamService.findById(1)).thenReturn(examEntity);
+        Mockito.when(mockExamService.findById(1)).thenReturn(examMapper.mapToDTO(examEntity));
         Mockito.when(mockExamService.deleteById(1)).thenReturn(true);
 
         examServlet.doDelete(mockRequest, mockResponse);

@@ -7,6 +7,9 @@ import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
 import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.service.impl.SubjectServiceImpl;
+import org.example.servlet.mapper.GroupDTOMapper;
+import org.example.servlet.mapper.SubjectDTOMapper;
+import org.example.servlet.mapper.TeacherDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,10 @@ class SubjectServiceImplTest {
     SubjectService subjectService;
     SubjectEntity subjectEntity;
 
+    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockSubjectRepository = Mockito.mock(SubjectRepositoryImpl.class);
@@ -36,11 +43,11 @@ class SubjectServiceImplTest {
     void findByIdTest() throws SQLException {
         Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
-        Assertions.assertEquals(subjectService.findById(1), subjectEntity);
+        Assertions.assertEquals(subjectService.findById(1), subjectMapper.mapToDTO(subjectEntity));
 
         subjectEntity = new SubjectEntity(1, "TestS2");
 
-        Assertions.assertNotEquals(subjectService.findById(1), subjectEntity);
+        Assertions.assertNotEquals(subjectService.findById(1), subjectMapper.mapToDTO(subjectEntity));
     }
 
     @Test
@@ -107,7 +114,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.save(subjectEntity)).thenReturn(subjectEntity);
 
-        Assertions.assertEquals(subjectEntity, subjectService.save(subjectEntity));
+        Assertions.assertEquals(subjectMapper.mapToDTO(subjectEntity), subjectService.save(subjectEntity));
     }
 
     @Test
@@ -119,7 +126,7 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.save(subjectEntity, teacherEntity)).thenReturn(teacherEntity);
 
-        Assertions.assertEquals(teacherEntity, subjectService.save(subjectEntity, teacherEntity));
+        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), subjectService.save(subjectEntity, teacherEntity));
 
     }
 
@@ -139,7 +146,7 @@ class SubjectServiceImplTest {
                 null,
                 2);
 
-        Assertions.assertEquals(groupEntity, subjectService.save(subjectEntity, groupEntity));
+        Assertions.assertEquals(groupMapper.mapToDTO(groupEntity), subjectService.save(subjectEntity, groupEntity));
 
     }
 }

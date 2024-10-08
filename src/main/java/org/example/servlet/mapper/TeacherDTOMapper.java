@@ -2,7 +2,6 @@ package org.example.servlet.mapper;
 
 import org.example.model.TeacherEntity;
 import org.example.servlet.dto.TeacherDTO;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

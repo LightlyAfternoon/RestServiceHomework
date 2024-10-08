@@ -50,8 +50,8 @@ class StudentServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockStudentService.findById(1)).thenReturn(studentEntity);
-        studentDTO = studentMapper.mapToDTO(mockStudentService.findById(1));
+        Mockito.when(mockStudentService.findById(1)).thenReturn(studentMapper.mapToDTO(studentEntity));
+        studentDTO = mockStudentService.findById(1);
 
         studentServlet.doGet(mockRequest, mockResponse);
 
@@ -71,8 +71,8 @@ class StudentServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockStudentService.findAll()).thenReturn(List.of(studentMapper.mapToEntity(studentDTO)));
-        List<StudentDTO> students = mockStudentService.findAll().stream().map(t -> studentMapper.mapToDTO(t)).toList();
+        Mockito.when(mockStudentService.findAll()).thenReturn(List.of(studentDTO));
+        List<StudentDTO> students = mockStudentService.findAll().stream().toList();
 
         studentServlet.doGet(mockRequest, mockResponse);
 
@@ -106,8 +106,8 @@ class StudentServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         studentEntity = studentMapper.mapToEntity(student);
-        Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentEntity);
-        studentDTO = studentMapper.mapToDTO(mockStudentService.save(studentEntity));
+        Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentMapper.mapToDTO(studentEntity));
+        studentDTO = mockStudentService.save(studentEntity);
         studentServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), studentDTO.toString());
@@ -129,15 +129,15 @@ class StudentServletTest {
         StudentDTO student = gson.fromJson(json, StudentDTO.class);
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/1");
-        Mockito.when(mockStudentService.findById(1)).thenReturn(studentEntity);
+        Mockito.when(mockStudentService.findById(1)).thenReturn(studentMapper.mapToDTO(studentEntity));
         Mockito.when(mockRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
         Mockito.when(mockRequest.getReader().lines()).thenReturn(jsonS.lines());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         studentEntity = studentMapper.mapToEntity(student, 1);
-        Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentEntity);
-        studentDTO = studentMapper.mapToDTO(mockStudentService.save(studentEntity));
+        Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentMapper.mapToDTO(studentEntity));
+        studentDTO = mockStudentService.save(studentEntity);
         studentServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), studentDTO.toString());
@@ -152,7 +152,7 @@ class StudentServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockStudentService.findById(1)).thenReturn(studentEntity);
+        Mockito.when(mockStudentService.findById(1)).thenReturn(studentMapper.mapToDTO(studentEntity));
         Mockito.when(mockStudentService.deleteById(1)).thenReturn(true);
 
         studentServlet.doDelete(mockRequest, mockResponse);
