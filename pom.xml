@@ -117,8 +117,8 @@
 
     <resources>
       <resource>
-        <directory>src/main/java/org/example/db</directory>
-        <targetPath>org/example/db</targetPath>
+        <directory>src/main/java/resources</directory>
+        <targetPath>resources</targetPath>
       </resource>
     </resources>
   </build>

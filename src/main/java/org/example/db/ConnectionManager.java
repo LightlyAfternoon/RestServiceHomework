@@ -16,7 +16,7 @@ public class ConnectionManager {
     private ConnectionManager() {}
 
     public static void setConfig() {
-        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("db.properties")) {
+        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/resources/db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
             config.setDriverClassName(prop.getProperty("driverClassName"));
