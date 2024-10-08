@@ -11,7 +11,7 @@ import org.example.model.StudentEntity;
 import org.example.service.StudentService;
 import org.example.service.impl.StudentServiceImpl;
 import org.example.servlet.dto.StudentDTO;
-import org.example.servlet.mapper.StudentDTOMapperImpl;
+import org.example.servlet.mapper.StudentDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,8 @@ class StudentServletTest {
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
 
+    StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -49,7 +51,7 @@ class StudentServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         Mockito.when(mockStudentService.findById(1)).thenReturn(studentEntity);
-        studentDTO = new StudentDTOMapperImpl().mapToDTO(mockStudentService.findById(1));
+        studentDTO = studentMapper.mapToDTO(mockStudentService.findById(1));
 
         studentServlet.doGet(mockRequest, mockResponse);
 
@@ -69,8 +71,8 @@ class StudentServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockStudentService.findAll()).thenReturn(List.of(new StudentDTOMapperImpl().mapToEntity(studentDTO)));
-        List<StudentDTO> students = mockStudentService.findAll().stream().map(t -> new StudentDTOMapperImpl().mapToDTO(t)).toList();
+        Mockito.when(mockStudentService.findAll()).thenReturn(List.of(studentMapper.mapToEntity(studentDTO)));
+        List<StudentDTO> students = mockStudentService.findAll().stream().map(t -> studentMapper.mapToDTO(t)).toList();
 
         studentServlet.doGet(mockRequest, mockResponse);
 
@@ -86,7 +88,7 @@ class StudentServletTest {
     void doPostTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "firstName": "t",
                         "lastName": "t",
                         "patronymic": "t",
@@ -103,9 +105,9 @@ class StudentServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        studentEntity = new StudentDTOMapperImpl().mapToEntity(student);
+        studentEntity = studentMapper.mapToEntity(student);
         Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentEntity);
-        studentDTO = new StudentDTOMapperImpl().mapToDTO(mockStudentService.save(studentEntity));
+        studentDTO = studentMapper.mapToDTO(mockStudentService.save(studentEntity));
         studentServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), studentDTO.toString());
@@ -115,7 +117,7 @@ class StudentServletTest {
     void doPutTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "firstName": "t",
                         "lastName": "t",
                         "patronymic": "t"
@@ -133,9 +135,9 @@ class StudentServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        studentEntity = new StudentDTOMapperImpl().mapToEntity(student, student.getId());
+        studentEntity = studentMapper.mapToEntity(student, 1);
         Mockito.when(mockStudentService.save(studentEntity)).thenReturn(studentEntity);
-        studentDTO = new StudentDTOMapperImpl().mapToDTO(mockStudentService.save(studentEntity));
+        studentDTO = studentMapper.mapToDTO(mockStudentService.save(studentEntity));
         studentServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), studentDTO.toString());

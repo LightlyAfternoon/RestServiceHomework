@@ -15,7 +15,6 @@ import org.example.service.ExamService;
 import org.example.service.impl.ExamServiceImpl;
 import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.mapper.ExamDTOMapper;
-import org.example.servlet.mapper.ExamDTOMapperImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +26,8 @@ import java.util.stream.Collectors;
 public class ExamServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     final transient ExamService examService;
+
+    static ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public ExamServlet() {
         this.examService = new ExamServiceImpl();
@@ -57,7 +58,7 @@ public class ExamServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
+                examDTO = examMapper.mapToDTO(examService.findById(id));
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }
@@ -69,7 +70,7 @@ public class ExamServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Exam is not found");
             } else {
-                List<ExamDTO> exams = examService.findAll().stream().map(t -> new ExamDTOMapperImpl().mapToDTO(t)).toList();
+                List<ExamDTO> exams = examService.findAll().stream().map(t -> examMapper.mapToDTO(t)).toList();
                 for (ExamDTO exam : exams) {
                     if (exam != exams.getLast()) {
                         printWriter.write(exam.toString() + ", \n");
@@ -87,18 +88,16 @@ public class ExamServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        ExamDTOMapper mapper = new ExamDTOMapperImpl();
-
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         ExamDTO examDTO = gson.fromJson(json, ExamDTO.class);
 
-        ExamEntity exam = mapper.mapToEntity(examDTO);
+        ExamEntity exam = examMapper.mapToEntity(examDTO);
         try {
             exam = examService.save(exam);
-            examDTO = mapper.mapToDTO(exam);
+            examDTO = examMapper.mapToDTO(exam);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -122,7 +121,7 @@ public class ExamServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
+                examDTO = examMapper.mapToDTO(examService.findById(id));
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }
@@ -130,16 +129,14 @@ public class ExamServlet extends HttpServlet {
 
         try {
             if (id != 0 && examDTO != null) {
-                ExamDTOMapperImpl mapper = new ExamDTOMapperImpl();
-
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                 JsonObject json = JsonParser.parseString(info).getAsJsonObject();
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
                 examDTO = gson.fromJson(json, ExamDTO.class);
 
-                ExamEntity exam = mapper.mapToEntity(examDTO, id);
-                examDTO = mapper.mapToDTO(examService.save(exam));
+                ExamEntity exam = examMapper.mapToEntity(examDTO, id);
+                examDTO = examMapper.mapToDTO(examService.save(exam));
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(examDTO.toString());
@@ -165,7 +162,7 @@ public class ExamServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                examDTO = new ExamDTOMapperImpl().mapToDTO(examService.findById(id));
+                examDTO = examMapper.mapToDTO(examService.findById(id));
             } catch (SQLException e) {
                throw new RuntimeException(e);
             }

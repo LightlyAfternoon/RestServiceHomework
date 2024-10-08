@@ -29,6 +29,11 @@ public class GroupServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     final transient GroupService groupService;
 
+    static GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    static StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+    static SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    static ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+
     public GroupServlet() {
         this.groupService = new GroupServiceImpl();
 
@@ -58,7 +63,7 @@ public class GroupServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
+                groupDTO = groupMapper.mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -70,7 +75,7 @@ public class GroupServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Group is not found");
             } else {
-                List<GroupDTO> groups = groupService.findAll().stream().map(t -> new GroupDTOMapperImpl().mapToDTO(t)).toList();
+                List<GroupDTO> groups = groupService.findAll().stream().map(t -> groupMapper.mapToDTO(t)).toList();
                 for (GroupDTO group : groups) {
                     if (group != groups.getLast()) {
                         printWriter.write(group.toString() + ", \n");
@@ -102,13 +107,13 @@ public class GroupServlet extends HttpServlet {
     private List<? extends DTO> findList(String info, GroupDTO groupDTO) throws SQLException {
         if (info.equals("student")) {
             return groupService.findAllStudentsWithGroupId(groupDTO.getId())
-                    .stream().map(e -> new StudentDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> studentMapper.mapToDTO(e)).toList();
         } else if (info.equals("subject")) {
             return groupService.findAllSubjectsWithGroupId(groupDTO.getId())
-                    .stream().map(e -> new SubjectDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> subjectMapper.mapToDTO(e)).toList();
         } else if (info.equals("exam")) {
             return groupService.findAllExamsWithGroupId(groupDTO.getId())
-                    .stream().map(e -> new ExamDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> examMapper.mapToDTO(e)).toList();
         }
 
         return new ArrayList<>();
@@ -118,18 +123,16 @@ public class GroupServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        GroupDTOMapper mapper = new GroupDTOMapperImpl();
-
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         GroupDTO groupDTO = gson.fromJson(json, GroupDTO.class);
 
-        GroupEntity group = mapper.mapToEntity(groupDTO);
+        GroupEntity group = groupMapper.mapToEntity(groupDTO);
         try {
             group = groupService.save(group);
-            groupDTO = mapper.mapToDTO(group);
+            groupDTO = groupMapper.mapToDTO(group);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -153,7 +156,7 @@ public class GroupServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
+                groupDTO = groupMapper.mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -161,16 +164,14 @@ public class GroupServlet extends HttpServlet {
 
         try {
             if (id != 0 && groupDTO != null) {
-                GroupDTOMapperImpl mapper = new GroupDTOMapperImpl();
-
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                 JsonObject json = JsonParser.parseString(info).getAsJsonObject();
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
                 groupDTO = gson.fromJson(json, GroupDTO.class);
 
-                GroupEntity group = mapper.mapToEntity(groupDTO, id);
-                groupDTO = mapper.mapToDTO(groupService.save(group));
+                GroupEntity group = groupMapper.mapToEntity(groupDTO, id);
+                groupDTO = groupMapper.mapToDTO(groupService.save(group));
 
                 try (PrintWriter printWriter = resp.getWriter()) {
                     printWriter.write(groupDTO.toString());
@@ -196,7 +197,7 @@ public class GroupServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                groupDTO = new GroupDTOMapperImpl().mapToDTO(groupService.findById(id));
+                groupDTO = groupMapper.mapToDTO(groupService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

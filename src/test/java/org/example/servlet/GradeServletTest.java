@@ -11,7 +11,7 @@ import org.example.model.GradeEntity;
 import org.example.service.GradeService;
 import org.example.service.impl.GradeServiceImpl;
 import org.example.servlet.dto.GradeDTO;
-import org.example.servlet.mapper.GradeDTOMapperImpl;
+import org.example.servlet.mapper.GradeDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,8 @@ class GradeServletTest {
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
 
+    GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -49,7 +51,7 @@ class GradeServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         Mockito.when(mockGradeService.findById(1)).thenReturn(gradeEntity);
-        gradeDTO = new GradeDTOMapperImpl().mapToDTO(mockGradeService.findById(1));
+        gradeDTO = gradeMapper.mapToDTO(mockGradeService.findById(1));
 
         gradeServlet.doGet(mockRequest, mockResponse);
 
@@ -69,8 +71,8 @@ class GradeServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockGradeService.findAll()).thenReturn(List.of(new GradeDTOMapperImpl().mapToEntity(gradeDTO)));
-        List<GradeDTO> grades = mockGradeService.findAll().stream().map(t -> new GradeDTOMapperImpl().mapToDTO(t)).toList();
+        Mockito.when(mockGradeService.findAll()).thenReturn(List.of(gradeMapper.mapToEntity(gradeDTO)));
+        List<GradeDTO> grades = mockGradeService.findAll().stream().map(t -> gradeMapper.mapToDTO(t)).toList();
 
         gradeServlet.doGet(mockRequest, mockResponse);
 
@@ -86,7 +88,7 @@ class GradeServletTest {
     void doPostTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "studentId": 1,
                         "examId": 1,
                         "mark": 1
@@ -102,9 +104,9 @@ class GradeServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        gradeEntity = new GradeDTOMapperImpl().mapToEntity(grade);
+        gradeEntity = gradeMapper.mapToEntity(grade);
         Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeEntity);
-        gradeDTO = new GradeDTOMapperImpl().mapToDTO(mockGradeService.save(gradeEntity));
+        gradeDTO = gradeMapper.mapToDTO(mockGradeService.save(gradeEntity));
         gradeServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), gradeDTO.toString());
@@ -114,7 +116,7 @@ class GradeServletTest {
     void doPutTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "studentId": 1,
                         "examId": 1,
                         "mark": 1
@@ -132,9 +134,9 @@ class GradeServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        gradeEntity = new GradeDTOMapperImpl().mapToEntity(grade, grade.getId());
+        gradeEntity = gradeMapper.mapToEntity(grade, 1);
         Mockito.when(mockGradeService.save(gradeEntity)).thenReturn(gradeEntity);
-        gradeDTO = new GradeDTOMapperImpl().mapToDTO(mockGradeService.save(gradeEntity));
+        gradeDTO = gradeMapper.mapToDTO(mockGradeService.save(gradeEntity));
         gradeServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), gradeDTO.toString());

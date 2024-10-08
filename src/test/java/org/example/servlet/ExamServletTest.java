@@ -11,7 +11,7 @@ import org.example.model.ExamEntity;
 import org.example.service.ExamService;
 import org.example.service.impl.ExamServiceImpl;
 import org.example.servlet.dto.ExamDTO;
-import org.example.servlet.mapper.ExamDTOMapperImpl;
+import org.example.servlet.mapper.ExamDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +35,8 @@ class ExamServletTest {
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
 
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -53,7 +55,7 @@ class ExamServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         Mockito.when(mockExamService.findById(1)).thenReturn(examEntity);
-        examDTO = new ExamDTOMapperImpl().mapToDTO(mockExamService.findById(1));
+        examDTO = examMapper.mapToDTO(mockExamService.findById(1));
 
         examServlet.doGet(mockRequest, mockResponse);
 
@@ -74,8 +76,8 @@ class ExamServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockExamService.findAll()).thenReturn(List.of(new ExamDTOMapperImpl().mapToEntity(examDTO)));
-        List<ExamDTO> exams = mockExamService.findAll().stream().map(t -> new ExamDTOMapperImpl().mapToDTO(t)).toList();
+        Mockito.when(mockExamService.findAll()).thenReturn(List.of(examMapper.mapToEntity(examDTO)));
+        List<ExamDTO> exams = mockExamService.findAll().stream().map(t -> examMapper.mapToDTO(t)).toList();
 
         examServlet.doGet(mockRequest, mockResponse);
 
@@ -91,7 +93,7 @@ class ExamServletTest {
     void doPostTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "startDate": "2029-09-01",
                         "groupId": 1,
                         "subjectExamId": 1
@@ -107,9 +109,9 @@ class ExamServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        examEntity = new ExamDTOMapperImpl().mapToEntity(exam);
+        examEntity = examMapper.mapToEntity(exam);
         Mockito.when(mockExamService.save(examEntity)).thenReturn(examEntity);
-        examDTO = new ExamDTOMapperImpl().mapToDTO(mockExamService.save(examEntity));
+        examDTO = examMapper.mapToDTO(mockExamService.save(examEntity));
         examServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
@@ -119,7 +121,7 @@ class ExamServletTest {
     void doPutTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "startDate": "2029-09-01",
                         "groupId": 1,
                         "subjectExamId": 1
@@ -137,9 +139,9 @@ class ExamServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        examEntity = new ExamDTOMapperImpl().mapToEntity(exam, exam.getId());
+        examEntity = examMapper.mapToEntity(exam, 1);
         Mockito.when(mockExamService.save(examEntity)).thenReturn(examEntity);
-        examDTO = new ExamDTOMapperImpl().mapToDTO(mockExamService.save(examEntity));
+        examDTO = examMapper.mapToDTO(mockExamService.save(examEntity));
         examServlet.doPut(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());

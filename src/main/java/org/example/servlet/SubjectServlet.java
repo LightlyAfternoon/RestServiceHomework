@@ -37,10 +37,15 @@ public class SubjectServlet extends HttpServlet {
     final transient TeacherService teacherService;
     final transient GroupService groupService;
 
+    static SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    static GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    static TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+    static ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+
     public SubjectServlet() {
         this.subjectService = new SubjectServiceImpl();
-        teacherService = new TeacherServiceImpl();
-        groupService =  new GroupServiceImpl();
+        this.teacherService = new TeacherServiceImpl();
+        this.groupService =  new GroupServiceImpl();
 
         ConnectionManager.setConfig();
     }
@@ -70,7 +75,7 @@ public class SubjectServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
+                subjectDTO = subjectMapper.mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -82,7 +87,7 @@ public class SubjectServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Subject is not found");
             } else {
-                List<SubjectDTO> subjects = subjectService.findAll().stream().map(t -> new SubjectDTOMapperImpl().mapToDTO(t)).toList();
+                List<SubjectDTO> subjects = subjectService.findAll().stream().map(t -> subjectMapper.mapToDTO(t)).toList();
                 for (SubjectDTO subject : subjects) {
                     if (subject != subjects.getLast()) {
                         printWriter.write(subject.toString() + ", \n");
@@ -114,13 +119,13 @@ public class SubjectServlet extends HttpServlet {
     private List<? extends DTO> findList(String info, SubjectDTO subjectDTO) throws SQLException {
         if (info.equals("group")) {
             return subjectService.findAllGroupsWithSubjectId(subjectDTO.getId())
-                    .stream().map(e -> new GroupDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> groupMapper.mapToDTO(e)).toList();
         } else if (info.equals("teacher")) {
             return subjectService.findAllTeachersWithSubjectId(subjectDTO.getId())
-                    .stream().map(e -> new TeacherDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> teacherMapper.mapToDTO(e)).toList();
         } else if (info.equals("exam")) {
             return subjectService.findAllExamsWithSubjectId(subjectDTO.getId())
-                    .stream().map(e -> new ExamDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> examMapper.mapToDTO(e)).toList();
         }
 
         return new ArrayList<>();
@@ -130,18 +135,16 @@ public class SubjectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
 
-        SubjectDTOMapper mapper = new SubjectDTOMapperImpl();
-
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
         Gson gson = new GsonBuilder().create();
 
         SubjectDTO subjectDTO = gson.fromJson(json, SubjectDTO.class);
 
-        SubjectEntity subject = mapper.mapToEntity(subjectDTO);
+        SubjectEntity subject = subjectMapper.mapToEntity(subjectDTO);
         try {
             subject = subjectService.save(subject);
-            subjectDTO = mapper.mapToDTO(subject);
+            subjectDTO = subjectMapper.mapToDTO(subject);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -165,7 +168,7 @@ public class SubjectServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
+                subjectDTO = subjectMapper.mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -181,16 +184,14 @@ public class SubjectServlet extends HttpServlet {
                         printWriter.write(dto.toString());
                     }
                 } else {
-                    SubjectDTOMapperImpl mapper = new SubjectDTOMapperImpl();
-
                     info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                     JsonObject json = JsonParser.parseString(info).getAsJsonObject();
                     Gson gson = new GsonBuilder().create();
 
                     subjectDTO = gson.fromJson(json, SubjectDTO.class);
 
-                    SubjectEntity subject = mapper.mapToEntity(subjectDTO, id);
-                    subjectDTO = mapper.mapToDTO(subjectService.save(subject));
+                    SubjectEntity subject = subjectMapper.mapToEntity(subjectDTO, id);
+                    subjectDTO = subjectMapper.mapToDTO(subjectService.save(subject));
 
                     try (PrintWriter printWriter = resp.getWriter()) {
                         printWriter.write(subjectDTO.toString());
@@ -206,11 +207,11 @@ public class SubjectServlet extends HttpServlet {
 
     private DTO findDTO(String info, SubjectDTO subjectDTO, int id) throws SQLException {
         if (info.equals("teacher")) {
-            TeacherEntity teacher = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO, subjectDTO.getId()), teacherService.findById(id));
-            return new TeacherDTOMapperImpl().mapToDTO(teacher);
+            TeacherEntity teacher = subjectService.save(subjectMapper.mapToEntity(subjectDTO, subjectDTO.getId()), teacherService.findById(id));
+            return teacherMapper.mapToDTO(teacher);
         } else if (info.equals("group")) {
-            GroupEntity group = subjectService.save(new SubjectDTOMapperImpl().mapToEntity(subjectDTO, subjectDTO.getId()), groupService.findById(id));
-            return new GroupDTOMapperImpl().mapToDTO(group);
+            GroupEntity group = subjectService.save(subjectMapper.mapToEntity(subjectDTO, subjectDTO.getId()), groupService.findById(id));
+            return groupMapper.mapToDTO(group);
         }
 
         return new SubjectDTO();
@@ -229,7 +230,7 @@ public class SubjectServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                subjectDTO = new SubjectDTOMapperImpl().mapToDTO(subjectService.findById(id));
+                subjectDTO = subjectMapper.mapToDTO(subjectService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

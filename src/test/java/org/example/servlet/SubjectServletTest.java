@@ -19,7 +19,6 @@ import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.*;
 import org.example.servlet.dto.SubjectDTO;
 import org.example.servlet.mapper.*;
-import org.example.servlet.mapper.SubjectDTOMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +44,11 @@ class SubjectServletTest {
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
 
+    SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+    TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
+    GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+
     @BeforeEach
     void setUp() {
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -64,7 +68,7 @@ class SubjectServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectEntity);
-        subjectDTO = new SubjectDTOMapperImpl().mapToDTO(mockSubjectService.findById(1));
+        subjectDTO = subjectMapper.mapToDTO(mockSubjectService.findById(1));
 
         subjectServlet.doGet(mockRequest, mockResponse);
 
@@ -84,8 +88,8 @@ class SubjectServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        Mockito.when(mockSubjectService.findAll()).thenReturn(List.of(new SubjectDTOMapperImpl().mapToEntity(subjectDTO)));
-        List<SubjectDTO> subjects = mockSubjectService.findAll().stream().map(t -> new SubjectDTOMapperImpl().mapToDTO(t)).toList();
+        Mockito.when(mockSubjectService.findAll()).thenReturn(List.of(subjectMapper.mapToEntity(subjectDTO)));
+        List<SubjectDTO> subjects = mockSubjectService.findAll().stream().map(t -> subjectMapper.mapToDTO(t)).toList();
 
         subjectServlet.doGet(mockRequest, mockResponse);
 
@@ -102,8 +106,8 @@ class SubjectServletTest {
 
         ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()), 1, 1);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectEntity);
-        Mockito.when(mockSubjectService.findAllExamsWithSubjectId(1)).thenReturn(List.of(new ExamDTOMapperImpl().mapToEntity(examDTO)));
-        List<ExamDTO> exams = mockSubjectService.findAllExamsWithSubjectId(1).stream().map(e -> new ExamDTOMapperImpl().mapToDTO(e)).toList();
+        Mockito.when(mockSubjectService.findAllExamsWithSubjectId(1)).thenReturn(List.of(examMapper.mapToEntity(examDTO)));
+        List<ExamDTO> exams = mockSubjectService.findAllExamsWithSubjectId(1).stream().map(e -> examMapper.mapToDTO(e)).toList();
 
         subjectServlet.doGet(mockRequest, mockResponse);
 
@@ -124,8 +128,8 @@ class SubjectServletTest {
 
         TeacherDTO teacherDTO = new TeacherDTO(1, "t", "t", "t");
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectEntity);
-        Mockito.when(mockSubjectService.findAllTeachersWithSubjectId(1)).thenReturn(List.of(new TeacherDTOMapperImpl().mapToEntity(teacherDTO)));
-        List<TeacherDTO> teachers = mockSubjectService.findAllTeachersWithSubjectId(1).stream().map(t -> new TeacherDTOMapperImpl().mapToDTO(t)).toList();
+        Mockito.when(mockSubjectService.findAllTeachersWithSubjectId(1)).thenReturn(List.of(teacherMapper.mapToEntity(teacherDTO)));
+        List<TeacherDTO> teachers = mockSubjectService.findAllTeachersWithSubjectId(1).stream().map(t -> teacherMapper.mapToDTO(t)).toList();
 
         subjectServlet.doGet(mockRequest, mockResponse);
 
@@ -148,8 +152,8 @@ class SubjectServletTest {
                 new Date(new GregorianCalendar(2011,9,1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2016,1,5).getTimeInMillis()), 1);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectEntity);
-        Mockito.when(mockSubjectService.findAllGroupsWithSubjectId(1)).thenReturn(List.of(new GroupDTOMapperImpl().mapToEntity(groupDTO)));
-        List<GroupDTO> groups = mockSubjectService.findAllGroupsWithSubjectId(1).stream().map(g -> new GroupDTOMapperImpl().mapToDTO(g)).toList();
+        Mockito.when(mockSubjectService.findAllGroupsWithSubjectId(1)).thenReturn(List.of(groupMapper.mapToEntity(groupDTO)));
+        List<GroupDTO> groups = mockSubjectService.findAllGroupsWithSubjectId(1).stream().map(g -> groupMapper.mapToDTO(g)).toList();
 
         subjectServlet.doGet(mockRequest, mockResponse);
 
@@ -169,7 +173,7 @@ class SubjectServletTest {
     void doPostTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "name": "t"
                     }""";
 
@@ -183,9 +187,9 @@ class SubjectServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        subjectEntity = new SubjectDTOMapperImpl().mapToEntity(subject);
+        subjectEntity = subjectMapper.mapToEntity(subject);
         Mockito.when(mockSubjectService.save(subjectEntity)).thenReturn(subjectEntity);
-        subjectDTO = new SubjectDTOMapperImpl().mapToDTO(mockSubjectService.save(subjectEntity));
+        subjectDTO = subjectMapper.mapToDTO(mockSubjectService.save(subjectEntity));
         subjectServlet.doPost(mockRequest, mockResponse);
 
         Assertions.assertEquals(byteArrayOutputStream.toString(), subjectDTO.toString());
@@ -195,7 +199,7 @@ class SubjectServletTest {
     void doPutTest() throws ServletException, IOException, SQLException {
         String jsonS = """
                     {
-                        "id": 1,
+                        "id": 0,
                         "name": "t"
                     }""";
 
@@ -211,9 +215,9 @@ class SubjectServletTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        subjectEntity = new SubjectDTOMapperImpl().mapToEntity(subject, subject.getId());
+        subjectEntity = subjectMapper.mapToEntity(subject, 1);
         Mockito.when(mockSubjectService.save(subjectEntity)).thenReturn(subjectEntity);
-        subjectDTO = new SubjectDTOMapperImpl().mapToDTO(mockSubjectService.save(subjectEntity));
+        subjectDTO = subjectMapper.mapToDTO(mockSubjectService.save(subjectEntity));
 
         subjectServlet.doPut(mockRequest, mockResponse);
 
@@ -230,7 +234,7 @@ class SubjectServletTest {
         Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherEntity);
         Mockito.when(mockTeacherService.save(teacherEntity)).thenReturn(teacherEntity);
         Mockito.when(mockSubjectService.save(subjectEntity, teacherEntity)).thenReturn(teacherEntity);
-        TeacherDTO teacherDTO = new TeacherDTOMapperImpl().mapToDTO(mockTeacherService.save(teacherEntity));
+        TeacherDTO teacherDTO = teacherMapper.mapToDTO(mockTeacherService.save(teacherEntity));
 
         subjectServlet.doPut(mockRequest, mockResponse);
 
@@ -248,7 +252,7 @@ class SubjectServletTest {
         Mockito.when(mockGroupService.findById(1)).thenReturn(groupEntity);
         Mockito.when(mockGroupService.save(groupEntity)).thenReturn(groupEntity);
         Mockito.when(mockSubjectService.save(subjectEntity, groupEntity)).thenReturn(groupEntity);
-        GroupDTO groupDTO = new GroupDTOMapperImpl().mapToDTO(mockGroupService.save(groupEntity));
+        GroupDTO groupDTO = groupMapper.mapToDTO(mockGroupService.save(groupEntity));
 
         subjectServlet.doPut(mockRequest, mockResponse);
 

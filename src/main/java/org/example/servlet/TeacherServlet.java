@@ -13,7 +13,8 @@ import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
 import org.example.service.impl.TeacherServiceImpl;
-import org.example.servlet.dto.*;
+import org.example.servlet.dto.DTO;
+import org.example.servlet.dto.TeacherDTO;
 import org.example.servlet.mapper.*;
 
 import java.io.IOException;
@@ -27,6 +28,11 @@ import java.util.stream.Collectors;
 public class TeacherServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     final transient TeacherService teacherService;
+
+    static TeacherDTOMapper mapper = TeacherDTOMapper.INSTANCE;
+    static GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
+    static SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
+    static ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public TeacherServlet() {
         this.teacherService = new TeacherServiceImpl();
@@ -57,7 +63,7 @@ public class TeacherServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
+                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -69,7 +75,7 @@ public class TeacherServlet extends HttpServlet {
             } else if (id != 0) {
                 printWriter.write("Teacher is not found");
             } else {
-                List<TeacherDTO> teachers = teacherService.findAll().stream().map(t -> new TeacherDTOMapperImpl().mapToDTO(t)).toList();
+                List<TeacherDTO> teachers = teacherService.findAll().stream().map(t -> mapper.mapToDTO(t)).toList();
                 for (TeacherDTO teacher : teachers) {
                     if (teacher != teachers.getLast()) {
                         printWriter.write(teacher.toString() + ", \n");
@@ -105,13 +111,13 @@ public class TeacherServlet extends HttpServlet {
     private List<? extends DTO> findList(String info, TeacherDTO teacherDTO) throws SQLException {
         if (info.equals("group")) {
             return teacherService.findAllGroupsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> new GroupDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> groupMapper.mapToDTO(e)).toList();
         } else if (info.equals("subject")) {
             return teacherService.findAllSubjectsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> new SubjectDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> subjectMapper.mapToDTO(e)).toList();
         } else if (info.equals("exam")) {
             return teacherService.findAllExamsWithTeacherId(teacherDTO.getId())
-                    .stream().map(e -> new ExamDTOMapperImpl().mapToDTO(e)).toList();
+                    .stream().map(e -> examMapper.mapToDTO(e)).toList();
         }
 
         return new ArrayList<>();
@@ -120,8 +126,6 @@ public class TeacherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setSettings(req, resp);
-
-        TeacherDTOMapper mapper = new TeacherDTOMapperImpl();
 
         String info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonObject json = JsonParser.parseString(info).getAsJsonObject();
@@ -156,7 +160,7 @@ public class TeacherServlet extends HttpServlet {
             split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
+                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -164,8 +168,6 @@ public class TeacherServlet extends HttpServlet {
 
         try {
             if (id != 0 && teacherDTO != null) {
-                TeacherDTOMapperImpl mapper = new TeacherDTOMapperImpl();
-
                 info = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
                 JsonObject json = JsonParser.parseString(info).getAsJsonObject();
                 Gson gson = new GsonBuilder().create();
@@ -199,7 +201,7 @@ public class TeacherServlet extends HttpServlet {
             String[] split = info.split("/");
             id = Integer.parseInt(split[1]);
             try {
-                teacherDTO = new TeacherDTOMapperImpl().mapToDTO(teacherService.findById(id));
+                teacherDTO = mapper.mapToDTO(teacherService.findById(id));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

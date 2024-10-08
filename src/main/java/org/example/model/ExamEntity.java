@@ -25,6 +25,10 @@ public class ExamEntity extends Entity {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Date getStartDate() {
         return startDate;
     }
