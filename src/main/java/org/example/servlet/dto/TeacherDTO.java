@@ -48,6 +48,30 @@ public class TeacherDTO extends DTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof TeacherDTO)) return false;
+        if (this == o) return true;
+
+        TeacherDTO t = (TeacherDTO) o;
+        return id == t.id
+                && firstName.equals(t.firstName)
+                && lastName.equals(t.lastName)
+                && ((patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic)));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
+
+        return result;
+    }
+
+    @Override
     public String toString() {
         if (patronymic == null) {
             return "{\n" +

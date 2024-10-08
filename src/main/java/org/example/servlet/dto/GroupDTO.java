@@ -60,6 +60,33 @@ public class GroupDTO extends DTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof GroupDTO)) return false;
+        if (this == o) return true;
+
+        GroupDTO g = (GroupDTO) o;
+
+        return id == g.id
+                && name.equals(g.name)
+                && startDate.equals(g.startDate)
+                && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
+                && teacherId == g.teacherId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + name.hashCode();
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+        result = 31 * result + teacherId;
+
+        return result;
+    }
+
+    @Override
     public String toString() {
         if (endDate == null) {
             return "{\n" +

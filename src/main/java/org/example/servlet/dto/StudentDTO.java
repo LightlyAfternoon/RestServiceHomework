@@ -58,6 +58,32 @@ public class StudentDTO extends DTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof StudentDTO)) return false;
+        if (this == o) return true;
+
+        StudentDTO s = (StudentDTO) o;
+        return id == s.id
+                && firstName.equals(s.firstName)
+                && lastName.equals(s.lastName)
+                && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
+                && groupId == s.groupId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
+        result = 31 * result + groupId;
+
+        return result;
+    }
+
+    @Override
     public String toString() {
         if (patronymic == null) {
             return "{\n" +

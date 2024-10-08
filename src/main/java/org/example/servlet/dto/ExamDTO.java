@@ -50,6 +50,30 @@ public class ExamDTO extends DTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof ExamDTO)) return false;
+        if (this == o) return true;
+
+        ExamDTO e = (ExamDTO) o;
+        return id == e.id
+                && startDate.equals(e.startDate)
+                && groupId == e.groupId
+                && subjectTeacherId == e.subjectTeacherId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + groupId;
+        result = 31 * result + subjectTeacherId;
+
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "{\n" +
                 "    \"id\": " + id + ",\n" +

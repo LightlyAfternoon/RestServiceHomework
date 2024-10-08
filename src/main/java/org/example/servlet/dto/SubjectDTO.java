@@ -28,6 +28,27 @@ public class SubjectDTO extends DTO {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof SubjectDTO)) return false;
+        if (this == o) return true;
+
+        SubjectDTO s = (SubjectDTO) o;
+
+        return id == s.id
+                && name.equals(s.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+
+        result = 31 * result + name.hashCode();
+
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "{\n" +
                 "    \"id\": "+id+",\n" +
