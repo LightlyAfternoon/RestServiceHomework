@@ -2,7 +2,6 @@ package org.example.service.impl;
 
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
-import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.TeacherService;
 import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.dto.GroupDTO;
@@ -12,11 +11,13 @@ import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
 import org.example.servlet.mapper.SubjectDTOMapper;
 import org.example.servlet.mapper.TeacherDTOMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class TeacherServiceImpl implements TeacherService {
+    @Autowired
     TeacherRepository teacherRepository;
 
     TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
@@ -25,7 +26,6 @@ public class TeacherServiceImpl implements TeacherService {
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public TeacherServiceImpl() {
-        this.teacherRepository = new TeacherRepositoryImpl();
     }
 
     public TeacherServiceImpl(TeacherRepository teacherRepository) {
@@ -54,16 +54,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<GroupDTO> findAllGroupsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllGroupsWithTeacherId(id).stream().map(groupMapper::mapToDTO).toList();
+        return teacherRepository.findAllGroupsById(id).stream().map(groupMapper::mapToDTO).toList();
     }
 
     @Override
     public List<SubjectDTO> findAllSubjectsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllSubjectsWithTeacherId(id).stream().map(subjectMapper::mapToDTO).toList();
+        return teacherRepository.findAllSubjectsById(id).stream().map(subjectMapper::mapToDTO).toList();
     }
 
     @Override
     public List<ExamDTO> findAllExamsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllExamsWithTeacherId(id).stream().map(examMapper::mapToDTO).toList();
+        return teacherRepository.findAllExamsById(id).stream().map(examMapper::mapToDTO).toList();
     }
 }

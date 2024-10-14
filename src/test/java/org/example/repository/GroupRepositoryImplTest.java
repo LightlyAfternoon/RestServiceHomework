@@ -98,13 +98,13 @@ class GroupRepositoryImplTest {
         group.setName("Т");
         group.setStartDate(startDate);
         group.setEndDate(endDate);
-        group.setTeacherId(2);
+        group.setTeacher(2);
 
         group = groupRepository.save(group);
         Assertions.assertEquals("Т", group.getName());
         Assertions.assertEquals(startDate, group.getStartDate());
         Assertions.assertEquals(endDate, group.getEndDate());
-        Assertions.assertEquals(2, group.getTeacherId());
+        Assertions.assertEquals(2, group.getTeacher());
 
         startCalendar.add(Calendar.YEAR, -4);
         startDate = new Date(startCalendar.getTimeInMillis());
@@ -114,14 +114,14 @@ class GroupRepositoryImplTest {
         group.setName("Т-2");
         group.setStartDate(startDate);
         group.setEndDate(endDate);
-        group.setTeacherId(3);
+        group.setTeacher(3);
 
         group = groupRepository.save(group);
         Assertions.assertEquals(4, group.getId());
         Assertions.assertEquals("Т-2", group.getName());
         Assertions.assertEquals(startDate, group.getStartDate());
         Assertions.assertEquals(endDate, group.getEndDate());
-        Assertions.assertEquals(3, group.getTeacherId());
+        Assertions.assertEquals(3, group.getTeacher());
     }
 
     @Test

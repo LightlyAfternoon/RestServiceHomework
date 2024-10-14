@@ -1,29 +1,40 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+
 import java.sql.Date;
 import java.util.List;
 
-public class GroupEntity extends Entity {
-    private int id;
+@Entity
+@Table(name = "\"group\"")
+public class GroupEntity {
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     private String name;
-    private Date startDate;
-    private Date endDate;
-    private int teacherId;
+    private @Column(name = "start_date") Date startDate;
+    private @Column(name = "end_date") Date endDate;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private TeacherEntity teacher;
+    @OneToMany(mappedBy = "group")
     private List<StudentEntity> students;
+    @OneToMany(mappedBy = "group")
     private List<ExamEntity> exams;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
+                                       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
     private List<SubjectEntity> subjects;
 
     public GroupEntity() {}
 
-    public GroupEntity(String name, Date startDate, Date endDate, int teacherId) {
+    public GroupEntity(String name, Date startDate, Date endDate, TeacherEntity teacher) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
     }
 
-    public GroupEntity(int id, String name, Date startDate, Date endDate, int teacherId) {
-        this(name, startDate, endDate, teacherId);
+    public GroupEntity(int id, String name, Date startDate, Date endDate, TeacherEntity teacher) {
+        this(name, startDate, endDate, teacher);
         this.id = id;
     }
 
@@ -59,12 +70,12 @@ public class GroupEntity extends Entity {
         this.endDate = endDate;
     }
 
-    public int getTeacherId() {
-        return teacherId;
+    public TeacherEntity getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacher(TeacherEntity teacher) {
+        this.teacher = teacher;
     }
 
     public List<StudentEntity> getStudents() {
@@ -103,7 +114,7 @@ public class GroupEntity extends Entity {
                 && name.equals(g.name)
                 && startDate.equals(g.startDate)
                 && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
-                && teacherId == g.teacherId);
+                && teacher == g.teacher);
     }
 
     @Override
@@ -113,7 +124,7 @@ public class GroupEntity extends Entity {
         result = 31 * result + name.hashCode();
         result = 31 * result + startDate.hashCode();
         result = 31 * result + endDate.hashCode();
-        result = 31 * result + teacherId;
+        result = 31 * result + teacher.hashCode();
 
         return result;
     }

@@ -91,14 +91,14 @@ class StudentRepositoryImplTest {
         student.setFirstName("Рита");
         student.setLastName("Черная");
         student.setPatronymic("Константиновна");
-        student.setGroupId(2);
+        student.setGroup(2);
 
         student = studentRepository.save(student);
         Assertions.assertEquals(4, student.getId());
         Assertions.assertEquals("Рита", student.getFirstName());
         Assertions.assertEquals("Черная", student.getLastName());
         Assertions.assertEquals("Константиновна", student.getPatronymic());
-        Assertions.assertEquals(2, student.getGroupId());
+        Assertions.assertEquals(2, student.getGroup());
     }
 
     @Test

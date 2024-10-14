@@ -5,10 +5,12 @@ import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.dto.GroupDTO;
 import org.example.servlet.dto.SubjectDTO;
 import org.example.servlet.dto.TeacherDTO;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public interface TeacherService {
     TeacherDTO findById(int id) throws SQLException;
 

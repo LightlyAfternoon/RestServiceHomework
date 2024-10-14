@@ -16,6 +16,7 @@ import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.DTO;
 import org.example.servlet.dto.TeacherDTO;
 import org.example.servlet.mapper.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,12 +28,12 @@ import java.util.stream.Collectors;
 @WebServlet("/teacher/*")
 public class TeacherServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
-    final transient TeacherService teacherService;
+    @Autowired
+    static TeacherService teacherService;
 
     static TeacherDTOMapper mapper = TeacherDTOMapper.INSTANCE;
 
     public TeacherServlet() {
-        this.teacherService = new TeacherServiceImpl();
 
         ConnectionManager.setConfig();
     }

@@ -1,15 +1,17 @@
 package org.example.servlet.dto;
 
+import org.example.model.GroupEntity;
+
 public class StudentDTO extends DTO {
     private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
-    private int groupId;
+    private GroupEntity groupId;
 
     public StudentDTO() {}
 
-    public StudentDTO(int id, String firstName, String lastName, String patronymic, int groupId) {
+    public StudentDTO(int id, String firstName, String lastName, String patronymic, GroupEntity groupId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,11 +51,11 @@ public class StudentDTO extends DTO {
         this.patronymic = patronymic;
     }
 
-    public int getGroupId() {
+    public GroupEntity getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(GroupEntity groupId) {
         this.groupId = groupId;
     }
 
@@ -78,7 +80,7 @@ public class StudentDTO extends DTO {
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
-        result = 31 * result + groupId;
+        result = 31 * result + groupId.hashCode();
 
         return result;
     }

@@ -2,21 +2,21 @@ package org.example.service.impl;
 
 import org.example.model.GradeEntity;
 import org.example.repository.GradeRepository;
-import org.example.repository.impl.GradeRepositoryImpl;
 import org.example.service.GradeService;
 import org.example.servlet.dto.GradeDTO;
 import org.example.servlet.mapper.GradeDTOMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class GradeServiceImpl implements GradeService {
+    @Autowired
     GradeRepository gradeRepository;
 
     GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
     public GradeServiceImpl() {
-        gradeRepository = new GradeRepositoryImpl();
     }
 
     public GradeServiceImpl(GradeRepository gradeRepository) {

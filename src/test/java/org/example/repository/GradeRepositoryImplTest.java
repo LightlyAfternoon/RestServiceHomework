@@ -80,23 +80,23 @@ class GradeRepositoryImplTest {
     @Test
     void saveGradeTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
-        grade.setStudentId(2);
-        grade.setExamId(1);
+        grade.setStudent(2);
+        grade.setExam(1);
         grade.setMark((short) 3);
 
         grade = gradeRepository.save(grade);
-        Assertions.assertEquals(2, grade.getStudentId());
-        Assertions.assertEquals(1, grade.getExamId());
+        Assertions.assertEquals(2, grade.getStudent());
+        Assertions.assertEquals(1, grade.getExam());
         Assertions.assertEquals(3, grade.getMark());
 
         grade = new GradeEntity();
-        grade.setStudentId(3);
-        grade.setExamId(3);
+        grade.setStudent(3);
+        grade.setExam(3);
         grade.setMark((short) 2);
 
         grade = gradeRepository.save(grade);
-        Assertions.assertEquals(3, grade.getStudentId());
-        Assertions.assertEquals(3, grade.getExamId());
+        Assertions.assertEquals(3, grade.getStudent());
+        Assertions.assertEquals(3, grade.getExam());
         Assertions.assertEquals(2, grade.getMark());
     }
 

@@ -7,10 +7,10 @@ import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.impl.GroupRepositoryImpl;
 import org.example.repository.impl.SubjectRepositoryImpl;
-import org.example.repository.impl.TeacherRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -101,11 +101,11 @@ class SubjectRepositoryImplTest {
         Assertions.assertEquals(4, subject.getId());
         Assertions.assertEquals("2 Тест", subject.getName());
     }
+    @Autowired
+    TeacherRepository teacherRepository;
 
     @Test
     void saveSubjectTeacherRelationshipTest() throws SQLException {
-        TeacherRepository teacherRepository = new TeacherRepositoryImpl();
-
         SubjectEntity subject = subjectRepository.findById(2);
         TeacherEntity teacher = teacherRepository.findById(1);
 

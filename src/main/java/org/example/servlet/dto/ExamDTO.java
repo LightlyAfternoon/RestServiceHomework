@@ -1,20 +1,33 @@
 package org.example.servlet.dto;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
+import org.example.model.TeacherEntity;
+
 import java.sql.Date;
 
 public class ExamDTO extends DTO {
     private int id;
     private Date startDate;
-    private int groupId;
-    private int subjectTeacherId;
+    private GroupEntity groupId;
+//    private TeacherEntity subjectTeacherId;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    private SubjectEntity subject;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private TeacherEntity teacher;
 
     public ExamDTO() {}
 
-    public ExamDTO(int id, Date startDate, int groupId, int subjectTeacherId) {
+    public ExamDTO(int id, Date startDate, GroupEntity groupId, SubjectEntity subject, TeacherEntity teacher) {
         this.id = id;
         this.startDate = startDate;
         this.groupId = groupId;
-        this.subjectTeacherId = subjectTeacherId;
+        this.subject = subject;
+        this.teacher = teacher;
     }
 
     public int getId() {
@@ -33,20 +46,28 @@ public class ExamDTO extends DTO {
         this.startDate = startDate;
     }
 
-    public int getGroupId() {
+    public GroupEntity getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(GroupEntity groupId) {
         this.groupId = groupId;
     }
 
-    public int getSubjectTeacherId() {
-        return subjectTeacherId;
+    public SubjectEntity getSubject() {
+        return subject;
     }
 
-    public void setSubjectTeacherId(int subjectTeacherId) {
-        this.subjectTeacherId = subjectTeacherId;
+    public void setSubject(SubjectEntity subject) {
+        this.subject = subject;
+    }
+
+    public TeacherEntity getSubjectTeacherId() {
+        return teacher;
+    }
+
+    public void setSubjectTeacherId(TeacherEntity teacher) {
+        this.teacher = teacher;
     }
 
     @Override
@@ -59,7 +80,8 @@ public class ExamDTO extends DTO {
         return id == e.id
                 && startDate.equals(e.startDate)
                 && groupId == e.groupId
-                && subjectTeacherId == e.subjectTeacherId;
+                && subject == e.subject
+                && teacher == e.teacher;
     }
 
     @Override
@@ -67,8 +89,9 @@ public class ExamDTO extends DTO {
         int result = id;
 
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + groupId;
-        result = 31 * result + subjectTeacherId;
+        result = 31 * result + groupId.hashCode();
+        result = 31 * result + subject.hashCode();
+        result = 31 * result + teacher.hashCode();
 
         return result;
     }
@@ -79,7 +102,8 @@ public class ExamDTO extends DTO {
                 "    \"id\": " + id + ",\n" +
                 "    \"startDate\": \"" + startDate + "\",\n" +
                 "    \"groupId\": " + groupId + ",\n" +
-                "    \"subjectTeacherId\": " + subjectTeacherId + "\n" +
+                "    \"subjectId\": " + subject.getId() + ",\n" +
+                "    \"teacherId\": " + teacher.getId() + "\n" +
                 "}";
     }
 }

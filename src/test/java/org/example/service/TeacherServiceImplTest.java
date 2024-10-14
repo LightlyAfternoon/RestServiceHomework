@@ -5,7 +5,6 @@ import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
-import org.example.repository.impl.TeacherRepositoryImpl;
 import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
@@ -35,7 +34,7 @@ class TeacherServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockTeacherRepository = Mockito.mock(TeacherRepositoryImpl.class);
+        mockTeacherRepository = Mockito.mock(TeacherRepository.class);
         teacherService = new TeacherServiceImpl(mockTeacherRepository);
 
         teacherEntity = new TeacherEntity(1, "t", "t", null);
@@ -80,7 +79,7 @@ class TeacherServiceImplTest {
                 1);
         List<GroupEntity> groupEntities = List.of(groupEntity);
 
-        Mockito.when(mockTeacherRepository.findAllGroupsWithTeacherId(1)).thenReturn(groupEntities);
+        Mockito.when(mockTeacherRepository.findAllGroupsById(1)).thenReturn(groupEntities);
 
         Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
     }
@@ -90,7 +89,7 @@ class TeacherServiceImplTest {
         SubjectEntity subjectEntity = new SubjectEntity(1, "TestS");
         List<SubjectEntity> subjectEntities = List.of(subjectEntity);
 
-        Mockito.when(mockTeacherRepository.findAllSubjectsWithTeacherId(1)).thenReturn(subjectEntities);
+        Mockito.when(mockTeacherRepository.findAllSubjectsById(1)).thenReturn(subjectEntities);
 
         Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
     }
@@ -103,7 +102,7 @@ class TeacherServiceImplTest {
                 1);
         List<ExamEntity> examEntities = List.of(examEntity);
 
-        Mockito.when(mockTeacherRepository.findAllExamsWithTeacherId(1)).thenReturn(examEntities);
+        Mockito.when(mockTeacherRepository.findAllExamsById(1)).thenReturn(examEntities);
 
         Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
     }

@@ -1,5 +1,7 @@
 package org.example.servlet.dto;
 
+import org.example.model.TeacherEntity;
+
 import java.sql.Date;
 
 public class GroupDTO extends DTO {
@@ -7,11 +9,11 @@ public class GroupDTO extends DTO {
     private String name;
     private Date startDate;
     private Date endDate;
-    private int teacherId;
+    private TeacherEntity teacherId;
 
     public GroupDTO() {}
 
-    public GroupDTO(int id, String name, Date startDate, Date endDate, int teacherId) {
+    public GroupDTO(int id, String name, Date startDate, Date endDate, TeacherEntity teacherId) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -51,11 +53,11 @@ public class GroupDTO extends DTO {
         this.endDate = endDate;
     }
 
-    public int getTeacherId() {
+    public TeacherEntity getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
+    public void setTeacherId(TeacherEntity teacherId) {
         this.teacherId = teacherId;
     }
 
@@ -81,7 +83,7 @@ public class GroupDTO extends DTO {
         result = 31 * result + name.hashCode();
         result = 31 * result + startDate.hashCode();
         result = 31 * result + endDate.hashCode();
-        result = 31 * result + teacherId;
+        result = 31 * result + teacherId.hashCode();
 
         return result;
     }

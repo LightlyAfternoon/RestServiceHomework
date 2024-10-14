@@ -2,21 +2,21 @@ package org.example.service.impl;
 
 import org.example.model.ExamEntity;
 import org.example.repository.ExamRepository;
-import org.example.repository.impl.ExamRepositoryImpl;
 import org.example.service.ExamService;
 import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.mapper.ExamDTOMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ExamServiceImpl implements ExamService {
+    @Autowired
     ExamRepository examRepository;
 
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public ExamServiceImpl() {
-        examRepository = new ExamRepositoryImpl();
     }
 
     public ExamServiceImpl(ExamRepository examRepository) {

@@ -4,7 +4,6 @@ import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
-import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.service.SubjectService;
 import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.dto.GroupDTO;
@@ -14,13 +13,13 @@ import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
 import org.example.servlet.mapper.SubjectDTOMapper;
 import org.example.servlet.mapper.TeacherDTOMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class SubjectServiceImpl implements SubjectService {
+    @Autowired
     SubjectRepository subjectRepository;
 
     SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
@@ -29,7 +28,6 @@ public class SubjectServiceImpl implements SubjectService {
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
     public SubjectServiceImpl() {
-        this.subjectRepository = new SubjectRepositoryImpl();
     }
 
     public SubjectServiceImpl(SubjectRepository subjectRepository) {

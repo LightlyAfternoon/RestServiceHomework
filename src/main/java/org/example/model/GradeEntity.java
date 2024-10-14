@@ -1,21 +1,29 @@
 package org.example.model;
 
-public class GradeEntity extends Entity {
-    private int id;
-    private int studentId;
-    private int examId;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "grade")
+public class GradeEntity {
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentEntity student;
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private ExamEntity exam;
     private short mark;
 
     public GradeEntity() {}
 
-    public GradeEntity(int studentId, int examId, short mark) {
-        this.studentId = studentId;
-        this.examId = examId;
+    public GradeEntity(StudentEntity student, ExamEntity exam, short mark) {
+        this.student = student;
+        this.exam = exam;
         this.mark = mark;
     }
 
-    public GradeEntity(int id, int studentId, int examId, short mark) {
-        this(studentId, examId, mark);
+    public GradeEntity(int id, StudentEntity student, ExamEntity exam, short mark) {
+        this(student, exam, mark);
         this.id = id;
     }
 
@@ -27,20 +35,20 @@ public class GradeEntity extends Entity {
         this.id = id;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public StudentEntity getStudent() {
+        return student;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setStudent(StudentEntity student) {
+        this.student = student;
     }
 
-    public int getExamId() {
-        return examId;
+    public ExamEntity getExam() {
+        return exam;
     }
 
-    public void setExamId(int examId) {
-        this.examId = examId;
+    public void setExam(ExamEntity exam) {
+        this.exam = exam;
     }
 
     public short getMark() {
@@ -59,8 +67,8 @@ public class GradeEntity extends Entity {
 
         GradeEntity g = (GradeEntity) o;
         return id == g.id
-                && studentId == g.studentId
-                && examId == g.examId
+                && student == g.student
+                && exam == g.exam
                 && mark == g.mark;
     }
 
@@ -68,8 +76,8 @@ public class GradeEntity extends Entity {
     public int hashCode() {
         int result = id;
 
-        result = 31 * result + studentId;
-        result = 31 * result + examId;
+        result = 31 * result + student.hashCode();
+        result = 31 * result + exam.hashCode();
         result = 31 * result + mark;
 
         return result;

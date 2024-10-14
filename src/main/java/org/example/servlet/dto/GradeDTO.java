@@ -1,14 +1,17 @@
 package org.example.servlet.dto;
 
+import org.example.model.ExamEntity;
+import org.example.model.StudentEntity;
+
 public class GradeDTO extends DTO {
     private int id;
-    private int studentId;
-    private int examId;
+    private StudentEntity studentId;
+    private ExamEntity examId;
     private short mark;
 
     public GradeDTO() {}
 
-    public GradeDTO(int id, int studentId, int examId, short mark) {
+    public GradeDTO(int id, StudentEntity studentId, ExamEntity examId, short mark) {
         this.id = id;
         this.studentId = studentId;
         this.examId = examId;
@@ -23,19 +26,19 @@ public class GradeDTO extends DTO {
         this.id = id;
     }
 
-    public int getStudentId() {
+    public StudentEntity getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(StudentEntity studentId) {
         this.studentId = studentId;
     }
 
-    public int getExamId() {
+    public ExamEntity getExamId() {
         return examId;
     }
 
-    public void setExamId(int examId) {
+    public void setExamId(ExamEntity examId) {
         this.examId = examId;
     }
 
@@ -64,8 +67,8 @@ public class GradeDTO extends DTO {
     public int hashCode() {
         int result = id;
 
-        result = 31 * result + studentId;
-        result = 31 * result + examId;
+        result = 31 * result + studentId.hashCode();
+        result = 31 * result + examId.hashCode();
         result = 31 * result + mark;
 
         return result;

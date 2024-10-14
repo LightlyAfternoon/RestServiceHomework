@@ -2,21 +2,21 @@ package org.example.service.impl;
 
 import org.example.model.StudentEntity;
 import org.example.repository.StudentRepository;
-import org.example.repository.impl.StudentRepositoryImpl;
 import org.example.service.StudentService;
 import org.example.servlet.dto.StudentDTO;
 import org.example.servlet.mapper.StudentDTOMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
+    @Autowired
     StudentRepository studentRepository;
 
     StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
 
     public StudentServiceImpl() {
-        studentRepository = new StudentRepositoryImpl();
     }
 
     public StudentServiceImpl(StudentRepository studentRepository) {

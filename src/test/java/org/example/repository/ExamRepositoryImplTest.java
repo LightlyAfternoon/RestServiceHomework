@@ -87,25 +87,25 @@ class ExamRepositoryImplTest {
 
         ExamEntity exam = examRepository.findById(2);
         exam.setStartDate(startDate);
-        exam.setGroupId(2);
-        exam.setSubjectTeacherId(2);
+        exam.setGroup(2);
+        exam.setTeacher(2);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
-        Assertions.assertEquals(2, exam.getGroupId());
-        Assertions.assertEquals(2, exam.getSubjectTeacherId());
+        Assertions.assertEquals(2, exam.getGroup());
+        Assertions.assertEquals(2, exam.getTeacher());
 
         exam = new ExamEntity();
         calendar.add(Calendar.MONTH, 8);
         startDate = new Date(calendar.getTimeInMillis());
         exam.setStartDate(startDate);
-        exam.setGroupId(2);
-        exam.setSubjectTeacherId(1);
+        exam.setGroup(2);
+        exam.setTeacher(1);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
-        Assertions.assertEquals(2, exam.getGroupId());
-        Assertions.assertEquals(1, exam.getSubjectTeacherId());
+        Assertions.assertEquals(2, exam.getGroup());
+        Assertions.assertEquals(1, exam.getTeacher());
     }
 
     @Test

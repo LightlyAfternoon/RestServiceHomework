@@ -1,23 +1,29 @@
 package org.example.model;
 
-public class StudentEntity extends Entity {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String patronymic;
-    private int groupId;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "student")
+public class StudentEntity {
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
+    private @Column(name = "first_name") String firstName;
+    private @Column(name = "last_name") String lastName;
+    private @Column(name = "patronymic") String patronymic;
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private GroupEntity group;
 
     public StudentEntity() {}
 
-    public StudentEntity(String firstName, String lastName, String patronymic, int groupId) {
+    public StudentEntity(String firstName, String lastName, String patronymic, GroupEntity group) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
-        this.groupId = groupId;
+        this.group = group;
     }
 
-    public StudentEntity(int id, String firstName, String lastName, String patronymic, int groupId) {
-        this(firstName, lastName, patronymic, groupId);
+    public StudentEntity(int id, String firstName, String lastName, String patronymic, GroupEntity group) {
+        this(firstName, lastName, patronymic, group);
         this.id = id;
     }
 
@@ -53,12 +59,12 @@ public class StudentEntity extends Entity {
         this.patronymic = patronymic;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public GroupEntity getGroup() {
+        return group;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
 
     @Override
@@ -72,7 +78,7 @@ public class StudentEntity extends Entity {
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
                 && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && groupId == s.groupId);
+                && group == s.group);
     }
 
     @Override
@@ -82,7 +88,7 @@ public class StudentEntity extends Entity {
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
-        result = 31 * result + groupId;
+        result = 31 * result + group.hashCode();
 
         return result;
     }

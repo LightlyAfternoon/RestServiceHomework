@@ -1,12 +1,23 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
-public class SubjectEntity extends Entity {
-    private int id;
+@Entity
+@Table(name = "subject")
+public class SubjectEntity {
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     private String name;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_teacher", joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"))
     private List<TeacherEntity> teachers;
+    @OneToMany(mappedBy = "subject")
     private List<ExamEntity> exams;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"))
     private List<GroupEntity> groups;
 
     public SubjectEntity() {}
