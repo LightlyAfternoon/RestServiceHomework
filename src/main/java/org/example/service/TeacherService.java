@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 
-@Service
 public interface TeacherService {
     TeacherDTO findById(int id) throws SQLException;
 
-    boolean deleteById(int id) throws SQLException;
+    void deleteById(int id) throws SQLException;
 
     TeacherDTO save(TeacherEntity entity) throws SQLException;
 

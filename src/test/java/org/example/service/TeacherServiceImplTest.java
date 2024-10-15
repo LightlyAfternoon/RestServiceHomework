@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -52,12 +53,12 @@ class TeacherServiceImplTest {
     }
 
     @Test
-    void deleteByIdTest() throws SQLException {
-        Mockito.when(mockTeacherRepository.deleteById(1)).thenReturn(true);
-        Mockito.when(mockTeacherRepository.deleteById(2)).thenReturn(false);
+    void deleteByIdTest() {
+        Mockito.doNothing().when(mockTeacherRepository).deleteById(1);
+        Mockito.doThrow(DataIntegrityViolationException.class).when(mockTeacherRepository).deleteById(2);
 
-        Assertions.assertTrue(teacherService.deleteById(1));
-        Assertions.assertFalse(teacherService.deleteById(2));
+        mockTeacherRepository.deleteById(1);
+        Assertions.assertThrows(DataIntegrityViolationException.class,() -> teacherService.deleteById(2));
     }
 
     @Test
@@ -76,7 +77,7 @@ class TeacherServiceImplTest {
                 "t-11",
                 new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2021, Calendar.JUNE, 28).getTimeInMillis()),
-                1);
+                teacherEntity);
         List<GroupEntity> groupEntities = List.of(groupEntity);
 
         Mockito.when(mockTeacherRepository.findAllGroupsById(1)).thenReturn(groupEntities);
@@ -96,10 +97,12 @@ class TeacherServiceImplTest {
 
     @Test
     void findAllExamsWithTeacherIdTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        SubjectEntity subject = new SubjectEntity(1, "t");
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
-                1,
-                1);
+                group, subject, teacher);
         List<ExamEntity> examEntities = List.of(examEntity);
 
         Mockito.when(mockTeacherRepository.findAllExamsById(1)).thenReturn(examEntities);

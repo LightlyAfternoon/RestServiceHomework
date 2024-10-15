@@ -12,10 +12,12 @@ import org.example.servlet.mapper.GroupDTOMapper;
 import org.example.servlet.mapper.SubjectDTOMapper;
 import org.example.servlet.mapper.TeacherDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class TeacherServiceImpl implements TeacherService {
     @Autowired
     TeacherRepository teacherRepository;
@@ -38,8 +40,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        return teacherRepository.deleteById(id);
+    public void deleteById(int id) throws SQLException {
+        teacherRepository.deleteById(id);
     }
 
     @Override

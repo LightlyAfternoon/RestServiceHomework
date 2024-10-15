@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
-import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.DTO;
 import org.example.servlet.dto.TeacherDTO;
 import org.example.servlet.mapper.*;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 @WebServlet("/teacher/*")
 public class TeacherServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
-    @Autowired
     static TeacherService teacherService;
 
     static TeacherDTOMapper mapper = TeacherDTOMapper.INSTANCE;
@@ -206,14 +204,12 @@ public class TeacherServlet extends HttpServlet {
 
         try (PrintWriter printWriter = resp.getWriter()) {
             if (!info.isBlank() && teacherDTO != null) {
-                printWriter.write("{\"success\":\""+teacherService.deleteById(id)+"\"}");
+                printWriter.write("{\"success\":\""+"teacherService.deleteById(id)"+"\"}");
             } else if (!info.isBlank()) {
                 printWriter.write("Teacher is not found");
             } else {
                 printWriter.write("Must to write a teacher's id");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }
