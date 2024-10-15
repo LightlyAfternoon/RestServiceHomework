@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.model.GradeEntity;
+import org.example.model.*;
 import org.example.service.GradeService;
 import org.example.service.impl.GradeServiceImpl;
 import org.example.servlet.dto.GradeDTO;
@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -31,6 +32,11 @@ class GradeServletTest {
     GradeEntity gradeEntity;
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
+    TeacherEntity teacher;
+    GroupEntity group;
+    SubjectEntity subject;
+    StudentEntity student;
+    ExamEntity exam;
 
     GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
@@ -41,7 +47,13 @@ class GradeServletTest {
 
         mockGradeService = Mockito.mock(GradeServiceImpl.class);
         gradeServlet = new GradeServlet(mockGradeService);
-        gradeEntity = new GradeEntity(1, 1, 1, (short) 1);
+
+        teacher = new TeacherEntity(1, "t", "t", "t");
+        group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        subject = new SubjectEntity(1, "t");
+        student = new StudentEntity(2, "t", "t", "t", group);
+        exam = new ExamEntity(1, new Date(System.currentTimeMillis()), group, subject, teacher);
+        gradeEntity = new GradeEntity(1, student, exam, (short) 1);
     }
 
     @Test
@@ -55,7 +67,7 @@ class GradeServletTest {
 
         gradeServlet.doGet(mockRequest, mockResponse);
 
-        gradeEntity = new GradeEntity(1, 1, 1, (short) 1);
+        gradeEntity = new GradeEntity(1, student, exam, (short) 1);
         Assertions.assertEquals(byteArrayOutputStream.toString(), gradeDTO.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/2");

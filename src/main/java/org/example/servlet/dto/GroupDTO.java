@@ -9,16 +9,16 @@ public class GroupDTO extends DTO {
     private String name;
     private Date startDate;
     private Date endDate;
-    private TeacherEntity teacherId;
+    private TeacherEntity teacher;
 
     public GroupDTO() {}
 
-    public GroupDTO(int id, String name, Date startDate, Date endDate, TeacherEntity teacherId) {
+    public GroupDTO(int id, String name, Date startDate, Date endDate, TeacherEntity teacher) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
     }
 
     public int getId() {
@@ -53,12 +53,12 @@ public class GroupDTO extends DTO {
         this.endDate = endDate;
     }
 
-    public TeacherEntity getTeacherId() {
-        return teacherId;
+    public TeacherEntity getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherId(TeacherEntity teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacher(TeacherEntity teacher) {
+        this.teacher = teacher;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class GroupDTO extends DTO {
                 && name.equals(g.name)
                 && startDate.equals(g.startDate)
                 && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
-                && teacherId == g.teacherId);
+                && teacher == g.teacher);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class GroupDTO extends DTO {
         result = 31 * result + name.hashCode();
         result = 31 * result + startDate.hashCode();
         result = 31 * result + endDate.hashCode();
-        result = 31 * result + teacherId.hashCode();
+        result = 31 * result + teacher.hashCode();
 
         return result;
     }
@@ -96,7 +96,7 @@ public class GroupDTO extends DTO {
                     "    \"name\": \"" + name + "\",\n" +
                     "    \"startDate\": \"" + startDate + "\",\n" +
                     "    \"endDate\": null,\n" +
-                    "    \"teacherId\": " + teacherId + "\n" +
+                    "    \"teacherId\": " + teacher + "\n" +
                     "}";
         }
 
@@ -105,7 +105,7 @@ public class GroupDTO extends DTO {
                 "    \"name\": \"" + name + "\",\n" +
                 "    \"startDate\": \"" + startDate + "\",\n" +
                 "    \"endDate\": \"" + endDate + "\",\n" +
-                "    \"teacherId\": " + teacherId + "\n" +
+                "    \"teacherId\": " + teacher + "\n" +
                 "}";
     }
 }

@@ -1,14 +1,11 @@
 package org.example.repository;
 
 import org.example.db.ConnectionManager;
-import org.example.model.ExamEntity;
-import org.example.model.GroupEntity;
-import org.example.model.StudentEntity;
-import org.example.model.SubjectEntity;
-import org.example.repository.impl.GroupRepositoryImpl;
+import org.example.model.*;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
@@ -25,6 +22,7 @@ class GroupRepositoryImplTest {
     static final Logger log = LoggerFactory.getLogger(GroupRepositoryImplTest.class);
     Connection connection;
 
+    @Autowired
     GroupRepository groupRepository;
 
     @BeforeAll
@@ -40,8 +38,6 @@ class GroupRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
-
-        groupRepository = new GroupRepositoryImpl();
 
         try {
             connection = ConnectionManager.getConnection();
@@ -91,6 +87,8 @@ class GroupRepositoryImplTest {
         Calendar startCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
         Calendar endCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
 
+        TeacherEntity teacher = new TeacherEntity(2, "t", "t", "t");
+
         Date startDate = new Date(startCalendar.getTimeInMillis());
         endCalendar.add(Calendar.MONTH, 46);
         Date endDate = new Date(endCalendar.getTimeInMillis());
@@ -98,13 +96,13 @@ class GroupRepositoryImplTest {
         group.setName("Т");
         group.setStartDate(startDate);
         group.setEndDate(endDate);
-        group.setTeacher(2);
+        group.setTeacher(teacher);
 
         group = groupRepository.save(group);
         Assertions.assertEquals("Т", group.getName());
         Assertions.assertEquals(startDate, group.getStartDate());
         Assertions.assertEquals(endDate, group.getEndDate());
-        Assertions.assertEquals(2, group.getTeacher());
+        Assertions.assertEquals(2, group.getTeacher().getId());
 
         startCalendar.add(Calendar.YEAR, -4);
         startDate = new Date(startCalendar.getTimeInMillis());
@@ -114,14 +112,15 @@ class GroupRepositoryImplTest {
         group.setName("Т-2");
         group.setStartDate(startDate);
         group.setEndDate(endDate);
-        group.setTeacher(3);
+        teacher.setId(3);
+        group.setTeacher(teacher);
 
         group = groupRepository.save(group);
         Assertions.assertEquals(4, group.getId());
         Assertions.assertEquals("Т-2", group.getName());
         Assertions.assertEquals(startDate, group.getStartDate());
         Assertions.assertEquals(endDate, group.getEndDate());
-        Assertions.assertEquals(3, group.getTeacher());
+        Assertions.assertEquals(3, group.getTeacher().getId());
     }
 
     @Test

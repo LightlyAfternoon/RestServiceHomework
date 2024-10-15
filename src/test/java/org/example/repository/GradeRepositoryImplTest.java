@@ -1,14 +1,15 @@
 package org.example.repository;
 
 import org.example.db.ConnectionManager;
-import org.example.model.GradeEntity;
-import org.example.repository.impl.GradeRepositoryImpl;
+import org.example.model.*;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,6 +20,7 @@ class GradeRepositoryImplTest {
     private static final Logger log = LoggerFactory.getLogger(GradeRepositoryImplTest.class);
     Connection connection;
 
+    @Autowired
     GradeRepository gradeRepository;
 
     @BeforeAll
@@ -34,8 +36,6 @@ class GradeRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
-
-        gradeRepository = new GradeRepositoryImpl();
 
         try {
             connection = ConnectionManager.getConnection();
@@ -80,23 +80,30 @@ class GradeRepositoryImplTest {
     @Test
     void saveGradeTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
-        grade.setStudent(2);
-        grade.setExam(1);
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        SubjectEntity subject = new SubjectEntity(1, "t");
+        StudentEntity student = new StudentEntity(2, "t", "t", "t", group);
+        ExamEntity exam = new ExamEntity(1, new Date(System.currentTimeMillis()), group, subject, teacher);
+        grade.setStudent(student);
+        grade.setExam(exam);
         grade.setMark((short) 3);
 
         grade = gradeRepository.save(grade);
-        Assertions.assertEquals(2, grade.getStudent());
-        Assertions.assertEquals(1, grade.getExam());
+        Assertions.assertEquals(2, grade.getStudent().getId());
+        Assertions.assertEquals(1, grade.getExam().getId());
         Assertions.assertEquals(3, grade.getMark());
 
         grade = new GradeEntity();
-        grade.setStudent(3);
-        grade.setExam(3);
+        student.setId(3);
+        exam.setId(3);
+        grade.setStudent(student);
+        grade.setExam(exam);
         grade.setMark((short) 2);
 
         grade = gradeRepository.save(grade);
-        Assertions.assertEquals(3, grade.getStudent());
-        Assertions.assertEquals(3, grade.getExam());
+        Assertions.assertEquals(3, grade.getStudent().getId());
+        Assertions.assertEquals(3, grade.getExam().getId());
         Assertions.assertEquals(2, grade.getMark());
     }
 

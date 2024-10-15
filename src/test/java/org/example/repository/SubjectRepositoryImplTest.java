@@ -5,8 +5,6 @@ import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
-import org.example.repository.impl.GroupRepositoryImpl;
-import org.example.repository.impl.SubjectRepositoryImpl;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,10 @@ class SubjectRepositoryImplTest {
     static final Logger log = LoggerFactory.getLogger(SubjectRepositoryImplTest.class);
     Connection connection;
 
+    @Autowired
     SubjectRepository subjectRepository;
+    @Autowired
+    GroupRepository groupRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -40,8 +41,6 @@ class SubjectRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
-
-        subjectRepository = new SubjectRepositoryImpl();
 
         try {
             connection = ConnectionManager.getConnection();
@@ -122,8 +121,6 @@ class SubjectRepositoryImplTest {
 
     @Test
     void saveSubjectGroupRelationshipTest() throws SQLException {
-        GroupRepository groupRepository = new GroupRepositoryImpl();
-
         SubjectEntity subject = subjectRepository.findById(2);
         GroupEntity group = groupRepository.findById(1);
 

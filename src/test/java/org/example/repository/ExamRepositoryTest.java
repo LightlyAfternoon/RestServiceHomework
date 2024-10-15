@@ -2,10 +2,12 @@ package org.example.repository;
 
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
-import org.example.repository.impl.ExamRepositoryImpl;
+import org.example.model.GroupEntity;
+import org.example.model.TeacherEntity;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
@@ -15,13 +17,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-class ExamRepositoryImplTest {
+class ExamRepositoryTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
     
-    private static final Logger log = LoggerFactory.getLogger(ExamRepositoryImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ExamRepositoryTest.class);
     Connection connection;
 
+    @Autowired
     ExamRepository examRepository;
     
     @BeforeAll
@@ -37,8 +40,6 @@ class ExamRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
-
-        examRepository = new ExamRepositoryImpl();
 
         try {
             connection = ConnectionManager.getConnection();
@@ -85,27 +86,31 @@ class ExamRepositoryImplTest {
         Calendar calendar = new GregorianCalendar(2023, Calendar.MAY, 26);
         Date startDate = new Date(calendar.getTimeInMillis());
 
+        TeacherEntity teacher = new TeacherEntity(2, "t", "t", "t");
+        GroupEntity group = new GroupEntity(2, "t", startDate, startDate, teacher);
+
         ExamEntity exam = examRepository.findById(2);
         exam.setStartDate(startDate);
-        exam.setGroup(2);
-        exam.setTeacher(2);
+        exam.setGroup(group);
+        exam.setTeacher(teacher);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
-        Assertions.assertEquals(2, exam.getGroup());
-        Assertions.assertEquals(2, exam.getTeacher());
+        Assertions.assertEquals(2, exam.getGroup().getId());
+        Assertions.assertEquals(2, exam.getTeacher().getId());
 
         exam = new ExamEntity();
         calendar.add(Calendar.MONTH, 8);
         startDate = new Date(calendar.getTimeInMillis());
         exam.setStartDate(startDate);
-        exam.setGroup(2);
-        exam.setTeacher(1);
+        teacher.setId(1);
+        exam.setGroup(group);
+        exam.setTeacher(teacher);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
-        Assertions.assertEquals(2, exam.getGroup());
-        Assertions.assertEquals(1, exam.getTeacher());
+        Assertions.assertEquals(2, exam.getGroup().getId());
+        Assertions.assertEquals(1, exam.getTeacher().getId());
     }
 
     @Test

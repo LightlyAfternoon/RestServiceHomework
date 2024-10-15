@@ -1,11 +1,11 @@
 CREATE DATABASE "AcademicPerformanceDatabase";
 
-
 CREATE TABLE public.exam (
     id integer NOT NULL,
     start_date date NOT NULL,
     group_id integer NOT NULL,
-    subject_teacher_id integer NOT NULL
+    subject_id integer NOT NULL,
+    teacher_id integer NOT NULL
 );
 
 ALTER TABLE public.exam ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -155,7 +155,10 @@ ALTER TABLE ONLY public.exam
     ADD CONSTRAINT exam_group_id_fkey FOREIGN KEY (group_id) REFERENCES public."group"(id) NOT VALID;
 
 ALTER TABLE ONLY public.exam
-    ADD CONSTRAINT exam_subject_teacher_id_fkey FOREIGN KEY (subject_teacher_id) REFERENCES public.subject_teacher(id) NOT VALID;
+    ADD CONSTRAINT exam_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subject(id) NOT VALID;
+
+ALTER TABLE ONLY public.exam
+    ADD CONSTRAINT exam_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teacher(id) NOT VALID;
 
 ALTER TABLE ONLY public.grade
     ADD CONSTRAINT grade_exam_id_fkey FOREIGN KEY (exam_id) REFERENCES public.exam(id) NOT VALID;

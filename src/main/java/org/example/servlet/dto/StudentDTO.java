@@ -7,16 +7,16 @@ public class StudentDTO extends DTO {
     private String firstName;
     private String lastName;
     private String patronymic;
-    private GroupEntity groupId;
+    private GroupEntity group;
 
     public StudentDTO() {}
 
-    public StudentDTO(int id, String firstName, String lastName, String patronymic, GroupEntity groupId) {
+    public StudentDTO(int id, String firstName, String lastName, String patronymic, GroupEntity group) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
-        this.groupId = groupId;
+        this.group = group;
     }
 
     public int getId() {
@@ -51,12 +51,12 @@ public class StudentDTO extends DTO {
         this.patronymic = patronymic;
     }
 
-    public GroupEntity getGroupId() {
-        return groupId;
+    public GroupEntity getGroup() {
+        return group;
     }
 
-    public void setGroupId(GroupEntity groupId) {
-        this.groupId = groupId;
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class StudentDTO extends DTO {
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
                 && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && groupId == s.groupId);
+                && group == s.group);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StudentDTO extends DTO {
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
-        result = 31 * result + groupId.hashCode();
+        result = 31 * result + group.hashCode();
 
         return result;
     }
@@ -93,7 +93,7 @@ public class StudentDTO extends DTO {
                     "    \"firstName\": \""+firstName+"\",\n" +
                     "    \"lastName\": \""+lastName+"\",\n" +
                     "    \"patronymic\": null,\n" +
-                    "    \"groupId\": "+groupId+"\n" +
+                    "    \"groupId\": "+ group +"\n" +
                     "}";
         }
 
@@ -102,7 +102,7 @@ public class StudentDTO extends DTO {
                 "    \"firstName\": \""+firstName+"\",\n" +
                 "    \"lastName\": \""+lastName+"\",\n" +
                 "    \"patronymic\": \""+patronymic+"\",\n" +
-                "    \"groupId\": "+groupId+"\n" +
+                "    \"groupId\": "+ group +"\n" +
                 "}";
     }
 }

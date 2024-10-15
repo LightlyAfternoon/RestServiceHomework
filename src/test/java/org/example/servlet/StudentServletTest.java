@@ -7,7 +7,9 @@ import com.google.gson.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.model.GroupEntity;
 import org.example.model.StudentEntity;
+import org.example.model.TeacherEntity;
 import org.example.service.StudentService;
 import org.example.service.impl.StudentServiceImpl;
 import org.example.servlet.dto.StudentDTO;
@@ -21,7 +23,10 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 class StudentServletTest {
@@ -31,6 +36,7 @@ class StudentServletTest {
     StudentEntity studentEntity;
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
+    GroupEntity group;
 
     StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
 
@@ -41,7 +47,13 @@ class StudentServletTest {
 
         mockStudentService = Mockito.mock(StudentServiceImpl.class);
         studentServlet = new StudentServlet(mockStudentService);
-        studentEntity = new StudentEntity(1, "t", "t", "t", 1);
+
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
+        group = new GroupEntity(1, "П-0",
+                new Date(new GregorianCalendar(2015, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2019, Calendar.JUNE, 30).getTimeInMillis()),
+                teacher);
+        studentEntity = new StudentEntity(1, "t", "t", "t", group);
     }
 
     @Test
@@ -55,7 +67,7 @@ class StudentServletTest {
 
         studentServlet.doGet(mockRequest, mockResponse);
 
-        studentEntity = new StudentEntity(1, "t", "t", "t", 1);
+        studentEntity = new StudentEntity(1, "t", "t", "t", group);
         Assertions.assertEquals(byteArrayOutputStream.toString(), studentDTO.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/2");

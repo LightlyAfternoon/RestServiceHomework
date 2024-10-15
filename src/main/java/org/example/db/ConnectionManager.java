@@ -2,7 +2,9 @@ package org.example.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,7 +13,7 @@ import java.util.Properties;
 
 public class ConnectionManager {
     private static final HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
+    private static DriverManagerDataSource ds;
 
     private ConnectionManager() {}
 
@@ -19,24 +21,30 @@ public class ConnectionManager {
         try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/resources/db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
-            config.setDriverClassName(prop.getProperty("driverClassName"));
-            config.setJdbcUrl(prop.getProperty("jdbcUrl"));
-            config.setUsername(prop.getProperty("username"));
-            config.setPassword(prop.getProperty("password"));
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName(prop.getProperty("driverClassName"));
+            dataSource.setUrl(prop.getProperty("jdbcUrl"));
+            dataSource.setUsername(prop.getProperty("username"));
+            dataSource.setPassword(prop.getProperty("password"));
 
-            ds = new HikariDataSource(config);
+            ds = dataSource;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void setConfig(String url, String user, String password) {
-        config.setDriverClassName("org.postgresql.Driver");
-        config.setJdbcUrl(url);
-        config.setUsername(user);
-        config.setPassword(password);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
 
-        ds = new HikariDataSource(config);
+        ds = dataSource;
+    }
+
+    public static DataSource getDataSource() {
+        return ds;
     }
 
     public static Connection getConnection() throws SQLException {
@@ -47,7 +55,7 @@ public class ConnectionManager {
         }
     }
 
-    public static void close() {
-        ds.close();
+    public static void close() throws SQLException {
+        getConnection().close();
     }
 }

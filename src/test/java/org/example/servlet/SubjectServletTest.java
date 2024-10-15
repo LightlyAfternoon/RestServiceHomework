@@ -15,7 +15,6 @@ import org.example.service.SubjectService;
 import org.example.service.TeacherService;
 import org.example.service.impl.GroupServiceImpl;
 import org.example.service.impl.SubjectServiceImpl;
-import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.*;
 import org.example.servlet.dto.SubjectDTO;
 import org.example.servlet.mapper.*;
@@ -23,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -37,6 +37,7 @@ import java.util.List;
 class SubjectServletTest {
     SubjectServlet subjectServlet;
     SubjectService mockSubjectService;
+    @Autowired
     TeacherService mockTeacherService;
     GroupService mockGroupService;
     SubjectDTO subjectDTO;
@@ -54,7 +55,7 @@ class SubjectServletTest {
         mockResponse = Mockito.mock(HttpServletResponse.class);
 
         mockSubjectService = Mockito.mock(SubjectServiceImpl.class);
-        mockTeacherService = Mockito.mock(TeacherServiceImpl.class);
+        mockTeacherService = Mockito.mock(TeacherService.class);
         mockGroupService = Mockito.mock(GroupServiceImpl.class);
         subjectServlet = new SubjectServlet(mockSubjectService, mockTeacherService, mockGroupService);
         subjectEntity = new SubjectEntity(1, "t");
@@ -103,7 +104,10 @@ class SubjectServletTest {
         byteArrayOutputStream = new ByteArrayOutputStream();
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
-        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()), 1, 1);
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        SubjectEntity subject = new SubjectEntity(1, "t");
+        ExamDTO examDTO = new ExamDTO(1, new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()), group, subject, teacher);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectMapper.mapToDTO(subjectEntity));
         Mockito.when(mockSubjectService.findAllExamsWithSubjectId(1)).thenReturn(List.of(examDTO));
         List<ExamDTO> exams = mockSubjectService.findAllExamsWithSubjectId(1).stream().toList();
@@ -133,11 +137,11 @@ class SubjectServletTest {
         subjectServlet.doGet(mockRequest, mockResponse);
 
         stringBuilder = new StringBuilder();
-        for (TeacherDTO teacher : teachers) {
-            if (teachers.getLast() != teacher) {
-                stringBuilder.append(teacher.toString()).append(", \n");
+        for (TeacherDTO dto : teachers) {
+            if (teachers.getLast() != dto) {
+                stringBuilder.append(dto.toString()).append(", \n");
             } else {
-                stringBuilder.append(teacher.toString());
+                stringBuilder.append(dto.toString());
             }
         }
 
@@ -149,7 +153,7 @@ class SubjectServletTest {
 
         GroupDTO groupDTO = new GroupDTO(1, "t",
                 new Date(new GregorianCalendar(2011,Calendar.SEPTEMBER,1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2016,Calendar.JANUARY,5).getTimeInMillis()), 1);
+                new Date(new GregorianCalendar(2016,Calendar.JANUARY,5).getTimeInMillis()), teacher);
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectMapper.mapToDTO(subjectEntity));
         Mockito.when(mockSubjectService.findAllGroupsWithSubjectId(1)).thenReturn(List.of(groupDTO));
         List<GroupDTO> groups = mockSubjectService.findAllGroupsWithSubjectId(1).stream().toList();
@@ -247,7 +251,7 @@ class SubjectServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         GroupEntity groupEntity = new GroupEntity(1, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), 1);
+                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity);
         Mockito.when(mockGroupService.findById(1)).thenReturn(groupMapper.mapToDTO(groupEntity));
         Mockito.when(mockGroupService.save(groupEntity)).thenReturn(groupMapper.mapToDTO(groupEntity));
         Mockito.when(mockSubjectService.save(subjectEntity, groupEntity)).thenReturn(groupMapper.mapToDTO(groupEntity));

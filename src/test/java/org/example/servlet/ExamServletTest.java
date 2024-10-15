@@ -8,6 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.ExamEntity;
+import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
+import org.example.model.TeacherEntity;
 import org.example.service.ExamService;
 import org.example.service.impl.ExamServiceImpl;
 import org.example.servlet.dto.ExamDTO;
@@ -34,6 +37,9 @@ class ExamServletTest {
     ExamEntity examEntity;
     HttpServletRequest mockRequest;
     HttpServletResponse mockResponse;
+    TeacherEntity teacher;
+    GroupEntity group;
+    SubjectEntity subject;
 
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
@@ -44,8 +50,12 @@ class ExamServletTest {
 
         mockExamService = Mockito.mock(ExamServiceImpl.class);
         examServlet = new ExamServlet(mockExamService);
+
+        teacher = new TeacherEntity(1, "t", "t", "t");
+        group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        subject = new SubjectEntity(1, "t");
         examEntity = new ExamEntity(1, new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                1, 1);
+                group, subject, teacher);
     }
 
     @Test
@@ -60,7 +70,7 @@ class ExamServletTest {
         examServlet.doGet(mockRequest, mockResponse);
 
         examEntity = new ExamEntity(1, new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                1, 1);
+                group, subject, teacher);
         Assertions.assertEquals(byteArrayOutputStream.toString(), examDTO.toString());
 
         Mockito.when(mockRequest.getPathInfo()).thenReturn("/2");

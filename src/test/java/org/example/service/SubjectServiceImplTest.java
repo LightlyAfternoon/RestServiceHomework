@@ -5,7 +5,6 @@ import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.SubjectRepository;
-import org.example.repository.impl.SubjectRepositoryImpl;
 import org.example.service.impl.SubjectServiceImpl;
 import org.example.servlet.mapper.ExamDTOMapper;
 import org.example.servlet.mapper.GroupDTOMapper;
@@ -35,7 +34,7 @@ class SubjectServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockSubjectRepository = Mockito.mock(SubjectRepositoryImpl.class);
+        mockSubjectRepository = Mockito.mock(SubjectRepository.class);
         subjectService = new SubjectServiceImpl(mockSubjectRepository);
 
         subjectEntity = new SubjectEntity(1, "TestS");
@@ -83,11 +82,12 @@ class SubjectServiceImplTest {
 
     @Test
     void findAllGroupsWithSubjectIdTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
         GroupEntity groupEntity = new GroupEntity(1,
                 "t-11",
                 new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2021, Calendar.JUNE, 28).getTimeInMillis()),
-                1);
+                teacher);
         List<GroupEntity> groupEntities = List.of(groupEntity);
 
         Mockito.when(mockSubjectRepository.findAllGroupsWithSubjectId(1)).thenReturn(groupEntities);
@@ -97,10 +97,12 @@ class SubjectServiceImplTest {
 
     @Test
     void findAllExamsWithSubjectIdTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
+        SubjectEntity subject = new SubjectEntity(1, "t");
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
-                1,
-                1);
+                group, subject, teacher);
         List<ExamEntity> examEntities = List.of(examEntity);
 
 
@@ -134,11 +136,12 @@ class SubjectServiceImplTest {
 
     @Test
     void saveSubjectGroupRelationshipTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(2, "t", "t", "t");
         GroupEntity groupEntity = new GroupEntity(1,
                 "П-12",
                 new Date(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 null,
-                2);
+                teacher);
 
         Mockito.when(mockSubjectRepository.save(subjectEntity, groupEntity)).thenReturn(groupEntity);
 
@@ -146,7 +149,7 @@ class SubjectServiceImplTest {
                 "П-12",
                 new Date(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 null,
-                2);
+                teacher);
 
         Assertions.assertEquals(groupMapper.mapToDTO(groupEntity), subjectService.save(subjectEntity, groupEntity));
 

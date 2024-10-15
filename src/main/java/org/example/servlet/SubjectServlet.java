@@ -16,10 +16,10 @@ import org.example.service.SubjectService;
 import org.example.service.TeacherService;
 import org.example.service.impl.GroupServiceImpl;
 import org.example.service.impl.SubjectServiceImpl;
-import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.DTO;
 import org.example.servlet.dto.SubjectDTO;
 import org.example.servlet.mapper.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
 public class SubjectServlet extends HttpServlet {
     static final String CONTENT_TYPE = "application/json; charset=UTF-8";
     final transient SubjectService subjectService;
-    final transient TeacherService teacherService;
+    @Autowired
+    static TeacherService teacherService;
     final transient GroupService groupService;
 
     static SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
@@ -41,7 +42,6 @@ public class SubjectServlet extends HttpServlet {
 
     public SubjectServlet() {
         this.subjectService = new SubjectServiceImpl();
-        this.teacherService = new TeacherServiceImpl();
         this.groupService =  new GroupServiceImpl();
 
         ConnectionManager.setConfig();
