@@ -9,13 +9,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.config.MyWebConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.TeacherEntity;
 import org.example.service.TeacherService;
 import org.example.servlet.dto.DTO;
 import org.example.servlet.dto.TeacherDTO;
 import org.example.servlet.mapper.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,8 +33,10 @@ public class TeacherServlet extends HttpServlet {
     static TeacherDTOMapper mapper = TeacherDTOMapper.INSTANCE;
 
     public TeacherServlet() {
-
         ConnectionManager.setConfig();
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyWebConfig.class);
+        teacherService = context.getBean(TeacherService.class);
     }
 
     public TeacherServlet(TeacherService teacherService) {

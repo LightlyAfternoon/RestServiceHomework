@@ -1,10 +1,13 @@
 package org.example.config;
 
 import org.example.db.ConnectionManager;
+import org.example.service.TeacherService;
+import org.example.service.impl.TeacherServiceImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,6 +23,7 @@ public class MyWebConfig extends AnnotationConfigApplicationContext {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
+
         em.setDataSource(ConnectionManager.getDataSource());
         em.setPackagesToScan("org.example.model");
 
@@ -46,5 +50,21 @@ public class MyWebConfig extends AnnotationConfigApplicationContext {
         transactionManager.setEntityManagerFactory(
                 entityManagerFactory().getObject());
         return transactionManager;
+    }
+
+    @Bean
+    public TeacherService teacherService() {
+        return new TeacherServiceImpl();
+    }
+
+    @Bean
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
+
+        sf.setDataSource(ConnectionManager.getDataSource());
+        sf.setPackagesToScan("org.example.model");
+        sf.setHibernateProperties(additionalProperties());
+
+        return sf;
     }
 }
