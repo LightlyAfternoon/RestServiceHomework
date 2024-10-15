@@ -1,7 +1,5 @@
 package org.example.db;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
@@ -12,7 +10,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionManager {
-    private static final HikariConfig config = new HikariConfig();
     private static DriverManagerDataSource ds;
 
     private ConnectionManager() {}
