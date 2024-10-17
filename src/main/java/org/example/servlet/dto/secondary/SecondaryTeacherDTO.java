@@ -1,22 +1,21 @@
-package org.example.servlet.dto;
+package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.secondary.SecondaryGroupDTO;
 
-public class StudentDTO extends DTO {
+import org.example.servlet.dto.DTO;
+
+public class SecondaryTeacherDTO extends DTO {
     private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
-    private SecondaryGroupDTO group;
 
-    public StudentDTO() {}
+    public SecondaryTeacherDTO() {}
 
-    public StudentDTO(int id, String firstName, String lastName, String patronymic, SecondaryGroupDTO group) {
+    public SecondaryTeacherDTO(int id, String firstName, String lastName, String patronymic) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
-        this.group = group;
     }
 
     public int getId() {
@@ -51,26 +50,17 @@ public class StudentDTO extends DTO {
         this.patronymic = patronymic;
     }
 
-    public SecondaryGroupDTO getGroup() {
-        return group;
-    }
-
-    public void setGroup(SecondaryGroupDTO group) {
-        this.group = group;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof StudentDTO)) return false;
+        if (!(o instanceof SecondaryTeacherDTO)) return false;
         if (this == o) return true;
 
-        StudentDTO s = (StudentDTO) o;
-        return id == s.id
-                && firstName.equals(s.firstName)
-                && lastName.equals(s.lastName)
-                && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && group == s.group);
+        SecondaryTeacherDTO t = (SecondaryTeacherDTO) o;
+        return id == t.id
+                && firstName.equals(t.firstName)
+                && lastName.equals(t.lastName)
+                && ((patronymic == null && t.patronymic == null) || (patronymic != null && patronymic.equals(t.patronymic)));
     }
 
     @Override
@@ -80,7 +70,6 @@ public class StudentDTO extends DTO {
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
-        result = 31 * result + group.hashCode();
 
         return result;
     }
@@ -92,17 +81,16 @@ public class StudentDTO extends DTO {
                     "    \"id\": "+id+",\n" +
                     "    \"firstName\": \""+firstName+"\",\n" +
                     "    \"lastName\": \""+lastName+"\",\n" +
-                    "    \"patronymic\": null,\n" +
-                    "    \"groupId\": "+ group +"\n" +
+                    "    \"patronymic\": null\n" +
                     "}";
+
         }
 
         return "{\n" +
                 "    \"id\": "+id+",\n" +
                 "    \"firstName\": \""+firstName+"\",\n" +
                 "    \"lastName\": \""+lastName+"\",\n" +
-                "    \"patronymic\": \""+patronymic+"\",\n" +
-                "    \"groupId\": "+ group +"\n" +
+                "    \"patronymic\": \""+patronymic+"\"\n" +
                 "}";
     }
 }

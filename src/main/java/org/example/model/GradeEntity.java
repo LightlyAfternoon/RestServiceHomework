@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 @Table(name = "grade")
 public class GradeEntity {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
     private StudentEntity student;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "exam_id")
     private ExamEntity exam;
     private short mark;

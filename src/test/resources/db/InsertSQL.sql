@@ -17,7 +17,7 @@ INSERT INTO student(first_name, last_name, patronymic, group_id) VALUES ('Сте
 INSERT INTO student(first_name, last_name, patronymic, group_id) VALUES ('Максимова', 'Пелагея', 'Артёмовна', 1);
 INSERT INTO student(first_name, last_name, patronymic, group_id) VALUES ('Илья', 'Родин', 'Артёмович', 2);
 
-INSERT INTO exam(start_date, group_id, subject_id, teacher_id) VALUES ('2021-12-13', 1, 2, 1);
+INSERT INTO exam(start_date, group_id, subject_id, teacher_id) VALUES ('2021-12-13', 1, 1, 2);
 INSERT INTO exam(start_date, group_id, subject_id, teacher_id) VALUES ('2023-12-02', 2, 1, 1);
 INSERT INTO exam(start_date, group_id, subject_id, teacher_id) VALUES ('2024-01-05', 2, 1, 1);
 

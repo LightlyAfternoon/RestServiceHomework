@@ -1,23 +1,19 @@
-package org.example.servlet.dto;
+package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.secondary.SecondaryGroupDTO;
-import org.example.servlet.dto.secondary.SecondarySubjectDTO;
-import org.example.servlet.dto.secondary.SecondaryTeacherDTO;
+import org.example.servlet.dto.DTO;
 
 import java.sql.Date;
-import java.util.List;
 
-public class ExamDTO extends DTO {
+public class SecondaryExamDTO extends DTO {
     private int id;
     private Date startDate;
     private SecondaryGroupDTO groupId;
     private SecondarySubjectDTO subject;
     private SecondaryTeacherDTO teacher;
-    private List<GradeDTO> grades;
 
-    public ExamDTO() {}
+    public SecondaryExamDTO() {}
 
-    public ExamDTO(int id, Date startDate, SecondaryGroupDTO groupId, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
+    public SecondaryExamDTO(int id, Date startDate, SecondaryGroupDTO groupId, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
         this.id = id;
         this.startDate = startDate;
         this.groupId = groupId;
@@ -65,21 +61,13 @@ public class ExamDTO extends DTO {
         this.teacher = teacher;
     }
 
-    public List<GradeDTO> getGrades() {
-        return grades;
-    }
-
-    public void setGrades(List<GradeDTO> grades) {
-        this.grades = grades;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof ExamDTO)) return false;
+        if (!(o instanceof SecondaryExamDTO)) return false;
         if (this == o) return true;
 
-        ExamDTO e = (ExamDTO) o;
+        SecondaryExamDTO e = (SecondaryExamDTO) o;
         return id == e.id
                 && startDate.equals(e.startDate)
                 && groupId == e.groupId

@@ -19,7 +19,6 @@ import java.util.List;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
-    @Autowired
     TeacherRepository teacherRepository;
 
     TeacherDTOMapper teacherMapper = TeacherDTOMapper.INSTANCE;
@@ -27,9 +26,8 @@ public class TeacherServiceImpl implements TeacherService {
     SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
 
-    public TeacherServiceImpl() {
-    }
 
+    @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository) {
         this.teacherRepository = teacherRepository;
     }
@@ -45,8 +43,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO save(TeacherEntity entity) throws SQLException {
-        return teacherMapper.mapToDTO(teacherRepository.save(entity));
+    public TeacherDTO save(TeacherDTO teacherDTO) throws SQLException {
+        return teacherMapper.mapToDTO(teacherRepository.save(teacherMapper.mapToEntity(teacherDTO)));
+    }
+
+    @Override
+    public TeacherDTO save(TeacherDTO teacherDTO, int id) throws SQLException {
+        return teacherMapper.mapToDTO(teacherRepository.save(teacherMapper.mapToEntity(teacherDTO, id)));
     }
 
     @Override
@@ -56,16 +59,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<GroupDTO> findAllGroupsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllGroupsById(id).stream().map(groupMapper::mapToDTO).toList();
+        return teacherRepository.findById(id).getGroups().stream().map(groupMapper::mapToDTO).toList();
     }
 
     @Override
     public List<SubjectDTO> findAllSubjectsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllSubjectsById(id).stream().map(subjectMapper::mapToDTO).toList();
+        return teacherRepository.findById(id).getSubjects().stream().map(subjectMapper::mapToDTO).toList();
     }
 
     @Override
     public List<ExamDTO> findAllExamsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findAllExamsById(id).stream().map(examMapper::mapToDTO).toList();
+        return teacherRepository.findById(id).getExams().stream().map(examMapper::mapToDTO).toList();
     }
 }

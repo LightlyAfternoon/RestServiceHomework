@@ -3,24 +3,27 @@ package org.example.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "exam")
 public class ExamEntity {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     private @Column(name = "start_date") Date startDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private GroupEntity group;
 //    @ManyToOne
 //    @JoinColumn(name = "subject_teacher_id")
 //    private TeacherEntity teacher;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subject_id")
     private SubjectEntity subject;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<GradeEntity> grades;
 
     public ExamEntity() {}
 
@@ -74,6 +77,14 @@ public class ExamEntity {
 
     public void setTeacher(TeacherEntity teacher) {
         this.teacher = teacher;
+    }
+
+    public List<GradeEntity> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<GradeEntity> grades) {
+        this.grades = grades;
     }
 
     @Override

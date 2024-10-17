@@ -80,7 +80,7 @@ class TeacherServiceImplTest {
                 teacherEntity);
         List<GroupEntity> groupEntities = List.of(groupEntity);
 
-        Mockito.when(mockTeacherRepository.findAllGroupsById(1)).thenReturn(groupEntities);
+        Mockito.when(mockTeacherRepository.findById(1).getGroups()).thenReturn(groupEntities);
 
         Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
     }
@@ -90,7 +90,7 @@ class TeacherServiceImplTest {
         SubjectEntity subjectEntity = new SubjectEntity(1, "TestS");
         List<SubjectEntity> subjectEntities = List.of(subjectEntity);
 
-        Mockito.when(mockTeacherRepository.findAllSubjectsById(1)).thenReturn(subjectEntities);
+        Mockito.when(mockTeacherRepository.findById(1).getSubjects()).thenReturn(subjectEntities);
 
         Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
     }
@@ -105,7 +105,7 @@ class TeacherServiceImplTest {
                 group, subject, teacher);
         List<ExamEntity> examEntities = List.of(examEntity);
 
-        Mockito.when(mockTeacherRepository.findAllExamsById(1)).thenReturn(examEntities);
+        Mockito.when(mockTeacherRepository.findById(1).getExams()).thenReturn(examEntities);
 
         Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
     }
@@ -118,6 +118,6 @@ class TeacherServiceImplTest {
 
         teacherEntity = new TeacherEntity(2, "Тет", "Тт", "Ттт");
 
-        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherService.save(teacherEntity));
+        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherService.save(teacherMapper.mapToDTO(teacherEntity)));
     }
 }

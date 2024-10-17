@@ -1,18 +1,17 @@
 package org.example.config;
 
 import org.example.db.ConnectionManager;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -24,16 +23,15 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "org.example.repository")
-@EnableWebMvc
-@ComponentScan({"org.example.service", "org.example.servlet"})
-public class MyWebConfig extends AnnotationConfigWebApplicationContext {
+@ComponentScan({"org.example.service"})
+public class MyTestConfig extends AnnotationConfigApplicationContext {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
 
-        em.setDataSource(setConfig());
+        em.setDataSource(ConnectionManager.getDataSource());
         em.setPackagesToScan("org.example.model");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -41,22 +39,6 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
         em.setJpaProperties(additionalProperties());
 
         return em;
-    }
-
-    public static DataSource setConfig() {
-        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/resources/db.properties")) {
-            Properties prop = new Properties();
-            prop.load(inputStream);
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName(prop.getProperty("driverClassName"));
-            dataSource.setUrl(prop.getProperty("jdbcUrl"));
-            dataSource.setUsername(prop.getProperty("username"));
-            dataSource.setPassword(prop.getProperty("password"));
-
-            return dataSource;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     Properties additionalProperties() {
@@ -81,19 +63,10 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
 
-        sf.setDataSource(setConfig());
+        sf.setDataSource(ConnectionManager.getDataSource());
         sf.setPackagesToScan("org.example.model");
         sf.setHibernateProperties(additionalProperties());
 
         return sf;
-    }
-
-    @Bean
-    public ViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/view/");
-        viewResolver.setSuffix(".jsp");
-
-        return viewResolver;
     }
 }

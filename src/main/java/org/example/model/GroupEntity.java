@@ -12,14 +12,14 @@ public class GroupEntity {
     private String name;
     private @Column(name = "start_date") Date startDate;
     private @Column(name = "end_date") Date endDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StudentEntity> students;
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ExamEntity> exams;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
                                        inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
     private List<SubjectEntity> subjects;

@@ -1,30 +1,22 @@
-package org.example.model;
+package org.example.servlet.dto.secondary;
 
-import jakarta.persistence.*;
+import org.example.servlet.dto.DTO;
 
-@Entity
-@Table(name = "student")
-public class StudentEntity {
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
-    private @Column(name = "first_name") String firstName;
-    private @Column(name = "last_name") String lastName;
-    private @Column(name = "patronymic") String patronymic;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id", nullable = false)
-    private GroupEntity group;
+public class SecondaryStudentDTO extends DTO {
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String patronymic;
+    private SecondaryGroupDTO group;
 
-    public StudentEntity() {}
+    public SecondaryStudentDTO() {}
 
-    public StudentEntity(String firstName, String lastName, String patronymic, GroupEntity group) {
+    public SecondaryStudentDTO(int id, String firstName, String lastName, String patronymic, SecondaryGroupDTO group) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
         this.group = group;
-    }
-
-    public StudentEntity(int id, String firstName, String lastName, String patronymic, GroupEntity group) {
-        this(firstName, lastName, patronymic, group);
-        this.id = id;
     }
 
     public int getId() {
@@ -59,21 +51,21 @@ public class StudentEntity {
         this.patronymic = patronymic;
     }
 
-    public GroupEntity getGroup() {
+    public SecondaryGroupDTO getGroup() {
         return group;
     }
 
-    public void setGroup(GroupEntity group) {
+    public void setGroup(SecondaryGroupDTO group) {
         this.group = group;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof StudentEntity)) return false;
+        if (!(o instanceof SecondaryStudentDTO)) return false;
         if (this == o) return true;
 
-        StudentEntity s = (StudentEntity) o;
+        SecondaryStudentDTO s = (SecondaryStudentDTO) o;
         return id == s.id
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
@@ -91,5 +83,26 @@ public class StudentEntity {
         result = 31 * result + group.hashCode();
 
         return result;
+    }
+
+    @Override
+    public String toString() {
+        if (patronymic == null) {
+            return "{\n" +
+                    "    \"id\": "+id+",\n" +
+                    "    \"firstName\": \""+firstName+"\",\n" +
+                    "    \"lastName\": \""+lastName+"\",\n" +
+                    "    \"patronymic\": null,\n" +
+                    "    \"groupId\": "+ group +"\n" +
+                    "}";
+        }
+
+        return "{\n" +
+                "    \"id\": "+id+",\n" +
+                "    \"firstName\": \""+firstName+"\",\n" +
+                "    \"lastName\": \""+lastName+"\",\n" +
+                "    \"patronymic\": \""+patronymic+"\",\n" +
+                "    \"groupId\": "+ group +"\n" +
+                "}";
     }
 }

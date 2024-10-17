@@ -84,7 +84,7 @@ class StudentServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(new PrintWriter(byteArrayOutputStream));
 
         Mockito.when(mockStudentService.findAll()).thenReturn(List.of(studentDTO));
-        List<StudentDTO> students = mockStudentService.findAll().stream().toList();
+        List<StudentDTO> students = mockStudentService.findAll();
 
         studentServlet.doGet(mockRequest, mockResponse);
 

@@ -19,7 +19,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class SubjectServiceImpl implements SubjectService {
-    @Autowired
     SubjectRepository subjectRepository;
 
     SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
@@ -30,6 +29,7 @@ public class SubjectServiceImpl implements SubjectService {
     public SubjectServiceImpl() {
     }
 
+    @Autowired
     public SubjectServiceImpl(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
     }
@@ -40,8 +40,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        return subjectRepository.deleteById(id);
+    public void deleteById(int id) throws SQLException {
+        subjectRepository.deleteById(id);
     }
 
     @Override

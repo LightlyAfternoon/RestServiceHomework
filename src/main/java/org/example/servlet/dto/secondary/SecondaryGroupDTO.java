@@ -1,25 +1,19 @@
-package org.example.servlet.dto;
+package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.secondary.SecondaryExamDTO;
-import org.example.servlet.dto.secondary.SecondaryStudentDTO;
-import org.example.servlet.dto.secondary.SecondarySubjectDTO;
+import org.example.servlet.dto.DTO;
 
 import java.sql.Date;
-import java.util.List;
 
-public class GroupDTO extends DTO {
+public class SecondaryGroupDTO extends DTO {
     private int id;
     private String name;
     private Date startDate;
     private Date endDate;
-    private TeacherDTO teacher;
-    private List<SecondaryStudentDTO> students;
-    private List<SecondaryExamDTO> exams;
-    private List<SecondarySubjectDTO> subjects;
+    private SecondaryTeacherDTO teacher;
 
-    public GroupDTO() {}
+    public SecondaryGroupDTO() {}
 
-    public GroupDTO(int id, String name, Date startDate, Date endDate, TeacherDTO teacher) {
+    public SecondaryGroupDTO(int id, String name, Date startDate, Date endDate, SecondaryTeacherDTO teacher) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -59,45 +53,21 @@ public class GroupDTO extends DTO {
         this.endDate = endDate;
     }
 
-    public TeacherDTO getTeacher() {
+    public SecondaryTeacherDTO getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(TeacherDTO teacher) {
+    public void setTeacher(SecondaryTeacherDTO teacher) {
         this.teacher = teacher;
-    }
-
-    public List<SecondaryStudentDTO> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<SecondaryStudentDTO> students) {
-        this.students = students;
-    }
-
-    public List<SecondaryExamDTO> getExams() {
-        return exams;
-    }
-
-    public void setExams(List<SecondaryExamDTO> exams) {
-        this.exams = exams;
-    }
-
-    public List<SecondarySubjectDTO> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<SecondarySubjectDTO> subjects) {
-        this.subjects = subjects;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof GroupDTO)) return false;
+        if (!(o instanceof SecondaryGroupDTO)) return false;
         if (this == o) return true;
 
-        GroupDTO g = (GroupDTO) o;
+        SecondaryGroupDTO g = (SecondaryGroupDTO) o;
 
         return id == g.id
                 && name.equals(g.name)

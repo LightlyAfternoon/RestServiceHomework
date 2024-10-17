@@ -1,10 +1,19 @@
 package org.example.servlet.dto;
 
+import org.example.servlet.dto.secondary.SecondaryExamDTO;
+import org.example.servlet.dto.secondary.SecondaryGroupDTO;
+import org.example.servlet.dto.secondary.SecondarySubjectDTO;
+
+import java.util.List;
+
 public class TeacherDTO extends DTO {
     private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
+    private List<SecondaryGroupDTO> groups;
+    private List<SecondarySubjectDTO> subjects;
+    private List<SecondaryExamDTO> exams;
 
     public TeacherDTO() {}
 
@@ -45,6 +54,30 @@ public class TeacherDTO extends DTO {
 
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
+    }
+
+    public List<SecondaryGroupDTO> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<SecondaryGroupDTO> groups) {
+        this.groups = groups;
+    }
+
+    public List<SecondarySubjectDTO> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SecondarySubjectDTO> subjects) {
+        this.subjects = subjects;
+    }
+
+    public List<SecondaryExamDTO> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<SecondaryExamDTO> exams) {
+        this.exams = exams;
     }
 
     @Override

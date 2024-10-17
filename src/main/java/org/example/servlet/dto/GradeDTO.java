@@ -1,20 +1,20 @@
 package org.example.servlet.dto;
 
-import org.example.model.ExamEntity;
-import org.example.model.StudentEntity;
+import org.example.servlet.dto.secondary.SecondaryExamDTO;
+import org.example.servlet.dto.secondary.SecondaryStudentDTO;
 
 public class GradeDTO extends DTO {
     private int id;
-    private StudentEntity studentId;
-    private ExamEntity examId;
+    private SecondaryStudentDTO studentId;
+    private SecondaryExamDTO exam;
     private short mark;
 
     public GradeDTO() {}
 
-    public GradeDTO(int id, StudentEntity studentId, ExamEntity examId, short mark) {
+    public GradeDTO(int id, SecondaryStudentDTO studentId, SecondaryExamDTO exam, short mark) {
         this.id = id;
         this.studentId = studentId;
-        this.examId = examId;
+        this.exam = exam;
         this.mark = mark;
     }
 
@@ -26,20 +26,20 @@ public class GradeDTO extends DTO {
         this.id = id;
     }
 
-    public StudentEntity getStudentId() {
+    public SecondaryStudentDTO getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(StudentEntity studentId) {
+    public void setStudentId(SecondaryStudentDTO studentId) {
         this.studentId = studentId;
     }
 
-    public ExamEntity getExamId() {
-        return examId;
+    public SecondaryExamDTO getExam() {
+        return exam;
     }
 
-    public void setExamId(ExamEntity examId) {
-        this.examId = examId;
+    public void setExam(SecondaryExamDTO exam) {
+        this.exam = exam;
     }
 
     public short getMark() {
@@ -59,7 +59,7 @@ public class GradeDTO extends DTO {
         GradeDTO g = (GradeDTO) o;
         return id == g.id
                 && studentId == g.studentId
-                && examId == g.examId
+                && exam == g.exam
                 && mark == g.mark;
     }
 
@@ -68,7 +68,7 @@ public class GradeDTO extends DTO {
         int result = id;
 
         result = 31 * result + studentId.hashCode();
-        result = 31 * result + examId.hashCode();
+        result = 31 * result + exam.hashCode();
         result = 31 * result + mark;
 
         return result;
@@ -79,7 +79,7 @@ public class GradeDTO extends DTO {
         return "{\n" +
                 "    \"id\": " + id + ",\n" +
                 "    \"studentId\": " + studentId + ",\n" +
-                "    \"examId\": " + examId + ",\n" +
+                "    \"examId\": " + exam + ",\n" +
                 "    \"mark\": " + mark + "\n" +
                 "}";
     }

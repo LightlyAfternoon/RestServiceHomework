@@ -15,7 +15,9 @@ public interface TeacherService {
 
     void deleteById(int id) throws SQLException;
 
-    TeacherDTO save(TeacherEntity entity) throws SQLException;
+    TeacherDTO save(TeacherDTO teacherDTO) throws SQLException;
+
+    TeacherDTO save(TeacherDTO teacherDTO, int id) throws SQLException;
 
     List<TeacherDTO> findAll() throws SQLException;
 

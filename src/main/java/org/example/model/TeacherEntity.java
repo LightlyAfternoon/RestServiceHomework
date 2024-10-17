@@ -11,13 +11,13 @@ public class TeacherEntity {
     private @Column(name = "first_name") String firstName;
     private @Column(name = "last_name") String lastName;
     private @Column(name = "patronymic") String patronymic;
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<GroupEntity> groups;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "subject_teacher", joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
     private List<SubjectEntity> subjects;
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ExamEntity> exams;
 
     public TeacherEntity() {}

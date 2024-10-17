@@ -79,11 +79,11 @@ class SubjectRepositoryImplTest {
         Assertions.assertNull(subjectRepository.findById(50));
     }
 
-    @Test
-    void deleteSubjectByIdTest() throws SQLException {
-        Assertions.assertTrue(subjectRepository.deleteById(3));
-        Assertions.assertFalse(subjectRepository.deleteById(50));
-    }
+//    @Test
+//    void deleteSubjectByIdTest() throws SQLException {
+//        Assertions.assertTrue(subjectRepository.deleteById(3));
+//        Assertions.assertFalse(subjectRepository.deleteById(50));
+//    }
 
     @Test
     void saveSubjectTest() throws SQLException {

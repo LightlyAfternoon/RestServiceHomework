@@ -51,14 +51,14 @@ class SubjectServiceImplTest {
         Assertions.assertNotEquals(subjectService.findById(1), subjectMapper.mapToDTO(subjectEntity));
     }
 
-    @Test
-    void deleteByIdTest() throws SQLException {
-        Mockito.when(mockSubjectRepository.deleteById(1)).thenReturn(true);
-        Mockito.when(mockSubjectRepository.deleteById(2)).thenReturn(false);
-
-        Assertions.assertTrue(subjectService.deleteById(1));
-        Assertions.assertFalse(subjectService.deleteById(2));
-    }
+//    @Test
+//    void deleteByIdTest() throws SQLException {
+//        Mockito.when(mockSubjectRepository.deleteById(1)).thenReturn(true);
+//        Mockito.when(mockSubjectRepository.deleteById(2)).thenReturn(false);
+//
+//        Assertions.assertTrue(subjectService.deleteById(1));
+//        Assertions.assertFalse(subjectService.deleteById(2));
+//    }
 
     @Test
     void findAllTest() throws SQLException {

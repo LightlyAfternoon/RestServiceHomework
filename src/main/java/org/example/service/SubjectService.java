@@ -14,7 +14,7 @@ import java.util.List;
 public interface SubjectService {
     SubjectDTO findById(int id) throws SQLException;
 
-    boolean deleteById(int id) throws SQLException;
+    void deleteById(int id) throws SQLException;
 
     SubjectDTO save(SubjectEntity entity) throws SQLException;
 

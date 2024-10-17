@@ -1,14 +1,11 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import org.example.config.MyWebConfig;
+import org.example.config.MyTestConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
 import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +44,7 @@ class TeacherRepositoryTest {
     void setUp() throws SQLException {
         try {
             connection = ConnectionManager.getConnection();
-            context = new AnnotationConfigApplicationContext(MyWebConfig.class);
+            context = new AnnotationConfigApplicationContext(MyTestConfig.class);
             teacherRepository = context.getBean(TeacherRepository.class);
         } catch (SQLException e) {
             throw new SQLException(e);
@@ -73,14 +70,15 @@ class TeacherRepositoryTest {
     @Test
     void getTeacherByIdTest() throws SQLException {
         TeacherEntity teacherEntity = teacherRepository.findById(1);
+        log.info("---------------");
 
-        EntityManagerFactory entityManagerFactory = (EntityManagerFactory) context.getBean("entityManagerFactory");
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()){
-            List<TeacherEntity> teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.groups where t.id in :id").setParameter("id", 1).getResultList();
-            teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.subjects where t.id in :id").setParameter("id", 1).getResultList();
-            teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.exams where t.id in :id").setParameter("id", 1).getResultList();
-            teacherEntity =  teacher.getFirst();
-        }
+//        EntityManagerFactory entityManagerFactory = (EntityManagerFactory) context.getBean("entityManagerFactory");
+//        try (EntityManager entityManager = entityManagerFactory.createEntityManager()){
+//            List<TeacherEntity> teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.groups where t.id in :id").setParameter("id", 1).getResultList();
+//            teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.subjects where t.id in :id").setParameter("id", 1).getResultList();
+//            teacher = entityManager.createQuery("from TeacherEntity t left join fetch t.exams where t.id in :id").setParameter("id", 1).getResultList();
+//            teacherEntity =  teacher.getFirst();
+//        }
 
         Assertions.assertNotNull(teacherEntity);
         Assertions.assertFalse(teacherEntity.getSubjects().isEmpty());
@@ -94,9 +92,13 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void deleteTeacherByIdTest() {
+    void deleteTeacherByIdTest() throws SQLException {
+        log.info("---");
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> teacherRepository.deleteById(1));
+        Assertions.assertNotNull(teacherRepository.findById(1));
+        log.info("---");
         Assertions.assertDoesNotThrow(() -> teacherRepository.deleteById(3));
+        log.info("---");
         Assertions.assertDoesNotThrow(() -> teacherRepository.deleteById(50));
     }
 
@@ -118,6 +120,7 @@ class TeacherRepositoryTest {
         Assertions.assertEquals(4, teacher.getId());
         Assertions.assertEquals("Новая", teacher.getFirstName());
         Assertions.assertEquals("Тестовна", teacher.getLastName());
+        log.info(String.valueOf(teacherRepository.findById(2).getId()));
     }
 
     @Test
@@ -127,26 +130,23 @@ class TeacherRepositoryTest {
         Assertions.assertFalse(teachers.isEmpty());
     }
 
-    @Ignore
     @Test
     void findAllSubjectsByIdTest() throws SQLException {
-        List<SubjectEntity> subjects = teacherRepository.findAllSubjectsById(1);
+        List<SubjectEntity> subjects = teacherRepository.findById(2).getSubjects();
 
         Assertions.assertFalse(subjects.isEmpty());
     }
 
-    @Ignore
     @Test
     void findAllGroupsByIdTest() throws SQLException {
-        List<GroupEntity> groups = teacherRepository.findAllGroupsById(1);
+        List<GroupEntity> groups = teacherRepository.findById(2).getGroups();
 
         Assertions.assertFalse(groups.isEmpty());
     }
 
-    @Ignore
     @Test
     void findAllExamsByIdTest() throws SQLException {
-        List<ExamEntity> exams = teacherRepository.findAllExamsById(1);
+        List<ExamEntity> exams = teacherRepository.findById(2).getExams();
 
         Assertions.assertFalse(exams.isEmpty());
     }
