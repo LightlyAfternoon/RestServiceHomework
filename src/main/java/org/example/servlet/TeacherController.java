@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/teacher")
@@ -23,7 +23,7 @@ public class TeacherController {
     }
 
     @GetMapping("/")
-    public List<TeacherDTO> getTeacher() throws SQLException {
+    public Set<TeacherDTO> getTeacher() throws SQLException {
         return teacherService.findAll();
     }
 
@@ -33,17 +33,17 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/group")
-    public List<GroupDTO> getGroups(@PathVariable("id") int id) throws SQLException {
+    public Set<GroupDTO> getGroups(@PathVariable("id") int id) throws SQLException {
         return teacherService.findAllGroupsWithTeacherId(id);
     }
 
     @GetMapping("/{id}/subject")
-    public List<SubjectDTO> getSubjects(@PathVariable("id") int id) throws SQLException {
+    public Set<SubjectDTO> getSubjects(@PathVariable("id") int id) throws SQLException {
         return teacherService.findAllSubjectsWithTeacherId(id);
     }
 
     @GetMapping("/{id}/exam")
-    public List<ExamDTO> getExams(@PathVariable("id") int id) throws SQLException {
+    public Set<ExamDTO> getExams(@PathVariable("id") int id) throws SQLException {
         return teacherService.findAllExamsWithTeacherId(id);
     }
 
@@ -60,12 +60,14 @@ public class TeacherController {
     @DeleteMapping("/{id}")
     public String deleteTeacher(@PathVariable("id") int id) throws SQLException {
         TeacherDTO teacherDTO = teacherService.findById(id);
-        teacherService.deleteById(id);
-
-        if (teacherDTO != null) {
-            return "Teacher deleted!";
-        } else {
+        if (teacherDTO != null && (teacherDTO.getGroups() != null || teacherDTO.getExams() != null)) {
+            return "Teacher is connected to some groups and/or exams!";
+        } else if (teacherDTO == null) {
             return "There is no teacher with id " + id;
+        } else {
+            teacherService.deleteById(id);
+
+            return "Teacher deleted!";
         }
     }
 }

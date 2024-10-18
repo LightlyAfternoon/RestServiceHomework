@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
 
 class GroupRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
@@ -125,28 +125,28 @@ class GroupRepositoryImplTest {
 
     @Test
     void findAllGroupsTest() throws SQLException {
-        List<GroupEntity> groups = groupRepository.findAll();
+        Set<GroupEntity> groups = groupRepository.findAll();
 
         Assertions.assertFalse(groups.isEmpty());
     }
 
     @Test
     void findAllStudentsWithGroupIdTest() throws SQLException {
-        List<StudentEntity> students = groupRepository.findAllStudentsWithGroupId(1);
+        Set<StudentEntity> students = groupRepository.findById(1).getStudents();
 
         Assertions.assertFalse(students.isEmpty());
     }
 
     @Test
     void findAllExamsWithGroupIdTest() throws SQLException {
-        List<ExamEntity> exams = groupRepository.findAllExamsWithGroupId(2);
+        Set<ExamEntity> exams = groupRepository.findById(2).getExams();
 
         Assertions.assertEquals(2, exams.size());
     }
 
     @Test
     void findAllSubjectsWithGroupIdTest() throws SQLException {
-        List<SubjectEntity> subjects = groupRepository.findAllSubjectsWithGroupId(2);
+        Set<SubjectEntity> subjects = groupRepository.findById(2).getSubjects();
 
         Assertions.assertEquals(1, subjects.size());
     }

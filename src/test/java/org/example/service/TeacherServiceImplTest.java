@@ -18,10 +18,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class TeacherServiceImplTest {
     TeacherRepository mockTeacherRepository;
@@ -63,36 +64,40 @@ class TeacherServiceImplTest {
 
     @Test
     void findAllTest() throws SQLException {
-        List<TeacherEntity> teacherEntities = new ArrayList<>();
+        Set<TeacherEntity> teacherEntities = new HashSet<>();
         teacherEntities.add(teacherEntity);
 
         Mockito.when(mockTeacherRepository.findAll()).thenReturn(teacherEntities);
 
-        Assertions.assertEquals(teacherService.findAll(), teacherEntities.stream().map(teacherMapper::mapToDTO).toList());
+        Assertions.assertEquals(teacherService.findAll(), teacherEntities.stream().map(teacherMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
     void findAllGroupsWithTeacherIdTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
         GroupEntity groupEntity = new GroupEntity(1,
                 "t-11",
                 new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2021, Calendar.JUNE, 28).getTimeInMillis()),
                 teacherEntity);
-        List<GroupEntity> groupEntities = List.of(groupEntity);
+        Set<GroupEntity> groupEntities = Set.of(groupEntity);
+        teacher.setGroups(groupEntities);
 
-        Mockito.when(mockTeacherRepository.findById(1).getGroups()).thenReturn(groupEntities);
+        Mockito.when(mockTeacherRepository.findById(1)).thenReturn(teacher);
 
-        Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
+            Assertions.assertEquals(teacherService.findAllGroupsWithTeacherId(1), groupEntities.stream().map(groupMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
     void findAllSubjectsWithTeacherIdTest() throws SQLException {
+        TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");
         SubjectEntity subjectEntity = new SubjectEntity(1, "TestS");
-        List<SubjectEntity> subjectEntities = List.of(subjectEntity);
+        Set<SubjectEntity> subjectEntities = Set.of(subjectEntity);
+        teacher.setSubjects(subjectEntities);
 
-        Mockito.when(mockTeacherRepository.findById(1).getSubjects()).thenReturn(subjectEntities);
+        Mockito.when(mockTeacherRepository.findById(1)).thenReturn(teacher);
 
-        Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
+        Assertions.assertEquals(teacherService.findAllSubjectsWithTeacherId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -103,11 +108,12 @@ class TeacherServiceImplTest {
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
                 group, subject, teacher);
-        List<ExamEntity> examEntities = List.of(examEntity);
+        Set<ExamEntity> examEntities = Set.of(examEntity);
+        teacher.setExams(examEntities);
 
-        Mockito.when(mockTeacherRepository.findById(1).getExams()).thenReturn(examEntities);
+        Mockito.when(mockTeacherRepository.findById(1)).thenReturn(teacher);
 
-        Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
+        Assertions.assertEquals(teacherService.findAllExamsWithTeacherId(1), examEntities.stream().map(examMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -118,6 +124,6 @@ class TeacherServiceImplTest {
 
         teacherEntity = new TeacherEntity(2, "Тет", "Тт", "Ттт");
 
-        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherService.save(teacherMapper.mapToDTO(teacherEntity)));
+        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherService.save(teacherMapper.mapToDTO(teacherEntity), teacherEntity.getId()));
     }
 }

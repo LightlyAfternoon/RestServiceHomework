@@ -4,14 +4,14 @@ import org.example.servlet.dto.secondary.SecondaryExamDTO;
 import org.example.servlet.dto.secondary.SecondaryGroupDTO;
 import org.example.servlet.dto.secondary.SecondaryTeacherDTO;
 
-import java.util.List;
+import java.util.Set;
 
-public class SubjectDTO extends DTO {
+public class SubjectDTO {
     private int id;
     private String name;
-    private List<SecondaryTeacherDTO> teachers;
-    private List<SecondaryExamDTO> exams;
-    private List<SecondaryGroupDTO> groups;
+    private Set<SecondaryTeacherDTO> teachers;
+    private Set<SecondaryExamDTO> exams;
+    private Set<SecondaryGroupDTO> groups;
 
     public SubjectDTO() {}
 
@@ -36,27 +36,27 @@ public class SubjectDTO extends DTO {
         this.name = name;
     }
 
-    public List<SecondaryTeacherDTO> getTeachers() {
+    public Set<SecondaryTeacherDTO> getTeachers() {
         return teachers;
     }
 
-    public void setTeachers(List<SecondaryTeacherDTO> teachers) {
+    public void setTeachers(Set<SecondaryTeacherDTO> teachers) {
         this.teachers = teachers;
     }
 
-    public List<SecondaryExamDTO> getExams() {
+    public Set<SecondaryExamDTO> getExams() {
         return exams;
     }
 
-    public void setExams(List<SecondaryExamDTO> exams) {
+    public void setExams(Set<SecondaryExamDTO> exams) {
         this.exams = exams;
     }
 
-    public List<SecondaryGroupDTO> getGroups() {
+    public Set<SecondaryGroupDTO> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<SecondaryGroupDTO> groups) {
+    public void setGroups(Set<SecondaryGroupDTO> groups) {
         this.groups = groups;
     }
 
@@ -79,13 +79,5 @@ public class SubjectDTO extends DTO {
         result = 31 * result + name.hashCode();
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" +
-                "    \"id\": "+id+",\n" +
-                "    \"name\": \""+name+"\"\n" +
-                "}";
     }
 }

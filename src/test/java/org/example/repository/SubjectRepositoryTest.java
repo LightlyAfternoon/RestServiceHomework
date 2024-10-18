@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import org.example.config.MyTestConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
@@ -8,25 +9,23 @@ import org.example.model.TeacherEntity;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
-class SubjectRepositoryImplTest {
+class SubjectRepositoryTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    static final Logger log = LoggerFactory.getLogger(SubjectRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(SubjectRepositoryTest.class);
     Connection connection;
+    AnnotationConfigApplicationContext context;
 
-    @Autowired
     SubjectRepository subjectRepository;
-    @Autowired
     GroupRepository groupRepository;
+    TeacherRepository teacherRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -44,6 +43,10 @@ class SubjectRepositoryImplTest {
 
         try {
             connection = ConnectionManager.getConnection();
+            context = new AnnotationConfigApplicationContext(MyTestConfig.class);
+            teacherRepository = context.getBean(TeacherRepository.class);
+            groupRepository = context.getBean(GroupRepository.class);
+            subjectRepository = context.getBean(SubjectRepository.class);
         } catch (SQLException e) {
             throw new SQLException(e);
         }
@@ -68,6 +71,8 @@ class SubjectRepositoryImplTest {
     @Test
     void getSubjectByIdTest() throws SQLException {
         SubjectEntity subject = subjectRepository.findById(1);
+        log.info("---");
+
         Assertions.assertNotNull(subject);
         Assertions.assertFalse(subject.getTeachers().isEmpty());
         Assertions.assertFalse(subject.getExams().isEmpty());
@@ -76,14 +81,25 @@ class SubjectRepositoryImplTest {
         subject = subjectRepository.findById(2);
         Assertions.assertNotNull(subject);
 
+        log.info("---");
         Assertions.assertNull(subjectRepository.findById(50));
     }
 
-//    @Test
-//    void deleteSubjectByIdTest() throws SQLException {
-//        Assertions.assertTrue(subjectRepository.deleteById(3));
-//        Assertions.assertFalse(subjectRepository.deleteById(50));
-//    }
+    @Test
+    void deleteSubjectByIdTest() throws SQLException {
+        log.info("---");
+        Assertions.assertNotNull(subjectRepository.findById(1));
+        subjectRepository.deleteById(1);
+        Assertions.assertNotNull(subjectRepository.findById(1));
+        log.info("---");
+        Assertions.assertNotNull(subjectRepository.findById(3));
+        subjectRepository.deleteById(3);
+        Assertions.assertNull(subjectRepository.findById(3));
+        log.info("---");
+        Assertions.assertNull(subjectRepository.findById(50));
+        subjectRepository.deleteById(50);
+        Assertions.assertNull(subjectRepository.findById(50));
+    }
 
     @Test
     void saveSubjectTest() throws SQLException {
@@ -100,23 +116,20 @@ class SubjectRepositoryImplTest {
         Assertions.assertEquals(4, subject.getId());
         Assertions.assertEquals("2 Тест", subject.getName());
     }
-    @Autowired
-    TeacherRepository teacherRepository;
 
     @Test
     void saveSubjectTeacherRelationshipTest() throws SQLException {
-        SubjectEntity subject = subjectRepository.findById(2);
-        TeacherEntity teacher = teacherRepository.findById(1);
+        SubjectEntity subject = subjectRepository.findById(1);
+        TeacherEntity teacher = teacherRepository.findById(3);
 
-        Assertions.assertEquals(teacher, subjectRepository.save(subject, teacher));
+        Set<TeacherEntity> teacherEntities = subject.getTeachers();
+        if (!teacherEntities.contains(teacher)) {
+            teacherEntities.add(teacher);
+            subject.setTeachers(teacherEntities);
+            subjectRepository.save(subject);
+        }
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_teacher ORDER BY id DESC LIMIT 1");
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-
-        Assertions.assertEquals(3, resultSet.getInt("id"));
-        Assertions.assertEquals(2, resultSet.getInt("subject_id"));
-        Assertions.assertEquals(1, resultSet.getInt("teacher_id"));
+        Assertions.assertEquals(teacherEntities, subjectRepository.findById(1).getTeachers());
     }
 
     @Test
@@ -124,41 +137,41 @@ class SubjectRepositoryImplTest {
         SubjectEntity subject = subjectRepository.findById(2);
         GroupEntity group = groupRepository.findById(1);
 
-        Assertions.assertEquals(group, subjectRepository.save(subject, group));
+        Set<GroupEntity> groupEntities = subject.getGroups();
+        System.out.println("---");
+        if (!groupEntities.contains(group)) {
+            groupEntities.add(group);
+            subject.setGroups(groupEntities);
+            subjectRepository.save(subject);
+        }
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subject_group ORDER BY id DESC LIMIT 1");
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-
-        Assertions.assertEquals(3, resultSet.getInt("id"));
-        Assertions.assertEquals(2, resultSet.getInt("subject_id"));
-        Assertions.assertEquals(1, resultSet.getInt("group_id"));
+        Assertions.assertEquals(groupEntities, subjectRepository.findById(2).getGroups());
     }
 
     @Test
     void findAllSubjectsTest() throws SQLException {
-        List<SubjectEntity> subjects = subjectRepository.findAll();
+        Set<SubjectEntity> subjects = subjectRepository.findAll();
 
         Assertions.assertFalse(subjects.isEmpty());
     }
 
     @Test
     void findAllTeachersWithSubjectIdTest() throws SQLException {
-        List<TeacherEntity> teachers = subjectRepository.findAllTeachersWithSubjectId(1);
+        Set<TeacherEntity> teachers = subjectRepository.findById(1).getTeachers();
 
         Assertions.assertFalse(teachers.isEmpty());
     }
 
     @Test
     void findAllExamsWithSubjectIdTest() throws SQLException {
-        List<ExamEntity> exams = subjectRepository.findAllExamsWithSubjectId(1);
+        Set<ExamEntity> exams = subjectRepository.findById(1).getExams();
 
         Assertions.assertFalse(exams.isEmpty());
     }
 
     @Test
     void findAllGroupsWithSubjectIdTest() throws SQLException {
-        List<GroupEntity> exams = subjectRepository.findAllGroupsWithSubjectId(1);
+        Set<GroupEntity> exams = subjectRepository.findById(1).getGroups();
 
         Assertions.assertFalse(exams.isEmpty());
     }

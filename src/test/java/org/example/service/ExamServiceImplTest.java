@@ -14,10 +14,11 @@ import org.mockito.Mockito;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class ExamServiceImplTest {
     ExamRepository mockExamRepository;
@@ -68,12 +69,12 @@ class ExamServiceImplTest {
 
     @Test
     void findAllTest() throws SQLException {
-        List<ExamEntity> examEntities = new ArrayList<>();
+        Set<ExamEntity> examEntities = new HashSet<>();
         examEntities.add(exam);
 
         Mockito.when(mockExamRepository.findAll()).thenReturn(examEntities);
 
-        Assertions.assertEquals(examService.findAll(), examEntities.stream().map(examMapper::mapToDTO).toList());
+        Assertions.assertEquals(examService.findAll(), examEntities.stream().map(examMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -90,6 +91,6 @@ class ExamServiceImplTest {
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
                 group, subject, teacher);
 
-        Assertions.assertEquals(examMapper.mapToDTO(exam), examService.save(exam));
+        Assertions.assertEquals(examMapper.mapToDTO(exam), examService.save(examMapper.mapToDTO(exam)));
     }
 }

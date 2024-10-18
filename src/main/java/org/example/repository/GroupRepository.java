@@ -1,17 +1,26 @@
 package org.example.repository;
 
-import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
-import org.example.model.StudentEntity;
-import org.example.model.SubjectEntity;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
-public interface GroupRepository extends Repository<GroupEntity> {
-    List<StudentEntity> findAllStudentsWithGroupId(int id) throws SQLException;
+@org.springframework.stereotype.Repository
+public interface GroupRepository extends Repository<GroupEntity, Integer> {
+    @Transactional
+    GroupEntity findById(int id) throws SQLException;
 
-    List<ExamEntity> findAllExamsWithGroupId(int id) throws SQLException;
+    @Transactional
+    @Modifying
+    boolean deleteById(int id) throws SQLException;
 
-    List<SubjectEntity> findAllSubjectsWithGroupId(int id) throws SQLException;
+    @Transactional
+    @Modifying
+    GroupEntity save(GroupEntity entity) throws SQLException;
+
+    @Transactional
+    Set<GroupEntity> findAll() throws SQLException;
 }

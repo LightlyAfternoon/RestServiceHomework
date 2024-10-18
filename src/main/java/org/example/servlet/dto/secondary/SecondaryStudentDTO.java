@@ -1,8 +1,6 @@
 package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.DTO;
-
-public class SecondaryStudentDTO extends DTO {
+public class SecondaryStudentDTO {
     private int id;
     private String firstName;
     private String lastName;
@@ -66,11 +64,12 @@ public class SecondaryStudentDTO extends DTO {
         if (this == o) return true;
 
         SecondaryStudentDTO s = (SecondaryStudentDTO) o;
+
         return id == s.id
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
                 && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && group == s.group);
+                && group.equals(s.group));
     }
 
     @Override

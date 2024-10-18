@@ -11,8 +11,9 @@ import org.mockito.Mockito;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class GradeServiceImplTest {
     GradeRepository mockGradeRepository;
@@ -61,12 +62,12 @@ class GradeServiceImplTest {
 
     @Test
     void findAllTest() throws SQLException {
-        List<GradeEntity> gradeEntities = new ArrayList<>();
+        Set<GradeEntity> gradeEntities = new HashSet<>();
         gradeEntities.add(grade);
 
         Mockito.when(mockGradeRepository.findAll()).thenReturn(gradeEntities);
 
-        Assertions.assertEquals(gradeService.findAll(), gradeEntities.stream().map(gradeMapper::mapToDTO).toList());
+        Assertions.assertEquals(gradeService.findAll(), gradeEntities.stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -79,6 +80,6 @@ class GradeServiceImplTest {
 
         grade = new GradeEntity(3, student, exam, (short) 2);
 
-        Assertions.assertEquals(gradeMapper.mapToDTO(grade), gradeService.save(grade));
+        Assertions.assertEquals(gradeMapper.mapToDTO(grade), gradeService.save(gradeMapper.mapToDTO(grade)));
     }
 }

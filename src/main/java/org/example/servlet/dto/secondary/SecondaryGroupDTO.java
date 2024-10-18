@@ -1,10 +1,8 @@
 package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.DTO;
-
 import java.sql.Date;
 
-public class SecondaryGroupDTO extends DTO {
+public class SecondaryGroupDTO {
     private int id;
     private String name;
     private Date startDate;
@@ -73,7 +71,7 @@ public class SecondaryGroupDTO extends DTO {
                 && name.equals(g.name)
                 && startDate.equals(g.startDate)
                 && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
-                && teacher == g.teacher);
+                && teacher.equals(g.teacher));
     }
 
     @Override

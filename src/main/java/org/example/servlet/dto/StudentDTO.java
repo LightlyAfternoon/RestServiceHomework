@@ -2,7 +2,7 @@ package org.example.servlet.dto;
 
 import org.example.servlet.dto.secondary.SecondaryGroupDTO;
 
-public class StudentDTO extends DTO {
+public class StudentDTO {
     private int id;
     private String firstName;
     private String lastName;
@@ -66,11 +66,12 @@ public class StudentDTO extends DTO {
         if (this == o) return true;
 
         StudentDTO s = (StudentDTO) o;
+
         return id == s.id
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
                 && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && group == s.group);
+                && group.equals(s.group));
     }
 
     @Override
@@ -83,26 +84,5 @@ public class StudentDTO extends DTO {
         result = 31 * result + group.hashCode();
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        if (patronymic == null) {
-            return "{\n" +
-                    "    \"id\": "+id+",\n" +
-                    "    \"firstName\": \""+firstName+"\",\n" +
-                    "    \"lastName\": \""+lastName+"\",\n" +
-                    "    \"patronymic\": null,\n" +
-                    "    \"groupId\": "+ group +"\n" +
-                    "}";
-        }
-
-        return "{\n" +
-                "    \"id\": "+id+",\n" +
-                "    \"firstName\": \""+firstName+"\",\n" +
-                "    \"lastName\": \""+lastName+"\",\n" +
-                "    \"patronymic\": \""+patronymic+"\",\n" +
-                "    \"groupId\": "+ group +"\n" +
-                "}";
     }
 }

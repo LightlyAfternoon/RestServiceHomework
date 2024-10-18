@@ -1,29 +1,32 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "exam")
 public class ExamEntity {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     private @Column(name = "start_date") Date startDate;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "group_id")
     private GroupEntity group;
 //    @ManyToOne
 //    @JoinColumn(name = "subject_teacher_id")
 //    private TeacherEntity teacher;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "subject_id")
     private SubjectEntity subject;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<GradeEntity> grades;
+    @OneToMany(mappedBy = "exam", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<GradeEntity> grades;
 
     public ExamEntity() {}
 
@@ -79,11 +82,11 @@ public class ExamEntity {
         this.teacher = teacher;
     }
 
-    public List<GradeEntity> getGrades() {
+    public Set<GradeEntity> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<GradeEntity> grades) {
+    public void setGrades(Set<GradeEntity> grades) {
         this.grades = grades;
     }
 
@@ -94,11 +97,12 @@ public class ExamEntity {
         if (this == o) return true;
 
         ExamEntity e = (ExamEntity) o;
+
         return id == e.id
                 && startDate.equals(e.startDate)
-                && group == e.group
-                && subject == e.subject
-                && teacher == e.teacher;
+                && group.equals(e.group)
+                && subject.equals(e.subject)
+                && teacher.equals(e.teacher);
     }
 
     @Override

@@ -5,22 +5,22 @@ import org.example.servlet.dto.secondary.SecondarySubjectDTO;
 import org.example.servlet.dto.secondary.SecondaryTeacherDTO;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.Set;
 
-public class ExamDTO extends DTO {
+public class ExamDTO {
     private int id;
     private Date startDate;
-    private SecondaryGroupDTO groupId;
+    private SecondaryGroupDTO group;
     private SecondarySubjectDTO subject;
     private SecondaryTeacherDTO teacher;
-    private List<GradeDTO> grades;
+    private Set<GradeDTO> grades;
 
     public ExamDTO() {}
 
-    public ExamDTO(int id, Date startDate, SecondaryGroupDTO groupId, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
+    public ExamDTO(int id, Date startDate, SecondaryGroupDTO group, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
         this.id = id;
         this.startDate = startDate;
-        this.groupId = groupId;
+        this.group = group;
         this.subject = subject;
         this.teacher = teacher;
     }
@@ -41,12 +41,12 @@ public class ExamDTO extends DTO {
         this.startDate = startDate;
     }
 
-    public SecondaryGroupDTO getGroupId() {
-        return groupId;
+    public SecondaryGroupDTO getGroup() {
+        return group;
     }
 
-    public void setGroupId(SecondaryGroupDTO groupId) {
-        this.groupId = groupId;
+    public void setGroup(SecondaryGroupDTO group) {
+        this.group = group;
     }
 
     public SecondarySubjectDTO getSubject() {
@@ -65,11 +65,11 @@ public class ExamDTO extends DTO {
         this.teacher = teacher;
     }
 
-    public List<GradeDTO> getGrades() {
+    public Set<GradeDTO> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<GradeDTO> grades) {
+    public void setGrades(Set<GradeDTO> grades) {
         this.grades = grades;
     }
 
@@ -80,11 +80,12 @@ public class ExamDTO extends DTO {
         if (this == o) return true;
 
         ExamDTO e = (ExamDTO) o;
+
         return id == e.id
                 && startDate.equals(e.startDate)
-                && groupId == e.groupId
-                && subject == e.subject
-                && teacher == e.teacher;
+                && group.equals(e.group)
+                && subject.equals(e.subject)
+                && teacher.equals(e.teacher);
     }
 
     @Override
@@ -92,21 +93,10 @@ public class ExamDTO extends DTO {
         int result = id;
 
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + groupId.hashCode();
+        result = 31 * result + group.hashCode();
         result = 31 * result + subject.hashCode();
         result = 31 * result + teacher.hashCode();
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" +
-                "    \"id\": " + id + ",\n" +
-                "    \"startDate\": \"" + startDate + "\",\n" +
-                "    \"groupId\": " + groupId + ",\n" +
-                "    \"subjectId\": " + subject.getId() + ",\n" +
-                "    \"teacherId\": " + teacher.getId() + "\n" +
-                "}";
     }
 }

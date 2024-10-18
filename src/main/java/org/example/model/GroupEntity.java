@@ -1,9 +1,11 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"group\"")
@@ -12,17 +14,20 @@ public class GroupEntity {
     private String name;
     private @Column(name = "start_date") Date startDate;
     private @Column(name = "end_date") Date endDate;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<StudentEntity> students;
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ExamEntity> exams;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
-                                       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
-    private List<SubjectEntity> subjects;
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<StudentEntity> students;
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<ExamEntity> exams;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "subject_group", joinColumns = @JoinColumn(name = "group_id"),
+                                       inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<SubjectEntity> subjects;
 
     public GroupEntity() {}
 
@@ -78,27 +83,27 @@ public class GroupEntity {
         this.teacher = teacher;
     }
 
-    public List<StudentEntity> getStudents() {
+    public Set<StudentEntity> getStudents() {
         return students;
     }
 
-    public void setStudents(List<StudentEntity> students) {
+    public void setStudents(Set<StudentEntity> students) {
         this.students = students;
     }
 
-    public List<ExamEntity> getExams() {
+    public Set<ExamEntity> getExams() {
         return exams;
     }
 
-    public void setExams(List<ExamEntity> exams) {
+    public void setExams(Set<ExamEntity> exams) {
         this.exams = exams;
     }
 
-    public List<SubjectEntity> getSubjects() {
+    public Set<SubjectEntity> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<SubjectEntity> subjects) {
+    public void setSubjects(Set<SubjectEntity> subjects) {
         this.subjects = subjects;
     }
 
@@ -114,7 +119,7 @@ public class GroupEntity {
                 && name.equals(g.name)
                 && startDate.equals(g.startDate)
                 && ((endDate == null && g.endDate == null) || (endDate != null && endDate.equals(g.endDate))
-                && teacher == g.teacher);
+                && teacher.equals(g.teacher));
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 class GradeRepositoryImplTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
@@ -109,7 +109,7 @@ class GradeRepositoryImplTest {
 
     @Test
     void findAllGradesTest() throws SQLException {
-        List<GradeEntity> grades = gradeRepository.findAll();
+        Set<GradeEntity> grades = gradeRepository.findAll();
 
         Assertions.assertFalse(grades.isEmpty());
     }

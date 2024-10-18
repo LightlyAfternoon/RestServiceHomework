@@ -1,13 +1,12 @@
 package org.example.service;
 
-import org.example.model.GroupEntity;
 import org.example.servlet.dto.ExamDTO;
 import org.example.servlet.dto.GroupDTO;
 import org.example.servlet.dto.StudentDTO;
 import org.example.servlet.dto.SubjectDTO;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 public interface GroupService {
 
@@ -15,13 +14,15 @@ public interface GroupService {
 
     boolean deleteById(int id) throws SQLException;
 
-    GroupDTO save(GroupEntity entity) throws SQLException;
+    GroupDTO save(GroupDTO groupDTO) throws SQLException;
 
-    List<GroupDTO> findAll() throws SQLException;
+    GroupDTO save(GroupDTO groupDTO, int id) throws SQLException;
 
-    List<StudentDTO> findAllStudentsWithGroupId(int id) throws SQLException;
+    Set<GroupDTO> findAll() throws SQLException;
 
-    List<ExamDTO> findAllExamsWithGroupId(int id) throws SQLException;
+    Set<StudentDTO> findAllStudentsWithGroupId(int id) throws SQLException;
 
-    List<SubjectDTO> findAllSubjectsWithGroupId(int id) throws SQLException;
+    Set<ExamDTO> findAllExamsWithGroupId(int id) throws SQLException;
+
+    Set<SubjectDTO> findAllSubjectsWithGroupId(int id) throws SQLException;
 }

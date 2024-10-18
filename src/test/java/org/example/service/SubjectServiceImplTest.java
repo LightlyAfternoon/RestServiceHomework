@@ -14,13 +14,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class SubjectServiceImplTest {
     SubjectRepository mockSubjectRepository;
@@ -51,33 +53,34 @@ class SubjectServiceImplTest {
         Assertions.assertNotEquals(subjectService.findById(1), subjectMapper.mapToDTO(subjectEntity));
     }
 
-//    @Test
-//    void deleteByIdTest() throws SQLException {
-//        Mockito.when(mockSubjectRepository.deleteById(1)).thenReturn(true);
-//        Mockito.when(mockSubjectRepository.deleteById(2)).thenReturn(false);
-//
-//        Assertions.assertTrue(subjectService.deleteById(1));
-//        Assertions.assertFalse(subjectService.deleteById(2));
-//    }
+    @Test
+    void deleteByIdTest() {
+        Mockito.doNothing().when(mockSubjectRepository).deleteById(1);
+        Mockito.doThrow(DataIntegrityViolationException.class).when(mockSubjectRepository).deleteById(2);
+
+        mockSubjectRepository.deleteById(1);
+        Assertions.assertThrows(DataIntegrityViolationException.class,() -> subjectService.deleteById(2));
+    }
 
     @Test
     void findAllTest() throws SQLException {
-        List<SubjectEntity> subjectEntities = new ArrayList<>();
+        Set<SubjectEntity> subjectEntities = new HashSet<>();
         subjectEntities.add(subjectEntity);
 
         Mockito.when(mockSubjectRepository.findAll()).thenReturn(subjectEntities);
 
-        Assertions.assertEquals(subjectService.findAll(), subjectEntities.stream().map(subjectMapper::mapToDTO).toList());
+        Assertions.assertEquals(subjectService.findAll(), subjectEntities.stream().map(subjectMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
     void findAllTeachersWithSubjectIdTest() throws SQLException {
         TeacherEntity teacherEntity = new TeacherEntity(1, "Lizzi", "Testova", "Testovna");
-        List<TeacherEntity> teacherEntities = List.of(teacherEntity);
+        Set<TeacherEntity> teacherEntities = Set.of(teacherEntity);
+        subjectEntity.setTeachers(teacherEntities);
 
-        Mockito.when(mockSubjectRepository.findAllTeachersWithSubjectId(1)).thenReturn(teacherEntities);
+        Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
-        Assertions.assertEquals(subjectService.findAllTeachersWithSubjectId(1), teacherEntities.stream().map(teacherMapper::mapToDTO).toList());
+        Assertions.assertEquals(subjectService.findAllTeachersWithSubjectId(1), teacherEntities.stream().map(teacherMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -88,11 +91,13 @@ class SubjectServiceImplTest {
                 new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2021, Calendar.JUNE, 28).getTimeInMillis()),
                 teacher);
-        List<GroupEntity> groupEntities = List.of(groupEntity);
+        Set<GroupEntity> groupEntities = Set.of(groupEntity);
+        subjectEntity.setGroups(groupEntities);
 
-        Mockito.when(mockSubjectRepository.findAllGroupsWithSubjectId(1)).thenReturn(groupEntities);
+        Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
-        Assertions.assertEquals(subjectService.findAllGroupsWithSubjectId(1), groupEntities.stream().map(groupMapper::mapToDTO).toList());
+        Assertions.assertEquals(subjectService.findAllGroupsWithSubjectId(1), groupEntities.stream().map(groupMapper::mapToDTO).collect(Collectors.toSet()));
+
     }
 
     @Test
@@ -103,13 +108,12 @@ class SubjectServiceImplTest {
         ExamEntity examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
                 group, subject, teacher);
-        List<ExamEntity> examEntities = List.of(examEntity);
+        Set<ExamEntity> examEntities = Set.of(examEntity);
+        subjectEntity.setExams(examEntities);
 
+        Mockito.when(mockSubjectRepository.findById(1)).thenReturn(subjectEntity);
 
-        Mockito.when(mockSubjectRepository.findAllExamsWithSubjectId(1)).thenReturn(examEntities);
-
-        Assertions.assertEquals(subjectService.findAllExamsWithSubjectId(1), examEntities.stream().map(examMapper::mapToDTO).toList());
-
+        Assertions.assertEquals(subjectService.findAllExamsWithSubjectId(1), examEntities.stream().map(examMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -118,40 +122,6 @@ class SubjectServiceImplTest {
 
         Mockito.when(mockSubjectRepository.save(subjectEntity)).thenReturn(subjectEntity);
 
-        Assertions.assertEquals(subjectMapper.mapToDTO(subjectEntity), subjectService.save(subjectEntity));
-    }
-
-    @Test
-    void saveSubjectTeacherRelationshipTest() throws SQLException {
-        TeacherEntity teacherEntity = new TeacherEntity(1,
-                "Лора",
-                "Тестова",
-                "Викторовна");
-
-        Mockito.when(mockSubjectRepository.save(subjectEntity, teacherEntity)).thenReturn(teacherEntity);
-
-        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), subjectService.save(subjectEntity, teacherEntity));
-
-    }
-
-    @Test
-    void saveSubjectGroupRelationshipTest() throws SQLException {
-        TeacherEntity teacher = new TeacherEntity(2, "t", "t", "t");
-        GroupEntity groupEntity = new GroupEntity(1,
-                "П-12",
-                new Date(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                null,
-                teacher);
-
-        Mockito.when(mockSubjectRepository.save(subjectEntity, groupEntity)).thenReturn(groupEntity);
-
-        groupEntity = new GroupEntity(1,
-                "П-12",
-                new Date(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                null,
-                teacher);
-
-        Assertions.assertEquals(groupMapper.mapToDTO(groupEntity), subjectService.save(subjectEntity, groupEntity));
-
+        Assertions.assertEquals(subjectMapper.mapToDTO(subjectEntity), subjectService.save(subjectMapper.mapToDTO(subjectEntity), subjectEntity.getId()));
     }
 }

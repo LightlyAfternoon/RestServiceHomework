@@ -15,7 +15,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
 
 class ExamRepositoryTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
@@ -115,7 +115,7 @@ class ExamRepositoryTest {
 
     @Test
     void findAllExamsTest() throws SQLException {
-        List<ExamEntity> exams = examRepository.findAll();
+        Set<ExamEntity> exams = examRepository.findAll();
 
         Assertions.assertFalse(exams.isEmpty());
     }

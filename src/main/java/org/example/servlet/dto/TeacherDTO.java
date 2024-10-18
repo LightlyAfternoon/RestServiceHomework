@@ -4,16 +4,16 @@ import org.example.servlet.dto.secondary.SecondaryExamDTO;
 import org.example.servlet.dto.secondary.SecondaryGroupDTO;
 import org.example.servlet.dto.secondary.SecondarySubjectDTO;
 
-import java.util.List;
+import java.util.Set;
 
-public class TeacherDTO extends DTO {
+public class TeacherDTO {
     private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
-    private List<SecondaryGroupDTO> groups;
-    private List<SecondarySubjectDTO> subjects;
-    private List<SecondaryExamDTO> exams;
+    private Set<SecondaryGroupDTO> groups;
+    private Set<SecondarySubjectDTO> subjects;
+    private Set<SecondaryExamDTO> exams;
 
     public TeacherDTO() {}
 
@@ -56,27 +56,27 @@ public class TeacherDTO extends DTO {
         this.patronymic = patronymic;
     }
 
-    public List<SecondaryGroupDTO> getGroups() {
+    public Set<SecondaryGroupDTO> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<SecondaryGroupDTO> groups) {
+    public void setGroups(Set<SecondaryGroupDTO> groups) {
         this.groups = groups;
     }
 
-    public List<SecondarySubjectDTO> getSubjects() {
+    public Set<SecondarySubjectDTO> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<SecondarySubjectDTO> subjects) {
+    public void setSubjects(Set<SecondarySubjectDTO> subjects) {
         this.subjects = subjects;
     }
 
-    public List<SecondaryExamDTO> getExams() {
+    public Set<SecondaryExamDTO> getExams() {
         return exams;
     }
 
-    public void setExams(List<SecondaryExamDTO> exams) {
+    public void setExams(Set<SecondaryExamDTO> exams) {
         this.exams = exams;
     }
 
@@ -87,6 +87,7 @@ public class TeacherDTO extends DTO {
         if (this == o) return true;
 
         TeacherDTO t = (TeacherDTO) o;
+
         return id == t.id
                 && firstName.equals(t.firstName)
                 && lastName.equals(t.lastName)
@@ -102,25 +103,5 @@ public class TeacherDTO extends DTO {
         result = 31 * result + (patronymic == null ? 0 : patronymic.hashCode());
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        if (patronymic == null) {
-            return "{\n" +
-                    "    \"id\": "+id+",\n" +
-                    "    \"firstName\": \""+firstName+"\",\n" +
-                    "    \"lastName\": \""+lastName+"\",\n" +
-                    "    \"patronymic\": null\n" +
-                    "}";
-
-        }
-
-        return "{\n" +
-                "    \"id\": "+id+",\n" +
-                "    \"firstName\": \""+firstName+"\",\n" +
-                "    \"lastName\": \""+lastName+"\",\n" +
-                "    \"patronymic\": \""+patronymic+"\"\n" +
-                "}";
     }
 }

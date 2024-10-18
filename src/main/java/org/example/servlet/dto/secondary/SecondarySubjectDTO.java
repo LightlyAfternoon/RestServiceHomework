@@ -1,8 +1,6 @@
 package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.DTO;
-
-public class SecondarySubjectDTO extends DTO {
+public class SecondarySubjectDTO {
     private int id;
     private String name;
 

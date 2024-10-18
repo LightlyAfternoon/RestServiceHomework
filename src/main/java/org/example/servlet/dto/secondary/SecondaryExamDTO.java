@@ -1,22 +1,20 @@
 package org.example.servlet.dto.secondary;
 
-import org.example.servlet.dto.DTO;
-
 import java.sql.Date;
 
-public class SecondaryExamDTO extends DTO {
+public class SecondaryExamDTO {
     private int id;
     private Date startDate;
-    private SecondaryGroupDTO groupId;
+    private SecondaryGroupDTO group;
     private SecondarySubjectDTO subject;
     private SecondaryTeacherDTO teacher;
 
     public SecondaryExamDTO() {}
 
-    public SecondaryExamDTO(int id, Date startDate, SecondaryGroupDTO groupId, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
+    public SecondaryExamDTO(int id, Date startDate, SecondaryGroupDTO group, SecondarySubjectDTO subject, SecondaryTeacherDTO teacher) {
         this.id = id;
         this.startDate = startDate;
-        this.groupId = groupId;
+        this.group = group;
         this.subject = subject;
         this.teacher = teacher;
     }
@@ -37,12 +35,12 @@ public class SecondaryExamDTO extends DTO {
         this.startDate = startDate;
     }
 
-    public SecondaryGroupDTO getGroupId() {
-        return groupId;
+    public SecondaryGroupDTO getGroup() {
+        return group;
     }
 
-    public void setGroupId(SecondaryGroupDTO groupId) {
-        this.groupId = groupId;
+    public void setGroup(SecondaryGroupDTO group) {
+        this.group = group;
     }
 
     public SecondarySubjectDTO getSubject() {
@@ -68,11 +66,12 @@ public class SecondaryExamDTO extends DTO {
         if (this == o) return true;
 
         SecondaryExamDTO e = (SecondaryExamDTO) o;
+
         return id == e.id
                 && startDate.equals(e.startDate)
-                && groupId == e.groupId
-                && subject == e.subject
-                && teacher == e.teacher;
+                && group.equals(e.group)
+                && subject.equals(e.subject)
+                && teacher.equals(e.teacher);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class SecondaryExamDTO extends DTO {
         int result = id;
 
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + groupId.hashCode();
+        result = 31 * result + group.hashCode();
         result = 31 * result + subject.hashCode();
         result = 31 * result + teacher.hashCode();
 
@@ -92,7 +91,7 @@ public class SecondaryExamDTO extends DTO {
         return "{\n" +
                 "    \"id\": " + id + ",\n" +
                 "    \"startDate\": \"" + startDate + "\",\n" +
-                "    \"groupId\": " + groupId + ",\n" +
+                "    \"groupId\": " + group + ",\n" +
                 "    \"subjectId\": " + subject.getId() + ",\n" +
                 "    \"teacherId\": " + teacher.getId() + "\n" +
                 "}";

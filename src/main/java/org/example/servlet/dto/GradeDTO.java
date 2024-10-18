@@ -3,17 +3,17 @@ package org.example.servlet.dto;
 import org.example.servlet.dto.secondary.SecondaryExamDTO;
 import org.example.servlet.dto.secondary.SecondaryStudentDTO;
 
-public class GradeDTO extends DTO {
+public class GradeDTO {
     private int id;
-    private SecondaryStudentDTO studentId;
+    private SecondaryStudentDTO student;
     private SecondaryExamDTO exam;
     private short mark;
 
     public GradeDTO() {}
 
-    public GradeDTO(int id, SecondaryStudentDTO studentId, SecondaryExamDTO exam, short mark) {
+    public GradeDTO(int id, SecondaryStudentDTO student, SecondaryExamDTO exam, short mark) {
         this.id = id;
-        this.studentId = studentId;
+        this.student = student;
         this.exam = exam;
         this.mark = mark;
     }
@@ -26,12 +26,12 @@ public class GradeDTO extends DTO {
         this.id = id;
     }
 
-    public SecondaryStudentDTO getStudentId() {
-        return studentId;
+    public SecondaryStudentDTO getStudent() {
+        return student;
     }
 
-    public void setStudentId(SecondaryStudentDTO studentId) {
-        this.studentId = studentId;
+    public void setStudent(SecondaryStudentDTO student) {
+        this.student = student;
     }
 
     public SecondaryExamDTO getExam() {
@@ -57,9 +57,10 @@ public class GradeDTO extends DTO {
         if (this == o) return true;
 
         GradeDTO g = (GradeDTO) o;
+
         return id == g.id
-                && studentId == g.studentId
-                && exam == g.exam
+                && student.equals(g.student)
+                && exam.equals(g.exam)
                 && mark == g.mark;
     }
 
@@ -67,20 +68,10 @@ public class GradeDTO extends DTO {
     public int hashCode() {
         int result = id;
 
-        result = 31 * result + studentId.hashCode();
+        result = 31 * result + student.hashCode();
         result = 31 * result + exam.hashCode();
         result = 31 * result + mark;
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" +
-                "    \"id\": " + id + ",\n" +
-                "    \"studentId\": " + studentId + ",\n" +
-                "    \"examId\": " + exam + ",\n" +
-                "    \"mark\": " + mark + "\n" +
-                "}";
     }
 }

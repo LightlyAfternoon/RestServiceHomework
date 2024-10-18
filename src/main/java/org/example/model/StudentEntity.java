@@ -9,7 +9,7 @@ public class StudentEntity {
     private @Column(name = "first_name") String firstName;
     private @Column(name = "last_name") String lastName;
     private @Column(name = "patronymic") String patronymic;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private GroupEntity group;
 
@@ -74,11 +74,12 @@ public class StudentEntity {
         if (this == o) return true;
 
         StudentEntity s = (StudentEntity) o;
+
         return id == s.id
                 && firstName.equals(s.firstName)
                 && lastName.equals(s.lastName)
                 && ((patronymic == null && s.patronymic == null) || (patronymic != null && patronymic.equals(s.patronymic))
-                && group == s.group);
+                && group.equals(s.group));
     }
 
     @Override

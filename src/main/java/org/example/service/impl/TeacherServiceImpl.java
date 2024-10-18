@@ -1,6 +1,5 @@
 package org.example.service.impl;
 
-import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
 import org.example.service.TeacherService;
 import org.example.servlet.dto.ExamDTO;
@@ -15,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -25,7 +25,6 @@ public class TeacherServiceImpl implements TeacherService {
     GroupDTOMapper groupMapper = GroupDTOMapper.INSTANCE;
     SubjectDTOMapper subjectMapper = SubjectDTOMapper.INSTANCE;
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
-
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository) {
@@ -53,22 +52,22 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<TeacherDTO> findAll() throws SQLException {
-        return teacherRepository.findAll().stream().map(teacherMapper::mapToDTO).toList();
+    public Set<TeacherDTO> findAll() throws SQLException {
+        return teacherRepository.findAll().stream().map(teacherMapper::mapToDTO).collect(Collectors.toSet());
     }
 
     @Override
-    public List<GroupDTO> findAllGroupsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findById(id).getGroups().stream().map(groupMapper::mapToDTO).toList();
+    public Set<GroupDTO> findAllGroupsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findById(id).getGroups().stream().map(groupMapper::mapToDTO).collect(Collectors.toSet());
     }
 
     @Override
-    public List<SubjectDTO> findAllSubjectsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findById(id).getSubjects().stream().map(subjectMapper::mapToDTO).toList();
+    public Set<SubjectDTO> findAllSubjectsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findById(id).getSubjects().stream().map(subjectMapper::mapToDTO).collect(Collectors.toSet());
     }
 
     @Override
-    public List<ExamDTO> findAllExamsWithTeacherId(int id) throws SQLException {
-        return teacherRepository.findById(id).getExams().stream().map(examMapper::mapToDTO).toList();
+    public Set<ExamDTO> findAllExamsWithTeacherId(int id) throws SQLException {
+        return teacherRepository.findById(id).getExams().stream().map(examMapper::mapToDTO).collect(Collectors.toSet());
     }
 }
