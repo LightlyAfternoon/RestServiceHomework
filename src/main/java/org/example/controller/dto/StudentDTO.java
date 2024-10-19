@@ -1,45 +1,25 @@
-package org.example.model;
+package org.example.controller.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.example.controller.dto.secondary.SecondaryGroupDTO;
 
 import java.util.Set;
 
-@Entity
-@Table(name = "student")
-public class StudentEntity {
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
-    private @Column(name = "first_name") String firstName;
-    private @Column(name = "last_name") String lastName;
-    private @Column(name = "patronymic") String patronymic;
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    private GroupEntity group;
-    @OneToMany(mappedBy = "student", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<GradeEntity> grades;
+public class StudentDTO {
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String patronymic;
+    private SecondaryGroupDTO group;
+    private Set<GradeDTO> grades;
 
-    public StudentEntity() {}
+    public StudentDTO() {}
 
-    public StudentEntity(String firstName, String lastName, String patronymic, GroupEntity group) {
+    public StudentDTO(int id, String firstName, String lastName, String patronymic, SecondaryGroupDTO group) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
         this.group = group;
-    }
-
-    public StudentEntity(int id, String firstName, String lastName, String patronymic, GroupEntity group) {
-        this(firstName, lastName, patronymic, group);
-        this.id = id;
-    }
-
-    @PreRemove
-    public void preRemove() {
-        if (grades == null || grades.isEmpty()) {
-            this.group.getStudents().remove(this);
-            this.group = null;
-        }
     }
 
     public int getId() {
@@ -74,29 +54,29 @@ public class StudentEntity {
         this.patronymic = patronymic;
     }
 
-    public GroupEntity getGroup() {
+    public SecondaryGroupDTO getGroup() {
         return group;
     }
 
-    public void setGroup(GroupEntity group) {
+    public void setGroup(SecondaryGroupDTO group) {
         this.group = group;
     }
 
-    public Set<GradeEntity> getGrades() {
+    public Set<GradeDTO> getGrades() {
         return grades;
     }
 
-    public void setGrades(Set<GradeEntity> grades) {
+    public void setGrades(Set<GradeDTO> grades) {
         this.grades = grades;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (!(o instanceof StudentEntity)) return false;
+        if (!(o instanceof StudentDTO)) return false;
         if (this == o) return true;
 
-        StudentEntity s = (StudentEntity) o;
+        StudentDTO s = (StudentDTO) o;
 
         return id == s.id
                 && firstName.equals(s.firstName)

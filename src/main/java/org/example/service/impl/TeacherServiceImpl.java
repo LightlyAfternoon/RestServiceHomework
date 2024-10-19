@@ -2,14 +2,14 @@ package org.example.service.impl;
 
 import org.example.repository.TeacherRepository;
 import org.example.service.TeacherService;
-import org.example.servlet.dto.ExamDTO;
-import org.example.servlet.dto.GroupDTO;
-import org.example.servlet.dto.SubjectDTO;
-import org.example.servlet.dto.TeacherDTO;
-import org.example.servlet.mapper.ExamDTOMapper;
-import org.example.servlet.mapper.GroupDTOMapper;
-import org.example.servlet.mapper.SubjectDTOMapper;
-import org.example.servlet.mapper.TeacherDTOMapper;
+import org.example.controller.dto.ExamDTO;
+import org.example.controller.dto.GroupDTO;
+import org.example.controller.dto.SubjectDTO;
+import org.example.controller.dto.TeacherDTO;
+import org.example.controller.mapper.ExamDTOMapper;
+import org.example.controller.mapper.GroupDTOMapper;
+import org.example.controller.mapper.SubjectDTOMapper;
+import org.example.controller.mapper.TeacherDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

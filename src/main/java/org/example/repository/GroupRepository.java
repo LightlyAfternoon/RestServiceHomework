@@ -15,7 +15,7 @@ public interface GroupRepository extends Repository<GroupEntity, Integer> {
 
     @Transactional
     @Modifying
-    boolean deleteById(int id) throws SQLException;
+    void deleteById(int id) throws SQLException;
 
     @Transactional
     @Modifying

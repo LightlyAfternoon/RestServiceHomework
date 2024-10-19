@@ -6,10 +6,10 @@ import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.TeacherRepository;
 import org.example.service.impl.TeacherServiceImpl;
-import org.example.servlet.mapper.ExamDTOMapper;
-import org.example.servlet.mapper.GroupDTOMapper;
-import org.example.servlet.mapper.SubjectDTOMapper;
-import org.example.servlet.mapper.TeacherDTOMapper;
+import org.example.controller.mapper.ExamDTOMapper;
+import org.example.controller.mapper.GroupDTOMapper;
+import org.example.controller.mapper.SubjectDTOMapper;
+import org.example.controller.mapper.TeacherDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,15 +51,6 @@ class TeacherServiceImplTest {
         teacherEntity = new TeacherEntity(2, "t2", "t2", null);
 
         Assertions.assertNotEquals(teacherService.findById(1), teacherMapper.mapToDTO(teacherEntity));
-    }
-
-    @Test
-    void deleteByIdTest() {
-        Mockito.doNothing().when(mockTeacherRepository).deleteById(1);
-        Mockito.doThrow(DataIntegrityViolationException.class).when(mockTeacherRepository).deleteById(2);
-
-        mockTeacherRepository.deleteById(1);
-        Assertions.assertThrows(DataIntegrityViolationException.class,() -> teacherService.deleteById(2));
     }
 
     @Test

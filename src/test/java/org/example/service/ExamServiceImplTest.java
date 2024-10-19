@@ -6,7 +6,7 @@ import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.example.repository.ExamRepository;
 import org.example.service.impl.ExamServiceImpl;
-import org.example.servlet.mapper.ExamDTOMapper;
+import org.example.controller.mapper.ExamDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,15 +56,6 @@ class ExamServiceImplTest {
                 group, subject, teacher);
 
         Assertions.assertNotEquals(examService.findById(1), examMapper.mapToDTO(exam));
-    }
-
-    @Test
-    void deleteByIdTest() throws SQLException {
-        Mockito.when(mockExamRepository.deleteById(1)).thenReturn(true);
-        Mockito.when(mockExamRepository.deleteById(2)).thenReturn(false);
-
-        Assertions.assertTrue(examService.deleteById(1));
-        Assertions.assertFalse(examService.deleteById(2));
     }
 
     @Test

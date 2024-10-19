@@ -2,14 +2,16 @@ package org.example.service.impl;
 
 import org.example.repository.GradeRepository;
 import org.example.service.GradeService;
-import org.example.servlet.dto.GradeDTO;
-import org.example.servlet.mapper.GradeDTOMapper;
+import org.example.controller.dto.GradeDTO;
+import org.example.controller.mapper.GradeDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class GradeServiceImpl implements GradeService {
     GradeRepository gradeRepository;
 
@@ -26,8 +28,8 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        return gradeRepository.deleteById(id);
+    public void deleteById(int id) throws SQLException {
+        gradeRepository.deleteById(id);
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories(basePackages = "org.example.repository")
 @EnableWebMvc
-@ComponentScan({"org.example.service", "org.example.servlet"})
+@ComponentScan({"org.example.service.impl", "org.example.controller"})
 public class MyWebConfig extends AnnotationConfigWebApplicationContext {
 
     @Bean

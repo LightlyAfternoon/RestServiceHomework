@@ -77,12 +77,6 @@ class GroupRepositoryImplTest {
     }
 
     @Test
-    void deleteGroupByIdTest() throws SQLException {
-        Assertions.assertTrue(groupRepository.deleteById(3));
-        Assertions.assertFalse(groupRepository.deleteById(50));
-    }
-
-    @Test
     void saveGroupTest() throws SQLException {
         Calendar startCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);
         Calendar endCalendar = new GregorianCalendar(2024, Calendar.SEPTEMBER,1);

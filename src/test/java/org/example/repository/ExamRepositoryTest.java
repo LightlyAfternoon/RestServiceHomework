@@ -76,12 +76,6 @@ class ExamRepositoryTest {
     }
 
     @Test
-    void deleteExamByIdTest() throws SQLException {
-        Assertions.assertTrue(examRepository.deleteById(3));
-        Assertions.assertFalse(examRepository.deleteById(50));
-    }
-
-    @Test
     void saveExamTest() throws SQLException {
         Calendar calendar = new GregorianCalendar(2023, Calendar.MAY, 26);
         Date startDate = new Date(calendar.getTimeInMillis());

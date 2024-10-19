@@ -2,14 +2,16 @@ package org.example.service.impl;
 
 import org.example.repository.ExamRepository;
 import org.example.service.ExamService;
-import org.example.servlet.dto.ExamDTO;
-import org.example.servlet.mapper.ExamDTOMapper;
+import org.example.controller.dto.ExamDTO;
+import org.example.controller.mapper.ExamDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class ExamServiceImpl implements ExamService {
     ExamRepository examRepository;
 
@@ -26,8 +28,8 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        return examRepository.deleteById(id);
+    public void deleteById(int id) throws SQLException {
+        examRepository.deleteById(id);
     }
 
     @Override

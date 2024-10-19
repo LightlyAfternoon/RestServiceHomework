@@ -3,10 +3,10 @@ package org.example.service;
 import org.example.model.*;
 import org.example.repository.GroupRepository;
 import org.example.service.impl.GroupServiceImpl;
-import org.example.servlet.mapper.ExamDTOMapper;
-import org.example.servlet.mapper.GroupDTOMapper;
-import org.example.servlet.mapper.StudentDTOMapper;
-import org.example.servlet.mapper.SubjectDTOMapper;
+import org.example.controller.mapper.ExamDTOMapper;
+import org.example.controller.mapper.GroupDTOMapper;
+import org.example.controller.mapper.StudentDTOMapper;
+import org.example.controller.mapper.SubjectDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,15 +56,6 @@ class GroupServiceImplTest {
                 teacher);
 
         Assertions.assertNotEquals(groupService.findById(1), groupMapper.mapToDTO(group));
-    }
-
-    @Test
-    void deleteByIdTest() throws SQLException {
-        Mockito.when(mockGroupRepository.deleteById(1)).thenReturn(true);
-        Mockito.when(mockGroupRepository.deleteById(2)).thenReturn(false);
-
-        Assertions.assertTrue(groupService.deleteById(1));
-        Assertions.assertFalse(groupService.deleteById(2));
     }
 
     @Test

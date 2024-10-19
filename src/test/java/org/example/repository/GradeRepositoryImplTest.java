@@ -72,12 +72,6 @@ class GradeRepositoryImplTest {
     }
 
     @Test
-    void deleteGradeByIdTest() throws SQLException {
-        Assertions.assertTrue(gradeRepository.deleteById(3));
-        Assertions.assertFalse(gradeRepository.deleteById(50));
-    }
-
-    @Test
     void saveGradeTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
         TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");

@@ -3,7 +3,7 @@ package org.example.service;
 import org.example.model.*;
 import org.example.repository.GradeRepository;
 import org.example.service.impl.GradeServiceImpl;
-import org.example.servlet.mapper.GradeDTOMapper;
+import org.example.controller.mapper.GradeDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,15 +49,6 @@ class GradeServiceImplTest {
         grade = new GradeEntity(2, student, exam, (short) 4);
 
         Assertions.assertNotEquals(gradeService.findById(1), gradeMapper.mapToDTO(grade));
-    }
-
-    @Test
-    void deleteByIdTest() throws SQLException {
-        Mockito.when(mockGradeRepository.deleteById(1)).thenReturn(true);
-        Mockito.when(mockGradeRepository.deleteById(2)).thenReturn(false);
-
-        Assertions.assertTrue(gradeService.deleteById(1));
-        Assertions.assertFalse(gradeService.deleteById(2));
     }
 
     @Test

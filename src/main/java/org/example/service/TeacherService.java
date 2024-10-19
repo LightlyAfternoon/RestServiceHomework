@@ -1,9 +1,9 @@
 package org.example.service;
 
-import org.example.servlet.dto.ExamDTO;
-import org.example.servlet.dto.GroupDTO;
-import org.example.servlet.dto.SubjectDTO;
-import org.example.servlet.dto.TeacherDTO;
+import org.example.controller.dto.ExamDTO;
+import org.example.controller.dto.GroupDTO;
+import org.example.controller.dto.SubjectDTO;
+import org.example.controller.dto.TeacherDTO;
 
 import java.sql.SQLException;
 import java.util.Set;
