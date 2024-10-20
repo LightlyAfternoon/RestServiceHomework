@@ -1,8 +1,7 @@
 package org.example.service;
 
-import org.example.model.GroupEntity;
-import org.example.model.StudentEntity;
-import org.example.model.TeacherEntity;
+import org.example.controller.mapper.GradeDTOMapper;
+import org.example.model.*;
 import org.example.repository.StudentRepository;
 import org.example.service.impl.StudentServiceImpl;
 import org.example.controller.mapper.StudentDTOMapper;
@@ -26,6 +25,7 @@ class StudentServiceImplTest {
     GroupEntity group;
 
     StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+    GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -60,6 +60,25 @@ class StudentServiceImplTest {
         Mockito.when(mockStudentRepository.findAll()).thenReturn(studentEntities);
 
         Assertions.assertEquals(studentService.findAll(), studentEntities.stream().map(studentMapper::mapToDTO).collect(Collectors.toSet()));
+    }
+
+    @Test
+    void findAllGradesWithServiceId() throws SQLException {
+        TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity groupEntity = new GroupEntity(1,
+                "t-11",
+                new Date(new GregorianCalendar(2017, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2021, Calendar.JUNE, 28).getTimeInMillis()),
+                teacherEntity);
+        SubjectEntity subjectEntity = new SubjectEntity(1, "s");
+        ExamEntity examEntity = new ExamEntity(1, new Date(System.currentTimeMillis()), groupEntity, subjectEntity, teacherEntity);
+        GradeEntity gradeEntity = new GradeEntity(1, student, examEntity, (short) 3);
+        Set<GradeEntity> gradeEntities = Set.of(gradeEntity);
+        student.setGrades(gradeEntities);
+
+        Mockito.when(mockStudentRepository.findById(1)).thenReturn(student);
+
+        Assertions.assertEquals(studentService.findAllGradesWithServiceId(1), gradeEntities.stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test

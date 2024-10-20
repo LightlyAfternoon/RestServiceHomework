@@ -29,6 +29,11 @@ public class StudentController {
         return studentService.findById(id);
     }
 
+    @GetMapping("/{id}/grade")
+    public Set<GradeDTO> getGrades(@PathVariable("id") int id) throws SQLException {
+        return studentService.findAllGradesWithServiceId(id);
+    }
+
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public StudentDTO createStudent(@RequestBody StudentDTO studentDTO) throws SQLException {
         return studentService.save(studentDTO);

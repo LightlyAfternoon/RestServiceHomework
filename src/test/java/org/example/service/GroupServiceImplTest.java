@@ -60,13 +60,14 @@ class GroupServiceImplTest {
 
     @Test
     void saveGroupTest() throws SQLException {
-        teacher.setId(4);
+        groupService = Mockito.spy(new GroupServiceImpl(mockGroupRepository));
+
         group = new GroupEntity(2, "Э-321",
                 new Date(new GregorianCalendar(2010, Calendar.SEPTEMBER, 1).getTimeInMillis()),
                 new Date(new GregorianCalendar(2020, Calendar.JUNE, 30).getTimeInMillis()),
                 teacher);
 
-        Mockito.when(mockGroupRepository.save(group)).thenReturn(group);
+        Mockito.doReturn(groupMapper.mapToDTO(group)).when(groupService).save(groupMapper.mapToDTO(group));
 
         group = new GroupEntity(2, "Э-321",
                 new Date(new GregorianCalendar(2010, Calendar.SEPTEMBER, 1).getTimeInMillis()),
@@ -90,8 +91,9 @@ class GroupServiceImplTest {
     void findAllStudentsWithGroupIdTest() throws SQLException {
         StudentEntity studentEntity = new StudentEntity(1, "Number 1", "One", null, group);
         Set<StudentEntity> studentEntities = Set.of(studentEntity);
+        group.setStudents(studentEntities);
 
-        Mockito.when(mockGroupRepository.findById(1).getStudents()).thenReturn(studentEntities);
+        Mockito.when(mockGroupRepository.findById(1)).thenReturn(group);
 
         Assertions.assertEquals(groupService.findAllStudentsWithGroupId(1), studentEntities.stream().map(studentMapper::mapToDTO).collect(Collectors.toSet()));
     }
@@ -100,8 +102,9 @@ class GroupServiceImplTest {
     void findAllSubjectsWithGroupIdTest() throws SQLException {
         SubjectEntity subjectEntity = new SubjectEntity(1, "TestS");
         Set<SubjectEntity> subjectEntities = Set.of(subjectEntity);
+        group.setSubjects(subjectEntities);
 
-        Mockito.when(mockGroupRepository.findById(1).getSubjects()).thenReturn(subjectEntities);
+        Mockito.when(mockGroupRepository.findById(1)).thenReturn(group);
 
         Assertions.assertEquals(groupService.findAllSubjectsWithGroupId(1), subjectEntities.stream().map(subjectMapper::mapToDTO).collect(Collectors.toSet()));
     }
@@ -114,8 +117,9 @@ class GroupServiceImplTest {
                 new Date(new GregorianCalendar(2019, Calendar.MARCH, 6).getTimeInMillis()),
                 group, subject, teacher);
         Set<ExamEntity> examEntities = Set.of(examEntity);
+        group.setExams(examEntities);
 
-        Mockito.when(mockGroupRepository.findById(1).getExams()).thenReturn(examEntities);
+        Mockito.when(mockGroupRepository.findById(1)).thenReturn(group);
 
         Assertions.assertEquals(groupService.findAllExamsWithGroupId(1), examEntities.stream().map(examMapper::mapToDTO).collect(Collectors.toSet()));
     }

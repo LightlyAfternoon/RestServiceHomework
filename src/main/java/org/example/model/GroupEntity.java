@@ -15,7 +15,7 @@ public class GroupEntity {
     private @Column(name = "start_date") Date startDate;
     private @Column(name = "end_date") Date endDate;
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(nullable = false, name = "teacher_id")
     private TeacherEntity teacher;
     @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
@@ -41,6 +41,14 @@ public class GroupEntity {
     public GroupEntity(int id, String name, Date startDate, Date endDate, TeacherEntity teacher) {
         this(name, startDate, endDate, teacher);
         this.id = id;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (students == null || students.isEmpty() || exams == null || exams.isEmpty()) {
+            this.teacher.getGroups().remove(this);
+            this.teacher = null;
+        }
     }
 
     public int getId() {

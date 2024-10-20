@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 class GradeServiceImplTest {
     GradeRepository mockGradeRepository;
     GradeService gradeService;
-    GradeEntity grade;
-    TeacherEntity teacher;
-    GroupEntity group;
-    SubjectEntity subject;
-    StudentEntity student;
-    ExamEntity exam;
+    GradeEntity gradeEntity;
+    TeacherEntity teacherEntity;
+    GroupEntity groupEntity;
+    SubjectEntity subjectEntity;
+    StudentEntity studentEntity;
+    ExamEntity examEntity;
 
     GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
@@ -32,29 +32,29 @@ class GradeServiceImplTest {
         mockGradeRepository = Mockito.mock(GradeRepository.class);
         gradeService = new GradeServiceImpl(mockGradeRepository);
 
-        teacher = new TeacherEntity(1, "t", "t", "t");
-        group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
-        subject = new SubjectEntity(1, "t");
-        student = new StudentEntity(2, "t", "t", "t", group);
-        exam = new ExamEntity(1, new Date(System.currentTimeMillis()), group, subject, teacher);
-        grade = new GradeEntity(1, student, exam, (short) 4);
+        teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        groupEntity = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity);
+        subjectEntity = new SubjectEntity(1, "t");
+        studentEntity = new StudentEntity(2, "t", "t", "t", groupEntity);
+        examEntity = new ExamEntity(1, new Date(System.currentTimeMillis()), groupEntity, subjectEntity, teacherEntity);
+        gradeEntity = new GradeEntity(1, studentEntity, examEntity, (short) 4);
     }
 
     @Test
     void findByIdTest() throws SQLException {
-        Mockito.when(mockGradeRepository.findById(1)).thenReturn(grade);
+        Mockito.when(mockGradeRepository.findById(1)).thenReturn(gradeEntity);
 
-        Assertions.assertEquals(gradeService.findById(1), gradeMapper.mapToDTO(grade));
+        Assertions.assertEquals(gradeService.findById(1), gradeMapper.mapToDTO(gradeEntity));
 
-        grade = new GradeEntity(2, student, exam, (short) 4);
+        gradeEntity = new GradeEntity(2, studentEntity, examEntity, (short) 4);
 
-        Assertions.assertNotEquals(gradeService.findById(1), gradeMapper.mapToDTO(grade));
+        Assertions.assertNotEquals(gradeService.findById(1), gradeMapper.mapToDTO(gradeEntity));
     }
 
     @Test
     void findAllTest() throws SQLException {
         Set<GradeEntity> gradeEntities = new HashSet<>();
-        gradeEntities.add(grade);
+        gradeEntities.add(gradeEntity);
 
         Mockito.when(mockGradeRepository.findAll()).thenReturn(gradeEntities);
 
@@ -63,14 +63,16 @@ class GradeServiceImplTest {
 
     @Test
     void saveGradeTest() throws SQLException {
-        student.setId(4);
-        exam.setId(3);
-        grade = new GradeEntity(3, student, exam, (short) 2);
+        gradeService = Mockito.spy(new GradeServiceImpl(mockGradeRepository));
 
-        Mockito.when(mockGradeRepository.save(grade)).thenReturn(grade);
+        studentEntity.setId(4);
+        examEntity.setId(3);
+        gradeEntity = new GradeEntity(3, studentEntity, examEntity, (short) 2);
 
-        grade = new GradeEntity(3, student, exam, (short) 2);
+        Mockito.doReturn(gradeMapper.mapToDTO(gradeEntity)).when(gradeService).save(gradeMapper.mapToDTO(gradeEntity));
 
-        Assertions.assertEquals(gradeMapper.mapToDTO(grade), gradeService.save(gradeMapper.mapToDTO(grade)));
+        gradeEntity = new GradeEntity(3, studentEntity, examEntity, (short) 2);
+
+        Assertions.assertEquals(gradeMapper.mapToDTO(gradeEntity), gradeService.save(gradeMapper.mapToDTO(gradeEntity)));
     }
 }

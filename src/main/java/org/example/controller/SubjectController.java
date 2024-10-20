@@ -55,7 +55,7 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}/group")
-    public Set<GroupDTO> getGroup(@PathVariable("id") int id) throws SQLException {
+    public Set<GroupDTO> getGroups(@PathVariable("id") int id) throws SQLException {
         return subjectService.findAllGroupsWithSubjectId(id);
     }
 

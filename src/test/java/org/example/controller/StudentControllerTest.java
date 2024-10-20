@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.controller.mapper.GradeDTOMapper;
 import org.example.model.*;
 import org.example.service.StudentService;
 import org.example.controller.dto.StudentDTO;
@@ -14,9 +15,10 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 class StudentControllerTest {
-    StudentController studentServlet;
+    StudentController studentController;
     StudentService mockStudentService;
 
     StudentDTO studentDTO;
@@ -24,11 +26,12 @@ class StudentControllerTest {
     GroupEntity groupEntity;
 
     StudentDTOMapper studentMapper = StudentDTOMapper.INSTANCE;
+    GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
         mockStudentService = Mockito.mock(StudentService.class);
-        studentServlet = new StudentController(mockStudentService);
+        studentController = new StudentController(mockStudentService);
 
         TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
         groupEntity = new GroupEntity(1, "П-0",
@@ -43,7 +46,7 @@ class StudentControllerTest {
         Mockito.when(mockStudentService.findAll()).thenReturn(Set.of(studentMapper.mapToDTO(studentEntity)));
 
         studentEntity = new StudentEntity(1, "t", "t", "t", groupEntity);
-        Assertions.assertEquals(studentServlet.getStudents(), Set.of(studentMapper.mapToDTO(studentEntity)));
+        Assertions.assertEquals(studentController.getStudents(), Set.of(studentMapper.mapToDTO(studentEntity)));
     }
 
     @Test
@@ -52,7 +55,23 @@ class StudentControllerTest {
         studentDTO = mockStudentService.findById(1);
 
         studentEntity = new StudentEntity(1, "t", "t", "t", groupEntity);
-        Assertions.assertEquals(studentServlet.getStudent(1), studentMapper.mapToDTO(studentEntity));
+        Assertions.assertEquals(studentController.getStudent(1), studentMapper.mapToDTO(studentEntity));
+    }
+
+    @Test
+    void getGradesTest() throws SQLException {
+        TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        SubjectEntity subjectEntity = new SubjectEntity(1, "s");
+        ExamEntity examEntity = new ExamEntity(1, new Date(System.currentTimeMillis()), groupEntity, subjectEntity, teacherEntity);
+        GradeEntity gradeEntity = new GradeEntity(1, studentEntity, examEntity, (short) 3);
+        Set<GradeEntity> gradeEntities = Set.of(gradeEntity);
+
+        Mockito.when(mockStudentService.findAllGradesWithServiceId(1)).thenReturn(gradeEntities.stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet()));
+
+        gradeEntity = new GradeEntity(1, studentEntity, examEntity, (short) 3);
+        gradeEntities = Set.of(gradeEntity);
+
+        Assertions.assertEquals(studentController.getGrades(1), gradeEntities.stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet()));
     }
 
     @Test
@@ -60,7 +79,7 @@ class StudentControllerTest {
         StudentDTO dto = studentMapper.mapToDTO(new StudentEntity(0, "t", "t", "t", groupEntity));
         Mockito.when(mockStudentService.save(dto)).thenReturn(dto);
 
-        studentDTO = studentServlet.createStudent(dto);
+        studentDTO = studentController.createStudent(dto);
 
         Assertions.assertEquals(dto, studentDTO);
     }
@@ -71,7 +90,7 @@ class StudentControllerTest {
 
         studentEntity = studentMapper.mapToEntity(dto, 1);
         Mockito.when(mockStudentService.save(dto, 1)).thenReturn(dto);
-        studentDTO = studentServlet.updateStudent(1, dto);
+        studentDTO = studentController.updateStudent(1, dto);
 
         Assertions.assertEquals(dto, studentDTO);
     }
@@ -81,7 +100,7 @@ class StudentControllerTest {
         studentDTO = studentMapper.mapToDTO(studentEntity);
         Mockito.when(mockStudentService.findById(1)).thenReturn(studentDTO);
 
-        String result = studentServlet.deleteStudent(1);
+        String result = studentController.deleteStudent(1);
 
         Assertions.assertEquals("Failed to delete student!", result);
 
@@ -93,14 +112,14 @@ class StudentControllerTest {
         studentDTO = studentMapper.mapToDTO(studentEntity);
         Mockito.when(mockStudentService.findById(1)).thenReturn(studentDTO);
 
-        result = studentServlet.deleteStudent(1);
+        result = studentController.deleteStudent(1);
 
         Assertions.assertEquals("Student is connected to some grades!", result);
 
         studentDTO = null;
         Mockito.when(mockStudentService.findById(2)).thenReturn(studentDTO);
 
-        result = studentServlet.deleteStudent(2);
+        result = studentController.deleteStudent(2);
 
         Assertions.assertEquals(result, "There is no student with id " + 2);
     }

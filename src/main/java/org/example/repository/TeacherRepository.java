@@ -11,7 +11,6 @@ import java.util.Set;
 @org.springframework.stereotype.Repository
 public interface TeacherRepository extends Repository<TeacherEntity, Integer> {
     @Transactional
-    //@EntityGraph(attributePaths = {"subjects", "groups", "exams"})
     TeacherEntity findById(int id) throws SQLException;
 
     @Modifying
@@ -23,6 +22,5 @@ public interface TeacherRepository extends Repository<TeacherEntity, Integer> {
     TeacherEntity save(TeacherEntity entity) throws SQLException;
 
     @Transactional
-    //@EntityGraph(attributePaths = {"subjects", "groups", "exams"})
     Set<TeacherEntity> findAll() throws SQLException;
 }

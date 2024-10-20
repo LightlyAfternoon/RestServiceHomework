@@ -13,16 +13,16 @@ public class ExamEntity {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     private @Column(name = "start_date") Date startDate;
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(nullable = false, name = "group_id")
     private GroupEntity group;
 //    @ManyToOne
 //    @JoinColumn(name = "subject_teacher_id")
 //    private TeacherEntity teacher;
     @ManyToOne
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(nullable = false, name = "subject_id")
     private SubjectEntity subject;
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(nullable = false, name = "teacher_id")
     private TeacherEntity teacher;
     @OneToMany(mappedBy = "exam", cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
@@ -40,6 +40,20 @@ public class ExamEntity {
     public ExamEntity(int id, Date startDate, GroupEntity group, SubjectEntity subject, TeacherEntity teacher) {
         this(startDate, group, subject, teacher);
         this.id = id;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (grades == null || grades.isEmpty()) {
+            this.group.getExams().remove(this);
+            this.group = null;
+
+            this.subject.getExams().remove(this);
+            this.subject = null;
+
+            this.teacher.getExams().remove(this);
+            this.teacher = null;
+        }
     }
 
     public int getId() {

@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 public class GradeEntity {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) int id;
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(nullable = false, name = "student_id")
     private StudentEntity student;
     @ManyToOne
-    @JoinColumn(name = "exam_id")
+    @JoinColumn(nullable = false, name = "exam_id")
     private ExamEntity exam;
     private short mark;
 
@@ -25,6 +25,15 @@ public class GradeEntity {
     public GradeEntity(int id, StudentEntity student, ExamEntity exam, short mark) {
         this(student, exam, mark);
         this.id = id;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        this.student.getGrades().remove(this);
+        this.student = null;
+
+        this.exam.getGrades().remove(this);
+        this.exam = null;
     }
 
     public int getId() {

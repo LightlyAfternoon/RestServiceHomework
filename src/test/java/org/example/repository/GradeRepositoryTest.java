@@ -1,11 +1,12 @@
 package org.example.repository;
 
+import org.example.config.MyTestConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.*;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
@@ -13,14 +14,14 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Set;
 
-class GradeRepositoryImplTest {
+class GradeRepositoryTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    private static final Logger log = LoggerFactory.getLogger(GradeRepositoryImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(GradeRepositoryTest.class);
     Connection connection;
+    AnnotationConfigApplicationContext context;
 
-    @Autowired
     GradeRepository gradeRepository;
 
     @BeforeAll
@@ -36,6 +37,9 @@ class GradeRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        context = new AnnotationConfigApplicationContext(MyTestConfig.class);
+        gradeRepository = context.getBean(GradeRepository.class);
 
         try {
             connection = ConnectionManager.getConnection();

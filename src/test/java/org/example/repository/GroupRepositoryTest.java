@@ -1,11 +1,12 @@
 package org.example.repository;
 
+import org.example.config.MyTestConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.*;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
@@ -15,14 +16,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Set;
 
-class GroupRepositoryImplTest {
+class GroupRepositoryTest {
     static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:16.4")
             .withInitScripts("db/AcademicPerformanceDb.sql", "db/InsertSQL.sql");
 
-    static final Logger log = LoggerFactory.getLogger(GroupRepositoryImplTest.class);
+    static final Logger log = LoggerFactory.getLogger(GroupRepositoryTest.class);
     Connection connection;
+    AnnotationConfigApplicationContext context;
 
-    @Autowired
     GroupRepository groupRepository;
 
     @BeforeAll
@@ -38,6 +39,9 @@ class GroupRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        context = new AnnotationConfigApplicationContext(MyTestConfig.class);
+        groupRepository = context.getBean(GroupRepository.class);
 
         try {
             connection = ConnectionManager.getConnection();
@@ -73,6 +77,21 @@ class GroupRepositoryImplTest {
         group = groupRepository.findById(2);
         Assertions.assertNotNull(group);
 
+        Assertions.assertNull(groupRepository.findById(50));
+    }
+
+    @Test
+    void deleteStudentByIdTest() throws SQLException {
+        Assertions.assertNotNull(groupRepository.findById(1));
+        groupRepository.deleteById(1);
+        Assertions.assertNotNull(groupRepository.findById(1));
+        log.info("---");
+        Assertions.assertNotNull(groupRepository.findById(3));
+        groupRepository.deleteById(3);
+        Assertions.assertNull(groupRepository.findById(3));
+        log.info("---");
+        Assertions.assertNull(groupRepository.findById(50));
+        groupRepository.deleteById(50);
         Assertions.assertNull(groupRepository.findById(50));
     }
 
