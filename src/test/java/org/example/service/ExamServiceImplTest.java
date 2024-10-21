@@ -1,9 +1,7 @@
 package org.example.service;
 
-import org.example.model.ExamEntity;
-import org.example.model.GroupEntity;
-import org.example.model.SubjectEntity;
-import org.example.model.TeacherEntity;
+import org.example.controller.mapper.GradeDTOMapper;
+import org.example.model.*;
 import org.example.repository.ExamRepository;
 import org.example.service.impl.ExamServiceImpl;
 import org.example.controller.mapper.ExamDTOMapper;
@@ -23,45 +21,46 @@ import java.util.stream.Collectors;
 class ExamServiceImplTest {
     ExamRepository mockExamRepository;
     ExamService examService;
-    ExamEntity exam;
-    TeacherEntity teacher;
-    GroupEntity group;
-    SubjectEntity subject;
+    ExamEntity examEntity;
+    TeacherEntity teacherEntity;
+    GroupEntity groupEntity;
+    SubjectEntity subjectEntity;
 
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+    GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
         mockExamRepository = Mockito.mock(ExamRepository.class);
         examService = new ExamServiceImpl(mockExamRepository);
 
-        teacher = new TeacherEntity(1, "t", "t", "t");
-        group = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacher);
-        subject = new SubjectEntity(1, "t");
-        exam = new ExamEntity(1,
+        teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        groupEntity = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity);
+        subjectEntity = new SubjectEntity(1, "t");
+        examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2000, Calendar.SEPTEMBER, 2).getTimeInMillis()),
-                group, subject, teacher);
+                groupEntity, subjectEntity, teacherEntity);
     }
 
     @Test
     void findByIdTest() throws SQLException {
-        Mockito.when(mockExamRepository.findById(1)).thenReturn(exam);
+        Mockito.when(mockExamRepository.findById(1)).thenReturn(examEntity);
 
-        Assertions.assertEquals(examService.findById(1), examMapper.mapToDTO(exam));
+        Assertions.assertEquals(examService.findById(1), examMapper.mapToDTO(examEntity));
 
-        subject.setId(2);
-        teacher.setId(4);
-        exam = new ExamEntity(2,
+        subjectEntity.setId(2);
+        teacherEntity.setId(4);
+        examEntity = new ExamEntity(2,
                 new Date(new GregorianCalendar(2000, Calendar.SEPTEMBER, 2).getTimeInMillis()),
-                group, subject, teacher);
+                groupEntity, subjectEntity, teacherEntity);
 
-        Assertions.assertNotEquals(examService.findById(1), examMapper.mapToDTO(exam));
+        Assertions.assertNotEquals(examService.findById(1), examMapper.mapToDTO(examEntity));
     }
 
     @Test
     void findAllTest() throws SQLException {
         Set<ExamEntity> examEntities = new HashSet<>();
-        examEntities.add(exam);
+        examEntities.add(examEntity);
 
         Mockito.when(mockExamRepository.findAll()).thenReturn(examEntities);
 
@@ -70,18 +69,36 @@ class ExamServiceImplTest {
 
     @Test
     void saveExamTest() throws SQLException {
-        subject.setId(5);
-        teacher.setId(2);
-        exam = new ExamEntity(1,
+        examService = Mockito.spy(new ExamServiceImpl(mockExamRepository));
+
+        subjectEntity.setId(5);
+        teacherEntity.setId(2);
+        examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
-                group, subject, teacher);
+                groupEntity, subjectEntity, teacherEntity);
 
-        Mockito.when(mockExamRepository.save(exam)).thenReturn(exam);
+        Mockito.doReturn(examMapper.mapToDTO(examEntity)).when(examService).save(examMapper.mapToDTO(examEntity));
 
-        exam = new ExamEntity(1,
+        examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
-                group, subject, teacher);
+                groupEntity, subjectEntity, teacherEntity);
 
-        Assertions.assertEquals(examMapper.mapToDTO(exam), examService.save(examMapper.mapToDTO(exam)));
+        Assertions.assertEquals(examMapper.mapToDTO(examEntity), examService.save(examMapper.mapToDTO(examEntity)));
+    }
+
+    @Test
+    void findAllGradesWithExamIdTest() throws SQLException {
+        teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        groupEntity = new GroupEntity(1, "t", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity);
+        subjectEntity = new SubjectEntity(1, "t");
+        StudentEntity studentEntity = new StudentEntity(2, "t", "t", "t", groupEntity);
+        examEntity = new ExamEntity(1, new Date(System.currentTimeMillis()), groupEntity, subjectEntity, teacherEntity);
+        GradeEntity gradeEntity = new GradeEntity(1, studentEntity, examEntity, (short) 4);
+        Set<GradeEntity> gradeEntities = Set.of(gradeEntity);
+        examEntity.setGrades(gradeEntities);
+
+        Mockito.when(mockExamRepository.findById(1)).thenReturn(examEntity);
+
+        Assertions.assertEquals(examService.findAllGradesWithExamId(1), gradeEntities.stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet()));
     }
 }

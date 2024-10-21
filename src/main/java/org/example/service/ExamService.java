@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.controller.dto.ExamDTO;
+import org.example.controller.dto.GradeDTO;
 
 import java.sql.SQLException;
 import java.util.Set;
@@ -15,4 +16,6 @@ public interface ExamService {
     ExamDTO save(ExamDTO examDTO, int id) throws SQLException;
 
     Set<ExamDTO> findAll() throws SQLException;
+
+    Set<GradeDTO> findAllGradesWithExamId(int id) throws SQLException;
 }

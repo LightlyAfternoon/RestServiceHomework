@@ -46,6 +46,7 @@ class StudentControllerTest {
         Mockito.when(mockStudentService.findAll()).thenReturn(Set.of(studentMapper.mapToDTO(studentEntity)));
 
         studentEntity = new StudentEntity(1, "t", "t", "t", groupEntity);
+
         Assertions.assertEquals(studentController.getStudents(), Set.of(studentMapper.mapToDTO(studentEntity)));
     }
 
@@ -55,6 +56,7 @@ class StudentControllerTest {
         studentDTO = mockStudentService.findById(1);
 
         studentEntity = new StudentEntity(1, "t", "t", "t", groupEntity);
+
         Assertions.assertEquals(studentController.getStudent(1), studentMapper.mapToDTO(studentEntity));
     }
 

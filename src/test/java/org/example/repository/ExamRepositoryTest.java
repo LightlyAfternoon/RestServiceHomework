@@ -1,13 +1,15 @@
 package org.example.repository;
 
+import org.example.config.MyTestConfig;
 import org.example.db.ConnectionManager;
 import org.example.model.ExamEntity;
 import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
 import org.example.model.TeacherEntity;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.Connection;
@@ -23,8 +25,8 @@ class ExamRepositoryTest {
     
     private static final Logger log = LoggerFactory.getLogger(ExamRepositoryTest.class);
     Connection connection;
+    AnnotationConfigApplicationContext context;
 
-    @Autowired
     ExamRepository examRepository;
     
     @BeforeAll
@@ -40,6 +42,9 @@ class ExamRepositoryTest {
     @BeforeEach
     void setUp() throws SQLException {
         ConnectionManager.setConfig(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+
+        context = new AnnotationConfigApplicationContext(MyTestConfig.class);
+        examRepository = context.getBean(ExamRepository.class);
 
         try {
             connection = ConnectionManager.getConnection();
@@ -81,16 +86,19 @@ class ExamRepositoryTest {
         Date startDate = new Date(calendar.getTimeInMillis());
 
         TeacherEntity teacher = new TeacherEntity(2, "t", "t", "t");
+        SubjectEntity subject = new SubjectEntity(1, "s");
         GroupEntity group = new GroupEntity(2, "t", startDate, startDate, teacher);
 
         ExamEntity exam = examRepository.findById(2);
         exam.setStartDate(startDate);
         exam.setGroup(group);
         exam.setTeacher(teacher);
+        exam.setSubject(subject);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
         Assertions.assertEquals(2, exam.getGroup().getId());
+        Assertions.assertEquals(1, exam.getSubject().getId());
         Assertions.assertEquals(2, exam.getTeacher().getId());
 
         exam = new ExamEntity();
@@ -99,11 +107,14 @@ class ExamRepositoryTest {
         exam.setStartDate(startDate);
         teacher.setId(1);
         exam.setGroup(group);
+        subject.setId(3);
+        exam.setSubject(subject);
         exam.setTeacher(teacher);
 
         exam = examRepository.save(exam);
         Assertions.assertEquals(startDate, exam.getStartDate());
         Assertions.assertEquals(2, exam.getGroup().getId());
+        Assertions.assertEquals(3, exam.getSubject().getId());
         Assertions.assertEquals(1, exam.getTeacher().getId());
     }
 

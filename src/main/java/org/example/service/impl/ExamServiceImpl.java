@@ -1,5 +1,7 @@
 package org.example.service.impl;
 
+import org.example.controller.dto.GradeDTO;
+import org.example.controller.mapper.GradeDTOMapper;
 import org.example.repository.ExamRepository;
 import org.example.service.ExamService;
 import org.example.controller.dto.ExamDTO;
@@ -16,6 +18,7 @@ public class ExamServiceImpl implements ExamService {
     ExamRepository examRepository;
 
     ExamDTOMapper examMapper = ExamDTOMapper.INSTANCE;
+    GradeDTOMapper gradeMapper = GradeDTOMapper.INSTANCE;
 
     @Autowired
     public ExamServiceImpl(ExamRepository examRepository) {
@@ -45,5 +48,10 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public Set<ExamDTO> findAll() throws SQLException {
         return examRepository.findAll().stream().map(examMapper::mapToDTO).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<GradeDTO> findAllGradesWithExamId(int id) throws SQLException {
+        return examRepository.findById(id).getGrades().stream().map(gradeMapper::mapToDTO).collect(Collectors.toSet());
     }
 }
