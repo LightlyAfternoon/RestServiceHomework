@@ -69,7 +69,7 @@ class GradeServiceImplTest {
         examEntity.setId(3);
         gradeEntity = new GradeEntity(3, studentEntity, examEntity, (short) 2);
 
-        Mockito.doReturn(gradeMapper.mapToDTO(gradeEntity)).when(gradeService).save(gradeMapper.mapToDTO(gradeEntity));
+        Mockito.when(gradeService.save(gradeMapper.mapToDTO(gradeEntity))).thenReturn(gradeMapper.mapToDTO(gradeEntity));
 
         gradeEntity = new GradeEntity(3, studentEntity, examEntity, (short) 2);
 

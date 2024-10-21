@@ -121,6 +121,41 @@ class SubjectControllerTest {
     }
 
     @Test
+    void addTeacherTest() throws SQLException {
+        TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        subjectEntity = new SubjectEntity(2, "t");
+        subjectEntity.setTeachers(Set.of(teacherEntity));
+        SubjectDTO dto = subjectMapper.mapToDTO(subjectEntity);
+
+        Mockito.when(mockSubjectService.findById(subjectEntity.getId())).thenReturn(dto);
+        Mockito.when(mockTeacherService.findById(teacherEntity.getId())).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        Mockito.when(mockSubjectService.save(dto, subjectEntity.getId())).thenReturn(dto);
+
+        subjectDTO = subjectController.addTeacher(subjectEntity.getId(), teacherEntity.getId());
+
+        Assertions.assertEquals(dto.getTeachers(), subjectDTO.getTeachers());
+    }
+
+    @Test
+    void addGroupTest() throws SQLException {
+        TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity groupEntity = new GroupEntity(3, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity);
+        subjectEntity = new SubjectEntity(2, "t");
+        subjectEntity.setGroups(Set.of(groupEntity));
+        SubjectDTO dto = subjectMapper.mapToDTO(subjectEntity);
+
+        Mockito.when(mockSubjectService.findById(subjectEntity.getId())).thenReturn(dto);
+        Mockito.when(mockTeacherService.findById(teacherEntity.getId())).thenReturn(teacherMapper.mapToDTO(teacherEntity));
+        Mockito.when(mockGroupService.findById(groupEntity.getId())).thenReturn(groupMapper.mapToDTO(groupEntity));
+        Mockito.when(mockSubjectService.save(dto, subjectEntity.getId())).thenReturn(dto);
+
+        subjectDTO = subjectController.addGroup(subjectEntity.getId(), groupEntity.getId());
+
+        Assertions.assertEquals(dto.getGroups(), subjectDTO.getGroups());
+    }
+
+    @Test
     void updateSubjectTest() throws SQLException {
         SubjectDTO dto = subjectMapper.mapToDTO(subjectEntity);
 

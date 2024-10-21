@@ -77,7 +77,7 @@ class ExamServiceImplTest {
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),
                 groupEntity, subjectEntity, teacherEntity);
 
-        Mockito.doReturn(examMapper.mapToDTO(examEntity)).when(examService).save(examMapper.mapToDTO(examEntity));
+        Mockito.when(examService.save(examMapper.mapToDTO(examEntity))).thenReturn(examMapper.mapToDTO(examEntity));
 
         examEntity = new ExamEntity(1,
                 new Date(new GregorianCalendar(2003, Calendar.SEPTEMBER, 2).getTimeInMillis()),

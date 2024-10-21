@@ -67,7 +67,7 @@ class GroupServiceImplTest {
                 new Date(new GregorianCalendar(2020, Calendar.JUNE, 30).getTimeInMillis()),
                 teacher);
 
-        Mockito.doReturn(groupMapper.mapToDTO(group)).when(groupService).save(groupMapper.mapToDTO(group));
+        Mockito.when(groupService.save(groupMapper.mapToDTO(group))).thenReturn(groupMapper.mapToDTO(group));
 
         group = new GroupEntity(2, "Э-321",
                 new Date(new GregorianCalendar(2010, Calendar.SEPTEMBER, 1).getTimeInMillis()),

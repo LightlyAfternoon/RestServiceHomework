@@ -87,7 +87,7 @@ class StudentServiceImplTest {
 
         student = new StudentEntity(2, "Клавдий", "Ломоносов", "Германович", group);
 
-        Mockito.doReturn(studentMapper.mapToDTO(student)).when(studentService).save(studentMapper.mapToDTO(student));
+        Mockito.when(studentService.save(studentMapper.mapToDTO(student))).thenReturn(studentMapper.mapToDTO(student));
 
         student = new StudentEntity(2, "Клавдий", "Ломоносов", "Германович", group);
 
