@@ -15,9 +15,6 @@ public class ExamEntity {
     @ManyToOne
     @JoinColumn(nullable = false, name = "group_id")
     private GroupEntity group;
-//    @ManyToOne
-//    @JoinColumn(name = "subject_teacher_id")
-//    private TeacherEntity teacher;
     @ManyToOne
     @JoinColumn(nullable = false, name = "subject_id")
     private SubjectEntity subject;

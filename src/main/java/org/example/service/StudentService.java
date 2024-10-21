@@ -5,7 +5,6 @@ import org.example.controller.dto.StudentDTO;
 
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public interface StudentService {
     StudentDTO findById(int id) throws SQLException;
