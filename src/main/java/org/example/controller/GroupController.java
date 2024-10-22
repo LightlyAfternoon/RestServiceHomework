@@ -42,7 +42,7 @@ public class GroupController {
         return groupService.findAllSubjectsWithGroupId(id);
     }
 
-    @GetMapping("/{id}/student")
+    @GetMapping("/{id}/exam")
     public Set<ExamDTO> getExams(@PathVariable("id") int id) throws SQLException {
         return groupService.findAllExamsWithGroupId(id);
     }

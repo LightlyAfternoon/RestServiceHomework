@@ -15,6 +15,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
@@ -26,10 +28,10 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "org.example.repository")
 @EnableWebMvc
 @ComponentScan({"org.example.service.impl", "org.example.controller"})
-public class MyWebConfig extends AnnotationConfigWebApplicationContext {
+public class MyWebConfig extends AnnotationConfigWebApplicationContext implements WebMvcConfigurer {
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws IOException {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
 
@@ -43,7 +45,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
         return em;
     }
 
-    public static DataSource setConfig() {
+    public static DataSource setConfig() throws IOException {
         try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/resources/db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
@@ -55,7 +57,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
 
             return dataSource;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
     }
 
@@ -68,8 +70,13 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
         return properties;
     }
 
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("/index");
+    }
+
     @Bean(name = "transactionManager")
-    public PlatformTransactionManager dbTransactionManager() {
+    public PlatformTransactionManager dbTransactionManager() throws IOException {
         JpaTransactionManager transactionManager
                 = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(
@@ -78,7 +85,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext {
     }
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean sessionFactory() throws IOException {
         LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
 
         sf.setDataSource(setConfig());
