@@ -81,9 +81,11 @@ class StudentControllerTest {
         StudentDTO dto = studentMapper.mapToDTO(new StudentEntity(0, "t", "t", "t", groupEntity));
         Mockito.when(mockStudentService.save(dto)).thenReturn(dto);
 
+        studentEntity = studentMapper.mapToEntity(dto);
         studentDTO = studentController.createStudent(dto);
 
         Assertions.assertEquals(dto, studentDTO);
+        Assertions.assertEquals(studentEntity, studentMapper.mapToEntity(studentDTO));
     }
 
     @Test
@@ -95,6 +97,7 @@ class StudentControllerTest {
         studentDTO = studentController.updateStudent(1, dto);
 
         Assertions.assertEquals(dto, studentDTO);
+        Assertions.assertEquals(studentEntity, studentMapper.mapToEntity(studentDTO, studentDTO.getId()));
     }
 
     @Test

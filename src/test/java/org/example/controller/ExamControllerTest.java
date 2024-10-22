@@ -84,9 +84,11 @@ class ExamControllerTest {
                 groupEntity, subjectEntity, teacherEntity));
         Mockito.when(mockExamService.save(dto)).thenReturn(dto);
 
+        examEntity = examMapper.mapToEntity(dto);
         examDTO = examController.createExam(dto);
 
         Assertions.assertEquals(dto, examDTO);
+        Assertions.assertEquals(examEntity, examMapper.mapToEntity(examDTO));
     }
 
     @Test
@@ -98,6 +100,7 @@ class ExamControllerTest {
         examDTO = examController.updateExam(1, dto);
 
         Assertions.assertEquals(dto, examDTO);
+        Assertions.assertEquals(examEntity, examMapper.mapToEntity(examDTO, examDTO.getId()));
     }
 
     @Test

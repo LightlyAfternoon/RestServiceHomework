@@ -1,5 +1,11 @@
 package org.example.controller;
 
+import org.example.controller.mapper.GroupDTOMapper;
+import org.example.controller.mapper.SubjectDTOMapper;
+import org.example.controller.mapper.TeacherDTOMapper;
+import org.example.model.GroupEntity;
+import org.example.model.SubjectEntity;
+import org.example.model.TeacherEntity;
 import org.example.service.GroupService;
 import org.example.service.SubjectService;
 import org.example.service.TeacherService;
@@ -7,10 +13,6 @@ import org.example.controller.dto.ExamDTO;
 import org.example.controller.dto.GroupDTO;
 import org.example.controller.dto.SubjectDTO;
 import org.example.controller.dto.TeacherDTO;
-import org.example.controller.dto.secondary.SecondaryGroupDTO;
-import org.example.controller.dto.secondary.SecondaryTeacherDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +24,13 @@ import java.util.Set;
 @RestController
 @RequestMapping("/subject")
 public class SubjectController {
-    private static final Logger log = LoggerFactory.getLogger(SubjectController.class);
     SubjectService subjectService;
     TeacherService teacherService;
     GroupService groupService;
+
+    SubjectDTOMapper subjectDTOMapper = SubjectDTOMapper.INSTANCE;
+    TeacherDTOMapper teacherDTOMapper = TeacherDTOMapper.INSTANCE;
+    GroupDTOMapper groupDTOMapper = GroupDTOMapper.INSTANCE;
 
     @Autowired
     public SubjectController(SubjectService subjectService, TeacherService teacherService, GroupService groupService) {
@@ -66,46 +71,41 @@ public class SubjectController {
 
     @PostMapping(value = "/{id}/teacher/{teacherId}")
     public SubjectDTO addTeacher(@PathVariable("id") int id, @PathVariable("teacherId") int teacherId) throws SQLException {
-        SubjectDTO subjectDTO = subjectService.findById(id);
-        Set<SecondaryTeacherDTO> secondaryTeacherDTOS = new HashSet<>();
-        if (subjectDTO.getTeachers() != null) {
-            secondaryTeacherDTOS.addAll(subjectDTO.getTeachers());
+        SubjectEntity subject = subjectDTOMapper.mapToEntity(subjectService.findById(id));
+        Set<TeacherEntity> teachers = new HashSet<>();
+        if (subject.getTeachers() != null) {
+            teachers.addAll(subject.getTeachers());
         }
 
-        TeacherDTO teacherDTO = teacherService.findById(teacherId);
-        SecondaryTeacherDTO secondaryTeacherDTO = new SecondaryTeacherDTO(teacherId, teacherDTO.getFirstName(), teacherDTO.getLastName(), teacherDTO.getPatronymic());
+        TeacherEntity teacher = teacherDTOMapper.mapToEntity(teacherService.findById(teacherId), teacherId);
 
-        if (secondaryTeacherDTOS.isEmpty() || !secondaryTeacherDTOS.contains(secondaryTeacherDTO)) {
-            secondaryTeacherDTOS.add(secondaryTeacherDTO);
-            subjectDTO.setTeachers(secondaryTeacherDTOS);
-            subjectDTO.getGroups().forEach(t -> log.info(String.valueOf(t.getId())));
+        if (teachers.isEmpty() || !teachers.contains(teacher)) {
+            teachers.add(teacher);
+            subject.setTeachers(teachers);
 
-            return subjectService.save(subjectDTO, id);
+            return subjectService.save(subjectDTOMapper.mapToDTO(subject), id);
         } else {
-            return subjectDTO;
+            return subjectDTOMapper.mapToDTO(subject);
         }
     }
 
     @PostMapping(value = "/{id}/group/{groupId}")
     public SubjectDTO addGroup(@PathVariable("id") int id, @PathVariable("groupId") int groupId) throws SQLException {
-        SubjectDTO subjectDTO = subjectService.findById(id);
-        Set<SecondaryGroupDTO> secondaryGroupDTOS = new HashSet<>();
-        if (subjectDTO.getTeachers() != null) {
-            secondaryGroupDTOS.addAll(subjectDTO.getGroups());
+        SubjectEntity subject = subjectDTOMapper.mapToEntity(subjectService.findById(id), id);
+        Set<GroupEntity> groups = new HashSet<>();
+        if (subject.getTeachers() != null) {
+            groups.addAll(subject.getGroups());
         }
 
-        GroupDTO groupDTO = groupService.findById(groupId);
-        TeacherDTO teacherDTO = teacherService.findById(groupDTO.getTeacher().getId());
-        SecondaryTeacherDTO secondaryTeacherDTO = new SecondaryTeacherDTO(teacherDTO.getId(), teacherDTO.getFirstName(), teacherDTO.getLastName(), teacherDTO.getPatronymic());
-        SecondaryGroupDTO secondaryGroupDTO = new SecondaryGroupDTO(groupId, groupDTO.getName(), groupDTO.getStartDate(), groupDTO.getEndDate(), secondaryTeacherDTO);
+        GroupEntity group = groupDTOMapper.mapToEntity(groupService.findById(groupId), groupId);
 
-        if (secondaryGroupDTOS.isEmpty() || !secondaryGroupDTOS.contains(secondaryGroupDTO)) {
-            secondaryGroupDTOS.add(secondaryGroupDTO);
-            subjectDTO.setGroups(secondaryGroupDTOS);
+        if (groups.isEmpty() || !groups.contains(group)) {
+            groups.add(group);
+            subject.setGroups(groups);
 
-            return subjectService.save(subjectDTO, id);
+            return subjectService.save(subjectDTOMapper.mapToDTO(subject), id);
         } else {
-            return subjectDTO;
+            return subjectDTOMapper.mapToDTO(subject);
         }
     }
 

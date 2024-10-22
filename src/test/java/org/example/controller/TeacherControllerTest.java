@@ -48,10 +48,20 @@ class TeacherControllerTest {
 
     @Test
     void getTeacherTest() throws SQLException {
+        teacherEntity.setGroups(Set.of(new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity)));
+        teacherEntity.setExams(Set.of(new ExamEntity(1, new Date(System.currentTimeMillis()),
+                new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity),
+                new SubjectEntity(1, "s"), teacherEntity)));
+
         Mockito.when(mockTeacherService.findById(1)).thenReturn(teacherMapper.mapToDTO(teacherEntity));
 
         teacherEntity = new TeacherEntity(1, "t", "t", "t");
-        Assertions.assertEquals(teacherController.getTeacher(1), teacherMapper.mapToDTO(teacherEntity));
+        teacherEntity.setGroups(Set.of(new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity)));
+        teacherEntity.setExams(Set.of(new ExamEntity(1, new Date(System.currentTimeMillis()),
+                new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity),
+                new SubjectEntity(1, "s"), teacherEntity)));
+
+        Assertions.assertEquals(teacherMapper.mapToDTO(teacherEntity), teacherController.getTeacher(1));
     }
 
     @Test
@@ -102,24 +112,37 @@ class TeacherControllerTest {
 
     @Test
     void createTeacherTest() throws SQLException {
-        TeacherDTO dto = teacherMapper.mapToDTO(new TeacherEntity(0, "t", "t", null));
+        GroupEntity groupEntity = new GroupEntity(1, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity);
+        SubjectEntity subjectEntity = new SubjectEntity(1, "s");
+        ExamEntity examEntity = new ExamEntity(1, new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                groupEntity, subjectEntity, teacherEntity);
+        teacherEntity = new TeacherEntity(0, "t", "t", null);
+        teacherEntity.setSubjects(Set.of(subjectEntity));
+        teacherEntity.setGroups(Set.of(groupEntity));
+        teacherEntity.setExams(Set.of(examEntity));
+        TeacherDTO dto = teacherMapper.mapToDTO(teacherEntity);
+
+        teacherEntity = teacherMapper.mapToEntity(dto);
         Mockito.when(mockTeacherService.save(dto)).thenReturn(dto);
 
         teacherDTO = teacherController.createTeacher(dto);
 
         Assertions.assertEquals(dto, teacherDTO);
+        Assertions.assertEquals(teacherEntity, teacherMapper.mapToEntity(teacherDTO));
     }
 
     @Test
     void updateTeacherTest() throws SQLException {
         TeacherDTO dto = teacherMapper.mapToDTO(teacherEntity);
 
-        teacherEntity = teacherMapper.mapToEntity(dto, 1);
-        Mockito.when(mockTeacherService.save(dto, 1)).thenReturn(dto);
+        teacherEntity = teacherMapper.mapToEntity(dto, dto.getId());
+        Mockito.when(mockTeacherService.save(dto, dto.getId())).thenReturn(dto);
 
-        teacherDTO = teacherController.updateTeacher(1, dto);
+        teacherDTO = teacherController.updateTeacher(dto.getId(), dto);
 
         Assertions.assertEquals(dto, teacherDTO);
+        Assertions.assertEquals(teacherEntity, teacherMapper.mapToEntity(teacherDTO, teacherDTO.getId()));
     }
 
     @Test

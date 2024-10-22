@@ -57,9 +57,20 @@ class SubjectControllerTest {
 
     @Test
     void getSubjectTest() throws SQLException {
+        TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        subjectEntity.setGroups(Set.of(new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity)));
+        subjectEntity.setExams(Set.of(new ExamEntity(1, new Date(System.currentTimeMillis()),
+                new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity),
+                new SubjectEntity(1, "s"), teacherEntity)));
+
         Mockito.when(mockSubjectService.findById(1)).thenReturn(subjectMapper.mapToDTO(subjectEntity));
 
         subjectEntity = new SubjectEntity(1, "t");
+        subjectEntity.setGroups(Set.of(new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity)));
+        subjectEntity.setExams(Set.of(new ExamEntity(1, new Date(System.currentTimeMillis()),
+                new GroupEntity(1, "g", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), teacherEntity),
+                new SubjectEntity(1, "s"), teacherEntity)));
+
         Assertions.assertEquals(subjectController.getSubject(1), subjectMapper.mapToDTO(subjectEntity));
     }
 
@@ -112,19 +123,29 @@ class SubjectControllerTest {
 
     @Test
     void createSubjectTest() throws SQLException {
-        SubjectDTO dto = subjectMapper.mapToDTO(new SubjectEntity(0, "t"));
+        subjectEntity = new SubjectEntity(0, "t");
+        subjectEntity.setTeachers(Set.of(new TeacherEntity(1, "t", "t", "t")));
+        SubjectDTO dto = subjectMapper.mapToDTO(subjectEntity);
         Mockito.when(mockSubjectService.save(dto)).thenReturn(dto);
 
+        subjectEntity = subjectMapper.mapToEntity(dto);
         subjectDTO = subjectController.createSubject(dto);
 
         Assertions.assertEquals(dto, subjectDTO);
+        Assertions.assertEquals(subjectEntity, subjectMapper.mapToEntity(subjectDTO));
     }
 
     @Test
     void addTeacherTest() throws SQLException {
         TeacherEntity teacherEntity = new TeacherEntity(1, "t", "t", "t");
+        GroupEntity groupEntity = new GroupEntity(1, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity);
         subjectEntity = new SubjectEntity(2, "t");
+        ExamEntity examEntity = new ExamEntity(1, new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                groupEntity, subjectEntity, teacherEntity);
         subjectEntity.setTeachers(Set.of(teacherEntity));
+        subjectEntity.setGroups(Set.of(groupEntity));
+        subjectEntity.setExams(Set.of(examEntity));
         SubjectDTO dto = subjectMapper.mapToDTO(subjectEntity);
 
         Mockito.when(mockSubjectService.findById(subjectEntity.getId())).thenReturn(dto);
@@ -164,6 +185,7 @@ class SubjectControllerTest {
         subjectDTO = subjectController.updateSubject(1, dto);
 
         Assertions.assertEquals(dto, subjectDTO);
+        Assertions.assertEquals(subjectEntity, subjectMapper.mapToEntity(subjectDTO, subjectDTO.getId()));
     }
 
     @Test

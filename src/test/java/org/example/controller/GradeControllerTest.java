@@ -63,9 +63,11 @@ class GradeControllerTest {
         GradeDTO dto = gradeMapper.mapToDTO(new GradeEntity(0, studentEntity, examEntity, (short) 2));
         Mockito.when(mockGradeService.save(dto)).thenReturn(dto);
 
+        gradeEntity = gradeMapper.mapToEntity(dto);
         gradeDTO = gradeController.createGrade(dto);
 
         Assertions.assertEquals(dto, gradeDTO);
+        Assertions.assertEquals(gradeEntity, gradeMapper.mapToEntity(gradeDTO));
     }
 
     @Test
@@ -77,6 +79,7 @@ class GradeControllerTest {
         gradeDTO = gradeController.updateGrade(1, dto);
 
         Assertions.assertEquals(dto, gradeDTO);
+        Assertions.assertEquals(gradeEntity, gradeMapper.mapToEntity(gradeDTO, gradeDTO.getId()));
     }
 
     @Test

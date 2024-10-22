@@ -89,13 +89,18 @@ class GroupControllerTest {
 
     @Test
     void createGroupTest() throws SQLException {
-        GroupDTO dto = groupMapper.mapToDTO(new GroupEntity(0, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
-                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity));
+        groupEntity = new GroupEntity(0, "t", new Date(new GregorianCalendar(2029, Calendar.SEPTEMBER, 1).getTimeInMillis()),
+                new Date(new GregorianCalendar(2033, Calendar.JULY, 3).getTimeInMillis()), teacherEntity);
+        groupEntity.setSubjects(Set.of(new SubjectEntity(1, "s")));
+        groupEntity.setStudents(Set.of(new StudentEntity(1, "s", "s", "s", groupEntity)));
+        GroupDTO dto = groupMapper.mapToDTO(groupEntity);
         Mockito.when(mockGroupService.save(dto)).thenReturn(dto);
 
+        groupEntity = groupMapper.mapToEntity(dto);
         groupDTO = groupController.createGroup(dto);
 
         Assertions.assertEquals(dto, groupDTO);
+        Assertions.assertEquals(groupEntity, groupMapper.mapToEntity(groupDTO));
     }
 
     @Test
@@ -107,6 +112,7 @@ class GroupControllerTest {
         groupDTO = groupController.updateGroup(1, dto);
 
         Assertions.assertEquals(dto, groupDTO);
+        Assertions.assertEquals(groupEntity, groupMapper.mapToEntity(groupDTO, groupDTO.getId()));
     }
 
     @Test
