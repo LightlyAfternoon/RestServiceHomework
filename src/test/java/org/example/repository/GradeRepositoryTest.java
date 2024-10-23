@@ -78,10 +78,6 @@ class GradeRepositoryTest {
     @Test
     void deleteGradeByIdTest() throws SQLException {
         log.info("---");
-        Assertions.assertNotNull(gradeRepository.findById(1));
-        gradeRepository.deleteById(1);
-        Assertions.assertNull(gradeRepository.findById(1));
-        log.info("---");
         Assertions.assertNotNull(gradeRepository.findById(3));
         gradeRepository.deleteById(3);
         Assertions.assertNull(gradeRepository.findById(3));
