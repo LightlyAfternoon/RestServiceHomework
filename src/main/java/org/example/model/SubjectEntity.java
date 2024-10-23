@@ -36,6 +36,16 @@ public class SubjectEntity {
         this.id = id;
     }
 
+    @PreRemove
+    public void preRemove() {
+        if ((exams == null || exams.isEmpty()) && teachers != null) {
+            teachers.forEach(s -> s.getSubjects().remove(this));
+        }
+        if ((exams == null || exams.isEmpty()) && exams != null) {
+            groups.forEach(s -> s.getSubjects().remove(this));
+        }
+    }
+
     public int getId() {
         return id;
     }

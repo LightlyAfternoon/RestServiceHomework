@@ -8,6 +8,7 @@ INSERT INTO subject(name) VALUES ('Информационные технолог
 
 INSERT INTO subject_teacher(subject_id, teacher_id) VALUES (1, 1);
 INSERT INTO subject_teacher(subject_id, teacher_id) VALUES (1, 2);
+INSERT INTO subject_teacher(subject_id, teacher_id) VALUES (3, 3);
 
 INSERT INTO "group"(name, start_date, end_date, teacher_id) VALUES ('П-41', '2020-09-01', '2024-07-01', 1);
 INSERT INTO "group"(name, start_date, end_date, teacher_id) VALUES ('П-31', '2021-09-01', '2025-07-01', 2);
@@ -27,3 +28,4 @@ INSERT INTO grade(student_id, exam_id, mark) VALUES (2, 2, 5);
 
 INSERT INTO subject_group(subject_id, group_id) VALUES (2, 1);
 INSERT INTO subject_group(subject_id, group_id) VALUES (1, 2);
+INSERT INTO subject_group(subject_id, group_id) VALUES (3, 3);

@@ -45,6 +45,10 @@ public class GroupEntity {
 
     @PreRemove
     public void preRemove() {
+        if ((students == null || students.isEmpty() || exams == null || exams.isEmpty()) && subjects != null) {
+            subjects.forEach(s -> s.getGroups().remove(this));
+        }
+
         if (students == null || students.isEmpty() || exams == null || exams.isEmpty()) {
             this.teacher.getGroups().remove(this);
             this.teacher = null;
