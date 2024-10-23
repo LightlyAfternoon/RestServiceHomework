@@ -81,6 +81,22 @@ class ExamRepositoryTest {
     }
 
     @Test
+    void deleteExamByIdTest() throws SQLException {
+        log.info("---");
+        Assertions.assertNotNull(examRepository.findById(1));
+        examRepository.deleteById(1);
+        Assertions.assertNotNull(examRepository.findById(1));
+        log.info("---");
+        Assertions.assertNotNull(examRepository.findById(3));
+        examRepository.deleteById(3);
+        Assertions.assertNull(examRepository.findById(3));
+        log.info("---");
+        Assertions.assertNull(examRepository.findById(50));
+        examRepository.deleteById(50);
+        Assertions.assertNull(examRepository.findById(50));
+    }
+
+    @Test
     void saveExamTest() throws SQLException {
         Calendar calendar = new GregorianCalendar(2023, Calendar.MAY, 26);
         Date startDate = new Date(calendar.getTimeInMillis());

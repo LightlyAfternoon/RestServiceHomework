@@ -42,13 +42,12 @@ public class ExamEntity {
     @PreRemove
     public void preRemove() {
         if (grades == null || grades.isEmpty()) {
-            this.group.getExams().remove(this);
-            this.group = null;
-
             this.subject.getExams().remove(this);
-            this.subject = null;
-
+            this.group.getExams().remove(this);
             this.teacher.getExams().remove(this);
+
+            this.subject = null;
+            this.group = null;
             this.teacher = null;
         }
     }

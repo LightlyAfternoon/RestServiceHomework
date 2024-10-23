@@ -76,6 +76,22 @@ class GradeRepositoryTest {
     }
 
     @Test
+    void deleteGradeByIdTest() throws SQLException {
+        log.info("---");
+        Assertions.assertNotNull(gradeRepository.findById(1));
+        gradeRepository.deleteById(1);
+        Assertions.assertNull(gradeRepository.findById(1));
+        log.info("---");
+        Assertions.assertNotNull(gradeRepository.findById(3));
+        gradeRepository.deleteById(3);
+        Assertions.assertNull(gradeRepository.findById(3));
+        log.info("---");
+        Assertions.assertNull(gradeRepository.findById(50));
+        gradeRepository.deleteById(50);
+        Assertions.assertNull(gradeRepository.findById(50));
+    }
+
+    @Test
     void saveGradeTest() throws SQLException {
         GradeEntity grade = gradeRepository.findById(1);
         TeacherEntity teacher = new TeacherEntity(1, "t", "t", "t");

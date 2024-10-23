@@ -30,9 +30,9 @@ public class GradeEntity {
     @PreRemove
     public void preRemove() {
         this.student.getGrades().remove(this);
-        this.student = null;
-
         this.exam.getGrades().remove(this);
+
+        this.student = null;
         this.exam = null;
     }
 

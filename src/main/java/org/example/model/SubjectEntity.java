@@ -41,6 +41,7 @@ public class SubjectEntity {
         if ((exams == null || exams.isEmpty()) && teachers != null) {
             teachers.forEach(s -> s.getSubjects().remove(this));
         }
+
         if ((exams == null || exams.isEmpty()) && exams != null) {
             groups.forEach(s -> s.getSubjects().remove(this));
         }
