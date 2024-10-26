@@ -46,7 +46,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext implement
     }
 
     public static DataSource setConfig() throws IOException {
-        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/resources/db.properties")) {
+        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
