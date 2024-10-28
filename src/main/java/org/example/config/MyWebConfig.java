@@ -1,6 +1,5 @@
 package org.example.config;
 
-import org.example.db.ConnectionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +45,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext implement
     }
 
     public static DataSource setConfig() throws IOException {
-        try (InputStream inputStream = ConnectionManager.class.getResourceAsStream("/db.properties")) {
+        try (InputStream inputStream = MyWebConfig.class.getResourceAsStream("/db.properties")) {
             Properties prop = new Properties();
             prop.load(inputStream);
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
