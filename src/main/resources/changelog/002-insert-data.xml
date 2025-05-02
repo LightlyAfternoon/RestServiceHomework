@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+    <changeSet id="insert-teachers" author="Afternoon">
+        <insert tableName="teacher">
+            <column name="first_name" value="Аркадий"/>
+            <column name="last_name" value="Паровозов"/>
+        </insert>
+        <insert tableName="teacher">
+            <column name="first_name" value="Мирон"/>
+            <column name="last_name" value="Лаврентьев"/>
+            <column name="patronymic" value="Ильдусович"/>
+        </insert>
+        <insert tableName="teacher">
+            <column name="first_name" value="Арина"/>
+            <column name="last_name" value="Березина"/>
+            <column name="patronymic" value="Петровна"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-subjects" author="Afternoon">
+        <insert tableName="subject">
+            <column name="name" value="Математика"/>
+        </insert>
+        <insert tableName="subject">
+            <column name="name" value="Внедрение информационных систем"/>
+        </insert>
+        <insert tableName="subject">
+            <column name="name" value="Информационные технологии"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-subjects-with-teachers" author="Afternoon">
+        <insert tableName="subject_teacher">
+            <column name="subject_id" value="1"/>
+            <column name="teacher_id" value="1"/>
+        </insert>
+        <insert tableName="subject_teacher">
+            <column name="subject_id" value="1"/>
+            <column name="teacher_id" value="2"/>
+        </insert>
+        <insert tableName="subject_teacher">
+            <column name="subject_id" value="3"/>
+            <column name="teacher_id" value="3"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-groups" author="Afternoon">
+        <insert tableName="group">
+            <column name="name" value="П-41"/>
+            <column name="start_date" value="2020-09-01"/>
+            <column name="end_date" value="2024-07-01"/>
+            <column name="teacher_id" value="1"/>
+        </insert>
+        <insert tableName="group">
+            <column name="name" value="П-31"/>
+            <column name="start_date" value="2021-09-01"/>
+            <column name="end_date" value="2025-07-01"/>
+            <column name="teacher_id" value="2"/>
+        </insert>
+        <insert tableName="group">
+            <column name="name" value="Э-11"/>
+            <column name="start_date" value="2023-09-01"/>
+            <column name="end_date" value="2028-07-01"/>
+            <column name="teacher_id" value="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-students" author="Afternoon">
+        <insert tableName="student">
+            <column name="first_name" value="Стефания"/>
+            <column name="last_name" value="Крюкова"/>
+            <column name="patronymic" value="Артёмовна"/>
+            <column name="group_id" value="1"/>
+        </insert>
+        <insert tableName="student">
+            <column name="first_name" value="Максимова"/>
+            <column name="last_name" value="Пелагея"/>
+            <column name="patronymic" value="Артёмовна"/>
+            <column name="group_id" value="1"/>
+        </insert>
+        <insert tableName="student">
+            <column name="first_name" value="Илья"/>
+            <column name="last_name" value="Родин"/>
+            <column name="patronymic" value="Артёмович"/>
+            <column name="group_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-exams" author="Afternoon">
+        <insert tableName="exam">
+            <column name="start_date" value="2021-12-13"/>
+            <column name="group_id" value="1"/>
+            <column name="subject_id" value="1"/>
+            <column name="teacher_id" value="2"/>
+        </insert>
+        <insert tableName="exam">
+            <column name="start_date" value="2023-12-02"/>
+            <column name="group_id" value="2"/>
+            <column name="subject_id" value="1"/>
+            <column name="teacher_id" value="1"/>
+        </insert>
+        <insert tableName="exam">
+            <column name="start_date" value="2024-01-05"/>
+            <column name="group_id" value="2"/>
+            <column name="subject_id" value="1"/>
+            <column name="teacher_id" value="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-grades" author="Afternoon">
+        <insert tableName="grade">
+            <column name="student_id" value="1"/>
+            <column name="exam_id" value="1"/>
+            <column name="mark" value="4"/>
+        </insert>
+        <insert tableName="grade">
+            <column name="student_id" value="2"/>
+            <column name="exam_id" value="1"/>
+            <column name="mark" value="5"/>
+        </insert>
+        <insert tableName="grade">
+            <column name="student_id" value="2"/>
+            <column name="exam_id" value="2"/>
+            <column name="mark" value="5"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-subjects-with-groups" author="Afternoon">
+        <insert tableName="subject_group">
+            <column name="subject_id" value="2"/>
+            <column name="group_id" value="1"/>
+        </insert>
+        <insert tableName="subject_group">
+            <column name="subject_id" value="1"/>
+            <column name="group_id" value="2"/>
+        </insert>
+        <insert tableName="subject_group">
+            <column name="subject_id" value="3"/>
+            <column name="group_id" value="3"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

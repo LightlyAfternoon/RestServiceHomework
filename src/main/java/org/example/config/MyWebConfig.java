@@ -1,5 +1,11 @@
 package org.example.config;
 
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +27,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
@@ -30,7 +39,19 @@ import java.util.Properties;
 public class MyWebConfig extends AnnotationConfigWebApplicationContext implements WebMvcConfigurer {
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws IOException {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws IOException, LiquibaseException, SQLException, ClassNotFoundException {
+        try (InputStream inputStream = MyWebConfig.class.getResourceAsStream("/db.properties")) {
+            Class.forName("org.postgresql.Driver");
+
+            Properties prop = new Properties();
+            prop.load(inputStream);
+
+            Connection connection = DriverManager.getConnection(prop.getProperty("jdbcUrl"), prop.getProperty("username"), prop.getProperty("password"));
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            Liquibase liquibase = new Liquibase("changelog/changelog.xml", new ClassLoaderResourceAccessor(), database);
+            liquibase.update();
+        }
+
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
 
@@ -55,8 +76,6 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext implement
             dataSource.setPassword(prop.getProperty("password"));
 
             return dataSource;
-        } catch (IOException e) {
-            throw new IOException(e);
         }
     }
 
@@ -75,7 +94,7 @@ public class MyWebConfig extends AnnotationConfigWebApplicationContext implement
     }
 
     @Bean(name = "transactionManager")
-    public PlatformTransactionManager dbTransactionManager() throws IOException {
+    public PlatformTransactionManager dbTransactionManager() throws IOException, SQLException, LiquibaseException, ClassNotFoundException {
         JpaTransactionManager transactionManager
                 = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(

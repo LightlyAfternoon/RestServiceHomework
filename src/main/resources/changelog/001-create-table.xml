@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+    <changeSet id="create-table-teacher" author="Afternoon">
+        <createTable tableName="teacher">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="character varying(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="character varying(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="character varying(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-subject" author="Afternoon">
+        <createTable tableName="subject">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="character varying(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-group" author="Afternoon">
+        <createTable tableName="group">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="character varying(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="teacher_id" type="integer">
+                <constraints foreignKeyName="user_teacher_id_fkey" references="teacher(id)" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-subject_teacher" author="Afternoon">
+        <createTable tableName="subject_teacher">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="teacher_id" type="integer">
+                <constraints foreignKeyName="subject_teacher_teacher_id_fkey" references="teacher(id)" nullable="false"/>
+            </column>
+            <column name="subject_id" type="integer">
+                <constraints foreignKeyName="subject_teacher_subject_id_fkey" references="subject(id)" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-subject_group" author="Afternoon">
+        <createTable tableName="subject_group">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="subject_group_group_id_fkey" references="group(id)" nullable="false"/>
+            </column>
+            <column name="subject_id" type="integer">
+                <constraints foreignKeyName="subject_group_subject_id_fkey" references="subject(id)" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-student" author="Afternoon">
+        <createTable tableName="student">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="character varying(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="character varying(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="character varying(50)"/>
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="student_group_id_fkey" references="group(id)" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-exam" author="Afternoon">
+        <createTable tableName="exam">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="exam_group_id_fkey" references="group(id)" nullable="false"/>
+            </column>
+            <column name="subject_id" type="integer">
+                <constraints foreignKeyName="exam_subject_id_fkey" references="subject(id)" nullable="false"/>
+            </column>
+            <column name="teacher_id" type="integer">
+                <constraints foreignKeyName="exam_teacher_id_fkey" references="teacher(id)" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-grade" author="Afternoon">
+        <createTable tableName="grade">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="student_id" type="integer">
+                <constraints foreignKeyName="grade_student_id_fkey" references="student(id)" nullable="false"/>
+            </column>
+            <column name="exam_id" type="integer">
+                <constraints foreignKeyName="grade_exam_id_fkey" references="exam(id)" nullable="false"/>
+            </column>
+            <column name="mark" type="smallint" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -13,6 +13,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <org.mapstruct.version>1.6.2</org.mapstruct.version>
+    <liquibase.version>4.31.1</liquibase.version>
   </properties>
 
   <dependencies>
@@ -123,6 +124,12 @@
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>6.6.1.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <version>${liquibase.version}</version>
     </dependency>
   </dependencies>
 
