@@ -61,8 +61,10 @@ public class TeacherController {
     public String deleteTeacher(@PathVariable("id") int id) throws SQLException {
         TeacherDTO teacherDTO = teacherService.findById(id);
 
-        if (teacherDTO != null && (teacherDTO.getGroups() != null || teacherDTO.getExams() != null)) {
-            return "Teacher is connected to some groups and/or exams!";
+        if (teacherDTO != null && ((teacherDTO.getGroups() != null && !teacherDTO.getGroups().isEmpty()) ||
+                        (teacherDTO.getSubjects() != null && !teacherDTO.getSubjects().isEmpty())||
+                        (teacherDTO.getExams() != null && !teacherDTO.getExams().isEmpty()))) {
+            return "Teacher is connected to some groups, subjects and/or exams!";
         } else if (teacherDTO == null) {
             return "There is no teacher with id " + id;
         } else {
