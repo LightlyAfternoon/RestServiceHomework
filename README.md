@@ -2,10 +2,10 @@
 This is a simple service to keep trace of student's grades on exams.
 ## Launching
 ### Requirements
-- Git (to dowload the repository using the console)
-- Docker Desktop
-- JDK 21 or newer
-- Postman or other instrument for testing API
+- Git (to dowload the repository using the console).
+- Docker Desktop.
+- JDK 21 or newer.
+- Postman or other instrument for testing API.
 ### Steps
 1. Download repository from site and unzip in some place on disk or clone repository by command on the command line:
    
